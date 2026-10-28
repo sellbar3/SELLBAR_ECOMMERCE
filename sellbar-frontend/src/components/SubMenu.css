@@ -1,0 +1,129 @@
+.sm {
+  position: relative;
+  z-index: 40;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sm-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sm-item {
+  position: relative;
+}
+
+.sm-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 4px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sm-label i {
+  font-style: normal;
+  font-size: 0.8rem;
+  color: #6b7280;
+  transition: transform 0.2s;
+}
+
+.sm-label:hover,
+.sm-label.on {
+  color: #2874f0;
+}
+
+.sm-label.on i {
+  transform: rotate(180deg);
+  color: #2874f0;
+}
+
+.sm-label:focus-visible,
+.sm-panel a:focus-visible {
+  outline: 2px solid #f59f00;
+  outline-offset: 2px;
+}
+
+.sm-drop {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 4px;
+}
+
+.sm-drop.right {
+  left: auto;
+  right: 0;
+}
+
+.sm-panel {
+  display: flex;
+  gap: 28px;
+  min-width: 220px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+.sm-group {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  min-width: 190px;
+}
+
+.sm-group h4 {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.sm-panel a {
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sm-panel a:hover {
+  background: #f3f6ff;
+  color: #2874f0;
+}
+
+/* Phones and tablets: scrolling bar, no dropdown panels */
+@media (max-width: 900px) {
+  .sm-inner {
+    justify-content: flex-start;
+    gap: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .sm-inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sm-label i,
+  .sm-drop {
+    display: none;
+  }
+}
