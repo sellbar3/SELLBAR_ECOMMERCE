@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import "@/css/Refurb.css";
+import { fetchProducts } from "@/lib/productApi";
+import { getCloudinaryUrl } from "@/lib/cloudinary";
 
 function Pic({ src, alt, emoji }) {
   const [failed, setFailed] = useState(false);
@@ -19,31 +21,20 @@ function Pic({ src, alt, emoji }) {
 }
 
 const CATEGORIES = [
-  ["Refurbished Phones", "/buy-refurbished?category=phones", "/services/buy-phone.webp", "📱", "Up to 70% off"],
-  ["Refurbished Laptops", "/buy-refurbished?category=laptops", "/services/buy-laptops.webp", "💻", "Starting ₹16,999"],
-  ["Smartwatches", "/buy-refurbished?category=smartwatches", "/services/buy-smartwatches.webp", "⌚", "Up to 65% off"],
-  ["Tablets", "/buy-refurbished?category=tablets", "/services/buy-tablets.webp", "📲", "Starting ₹11,999"],
-  ["Gaming Consoles", "/buy-refurbished?category=gaming", "/services/buy-gaming.webp", "🎮", "Up to 45% off"],
-  ["Cameras", "/buy-refurbished?category=cameras", "/services/buy-cameras.webp", "📷", "Tested optics"],
-];
-
-const DEALS = [
-  { id: "ip14", name: "Apple iPhone 14 (128 GB)", brand: "APPLE", grade: "Flawless", tag: "Super deal", price: 38999, mrp: 69900, img: "/products/iphone-14.webp", emoji: "📱" },
-  { id: "s24", name: "Samsung Galaxy S24 5G (8GB/256GB)", brand: "SAMSUNG", grade: "Flawless", tag: "Best seller", price: 48499, mrp: 79999, img: "/products/phone-samsung-s24.jpg", emoji: "📱" },
-  { id: "ip13", name: "Apple iPhone 13 (128 GB)", brand: "APPLE", grade: "Superb", tag: "Top pick", price: 32999, mrp: 59900, img: "/products/iphone-13.webp", emoji: "📱" },
-  { id: "op12", name: "OnePlus 12 5G (16GB/512GB)", brand: "ONEPLUS", grade: "Flawless", tag: "36% off", price: 44999, mrp: 69999, img: "/products/phone-oneplus-12.jpg", emoji: "📱" },
-  { id: "fold5", name: "Samsung Galaxy Z Fold 5 (512GB)", brand: "SAMSUNG", grade: "Superb", tag: "52% off", price: 79999, mrp: 164999, img: "/products/phone-samsung-fold5.jpg", emoji: "📱" },
-  { id: "mbp", name: 'Apple MacBook Pro 14" M3 (512GB)', brand: "LAPTOPS", grade: "Flawless", tag: "Pro tech", price: 114999, mrp: 169900, img: "/products/laptop-macbook-pro-m3.webp", emoji: "💻" },
-  { id: "d5320", name: "Dell Latitude 5320 Core i7 (16GB/512GB)", brand: "LAPTOPS", grade: "Superb", tag: "Big saving", price: 28499, mrp: 89999, img: "/products/laptop-dell-5320.png", emoji: "💻" },
-  { id: "px7", name: "Google Pixel 7 5G (128GB)", brand: "GOOGLE", grade: "Good", tag: "55% off", price: 26999, mrp: 59999, img: "/products/google-pixel-7.webp", emoji: "📱" },
+  ["Refurbished Phones", "/buy-refurbished?category=mobile-phones", getCloudinaryUrl("/services/buy-phone.webp"), "📱", "Up to 70% off"],
+  ["Refurbished Laptops", "/buy-refurbished?category=laptop", getCloudinaryUrl("/services/buy-laptops.webp"), "💻", "Starting ₹18,999"],
+  ["Smartwatches", "/buy-refurbished?category=smart-watches", getCloudinaryUrl("/services/buy-smartwatches.webp"), "⌚", "Up to 65% off"],
+  ["Tablets", "/buy-refurbished?category=tablets", getCloudinaryUrl("/services/buy-tablets.webp"), "📲", "Starting ₹11,999"],
+  ["Gaming Consoles", "/buy-refurbished?category=gaming-consoles", getCloudinaryUrl("/services/buy-gaming.webp"), "🎮", "Up to 45% off"],
+  ["Cameras", "/buy-refurbished?category=cameras", getCloudinaryUrl("/services/buy-cameras.webp"), "📷", "Tested optics"],
 ];
 
 const TABS = [
   ["ALL", "All gadgets"],
-  ["APPLE", "Apple iPhones"],
+  ["APPLE", "Apple Devices"],
   ["SAMSUNG", "Samsung Galaxy"],
+  ["DELL", "Dell Laptops"],
   ["ONEPLUS", "OnePlus"],
-  ["LAPTOPS", "Laptops"],
 ];
 
 const GRADES = [
@@ -65,14 +56,35 @@ const PERKS = [
   ["💳", "No-cost EMI", "0% interest EMI on selected credit and debit cards."],
 ];
 
-const inr = (n) => `₹${n.toLocaleString("en-IN")}`;
+const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
 export default function BuyRefurbishedGadgetsPage() {
   const [brand, setBrand] = useState("ALL");
   const [grade, setGrade] = useState("Flawless");
   const [saved, setSaved] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const deals = brand === "ALL" ? DEALS : DEALS.filter((d) => d.brand === brand);
+  useEffect(() => {
+    async function loadAllProducts() {
+      try {
+        setLoading(true);
+        const data = await fetchProducts({ limit: 50 });
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error("Failed to load gadgets:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadAllProducts();
+  }, []);
+
+  const filteredDeals = products.filter((p) => {
+    if (brand === "ALL") return true;
+    if (brand === "DELL") return p.brand?.toLowerCase() === "dell" || p.category?.slug === "laptop";
+    return p.brand?.toLowerCase() === brand.toLowerCase();
+  });
 
   const toggleSave = (id) =>
     setSaved((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
@@ -123,7 +135,7 @@ export default function BuyRefurbishedGadgetsPage() {
 
         <section className="rf-sec">
           <h2>Trending deals</h2>
-          <p>Handpicked refurbished gadgets</p>
+          <p>Handpicked refurbished gadgets from verified database</p>
 
           <div className="rf-tabs" role="tablist">
             {TABS.map(([value, label]) => (
@@ -139,35 +151,46 @@ export default function BuyRefurbishedGadgetsPage() {
             ))}
           </div>
 
-          {deals.length ? (
+          {loading ? (
             <div className="rf-grid">
-              {deals.map((d) => {
-                const off = Math.round(((d.mrp - d.price) / d.mrp) * 100);
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rf-card animate-pulse" style={{ height: 280, background: "#f8fafc" }} />
+              ))}
+            </div>
+          ) : filteredDeals.length ? (
+            <div className="rf-grid">
+              {filteredDeals.map((d) => {
+                const comparePrice = d.compareAtPrice || Math.round(d.price * 1.4);
+                const off = Math.round(((comparePrice - d.price) / comparePrice) * 100);
+                const imgUrl = d.images?.[0]?.url || getCloudinaryUrl("/products/iphone-14.webp");
+
                 return (
-                  <article className="rf-card" key={d.id}>
-                    <span className="rf-badge">{d.tag}</span>
-                    <Pic src={d.img} alt={d.name} emoji={d.emoji} />
-                    <span className="rf-small">Grade: {d.grade}</span>
+                  <article className="rf-card" key={d._id}>
+                    <span className="rf-badge">{d.badge || "Verified"}</span>
+                    <Pic src={imgUrl} alt={d.name} emoji="📱" />
+                    <span className="rf-small">Grade: {d.condition || "Flawless"}</span>
                     <h3>{d.name}</h3>
                     <div className="rf-price">
                       <b>{inr(d.price)}</b>
-                      <del>{inr(d.mrp)}</del>
+                      <del>{inr(comparePrice)}</del>
                       <span>{off}% off</span>
                     </div>
-                    <Link href="/buy-refurbished" className="rf-btn">Buy certified</Link>
+                    <Link href={`/product/${d.slug || d._id}`} className="rf-btn">
+                      Buy certified
+                    </Link>
                     <button
                       className="rf-chip"
-                      aria-pressed={saved.includes(d.id)}
-                      onClick={() => toggleSave(d.id)}
+                      aria-pressed={saved.includes(d._id)}
+                      onClick={() => toggleSave(d._id)}
                     >
-                      {saved.includes(d.id) ? "♥ Saved" : "♡ Save"}
+                      {saved.includes(d._id) ? "♥ Saved" : "♡ Save"}
                     </button>
                   </article>
                 );
               })}
             </div>
           ) : (
-            <div className="rf-state"><h3>No deals in this group yet</h3></div>
+            <div className="rf-state"><h3>No deals found in this group yet</h3></div>
           )}
         </section>
 

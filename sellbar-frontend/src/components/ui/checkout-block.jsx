@@ -36,6 +36,7 @@ import {
   Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCloudinaryUrl } from "@/lib/cloudinary";
 import {
   Select,
   SelectContent,
@@ -126,11 +127,42 @@ export default function Checkout({ initialItems }) {
   useEffect(() => {
     const loadCheckout = async () => {
       setIsLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 800));
       if (initialItems && initialItems.length > 0) {
         setOrderItems(initialItems);
       } else {
-        setOrderItems(sampleOrderItems);
+        try {
+          const { getLocalCart } = await import("@/lib/cart");
+          const local = getLocalCart();
+          if (local && local.length > 0) {
+            setOrderItems(
+              local.map((item) => ({
+                id: item.id || item.productId,
+                name: item.name || "Refurbished Tech",
+                price: Number(item.price) || 0,
+                originalPrice: Math.round((Number(item.price) || 0) * 1.4),
+                image: item.image,
+                quantity: item.quantity || 1,
+              }))
+            );
+          } else {
+            const { fetchFeaturedProducts } = await import("@/lib/productApi");
+            const featured = await fetchFeaturedProducts("hot-deal");
+            if (featured && featured.length > 0) {
+              setOrderItems(
+                featured.slice(0, 2).map((p) => ({
+                  id: p._id,
+                  name: p.name,
+                  price: p.price,
+                  originalPrice: p.compareAtPrice || Math.round(p.price * 1.4),
+                  image: p.images?.[0]?.url,
+                  quantity: 1,
+                }))
+              );
+            }
+          }
+        } catch (e) {
+          console.error("Failed to load checkout items dynamically:", e);
+        }
       }
       setIsLoading(false);
     };
@@ -265,7 +297,7 @@ export default function Checkout({ initialItems }) {
             <div key={item.id} className="flex gap-3 items-center">
               <div className="relative w-14 h-14 flex-shrink-0 bg-gray-50 rounded-md overflow-hidden border border-gray-100">
                 <img
-                  src={item.image}
+                  src={getCloudinaryUrl(item.image)}
                   alt={item.name}
                   className="w-full h-full object-cover"
                 />

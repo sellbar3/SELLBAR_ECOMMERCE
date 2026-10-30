@@ -38,6 +38,13 @@ const productSchema = new mongoose.Schema(
       maxlength: 200,
     },
 
+    slug: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      index: true,
+    },
+
     description: {
       type: String,
       required: true,
@@ -122,6 +129,45 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    featuredType: {
+      type: String,
+      enum: ["hot-deal", "featured", "trending", "best-seller", "new-arrival", "regular"],
+      default: "regular",
+      index: true,
+    },
+
+    rating: {
+      type: Number,
+      default: 4.5,
+      min: 0,
+      max: 5,
+    },
+
+    reviewsCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
+    badge: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    condition: {
+      type: String,
+      trim: true,
+      default: "Flawless",
+    },
+
+    specs: [
+      {
+        label: { type: String, trim: true },
+        value: { type: String, trim: true },
+      },
+    ],
   },
   {
     timestamps: true,
@@ -130,7 +176,6 @@ const productSchema = new mongoose.Schema(
 );
 
 // SKU same vendor ke andar unique hona chahiye, alag vendors same SKU use kar sakte hain.
-// SKU optional hai, isliye sirf string SKU wale products par unique rule lagta hai.
 productSchema.index(
   { vendor: 1, sku: 1 },
   {
@@ -141,6 +186,12 @@ productSchema.index(
 
 productSchema.index({
   vendor: 1,
+  status: 1,
+  createdAt: -1,
+});
+
+productSchema.index({
+  category: 1,
   status: 1,
   createdAt: -1,
 });

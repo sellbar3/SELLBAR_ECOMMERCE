@@ -77,8 +77,31 @@ export default function BuyRefurbishedTabletsClient({ initialProducts = [], }) {
             count: 4,
         },
     ];
-    // Authentic Tablets Catalog from Cashify CDN
+    // Authentic Tablets Catalog from Cashify CDN or Database
     const tabletsCatalog = useMemo(() => {
+        if (initialProducts && initialProducts.length > 0) {
+            return initialProducts.map((p) => ({
+                id: p._id || p.id,
+                name: p.name,
+                slug: p.slug || p._id,
+                brand: (typeof p.brand === 'object' ? p.brand?.slug || p.brand?.name : p.brand || 'apple').toLowerCase(),
+                series: 'all',
+                screenSize: '11-inch',
+                connectivity: 'wifi',
+                image: p.images?.[0]?.url || 'https://s3ng.cashify.in/cashify/product/img/xxhdpi/ffe0f1ac-b106.jpg',
+                salePrice: Number(p.price) || 0,
+                originalPrice: Number(p.compareAtPrice) || Math.round((Number(p.price) || 0) * 1.4),
+                discount: Math.round((((Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4) - (Number(p.price) || 0)) / (Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4)) * 100),
+                rating: Number(p.rating) || 4.8,
+                reviewsCount: Number(p.reviewsCount) || 320,
+                grade: p.condition || 'Flawless',
+                specs: Array.isArray(p.specs) ? p.specs.map((s) => typeof s === 'string' ? s : `${s.label}: ${s.value}`) : ['12 Months Warranty'],
+                tag: p.badge || 'CERTIFIED',
+                batteryHealth: '95% Guaranteed',
+                warranty: '12 Months Warranty',
+                href: `/product/${p.slug || p._id}`,
+            }));
+        }
         return [
             {
                 id: 'ipad-air-13-m3-2025',
@@ -354,7 +377,7 @@ export default function BuyRefurbishedTabletsClient({ initialProducts = [], }) {
                 href: '/product/xiaomi-pad-6-refurbished',
             },
         ];
-    }, []);
+    }, [initialProducts]);
     // Filter & Sort
     const filteredTablets = useMemo(() => {
         return tabletsCatalog

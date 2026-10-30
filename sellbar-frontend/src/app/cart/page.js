@@ -11,6 +11,7 @@ import {
   updateLocalCart,
   getCart,
 } from "../../lib/cart";
+import { getCloudinaryUrl } from "@/lib/cloudinary";
 import LoginModal from "@/components/LoginModal";
 
 export default function CartPage() {
@@ -137,7 +138,7 @@ export default function CartPage() {
                       <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
                         {item.image ? (
                           <img
-                            src={item.image}
+                            src={getCloudinaryUrl(item.image)}
                             alt={item.name}
                             className="w-full h-full object-contain p-1"
                           />

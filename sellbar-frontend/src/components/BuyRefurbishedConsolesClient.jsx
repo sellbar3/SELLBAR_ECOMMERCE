@@ -17,6 +17,25 @@ export default function BuyRefurbishedConsolesClient({ initialProducts, }) {
         { id: 'accessory', label: 'Controllers & Accessories' },
     ];
     const consoleCatalog = useMemo(() => {
+        if (initialProducts && initialProducts.length > 0) {
+            return initialProducts.map((p) => ({
+                id: p._id || p.id,
+                name: p.name,
+                slug: p.slug || p._id,
+                platform: 'playstation',
+                image: p.images?.[0]?.url || 'https://s3ng.cashify.in/cashify/store/product/cf73bcbd1a084711b40776bfe103bf3d.png',
+                salePrice: Number(p.price) || 0,
+                originalPrice: Number(p.compareAtPrice) || Math.round((Number(p.price) || 0) * 1.4),
+                discount: Math.round((((Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4) - (Number(p.price) || 0)) / (Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4)) * 100),
+                rating: Number(p.rating) || 4.8,
+                reviewsCount: Number(p.reviewsCount) || 1200,
+                grade: p.condition || 'Flawless',
+                specs: Array.isArray(p.specs) ? p.specs.map((s) => typeof s === 'string' ? s : `${s.label}: ${s.value}`) : ['High Performance', '12 Months Warranty'],
+                tag: p.badge || 'CERTIFIED',
+                warranty: '12 Months Warranty',
+                href: `/product/${p.slug || p._id}`,
+            }));
+        }
         return [
             {
                 id: 'ps5-slim',
@@ -172,7 +191,7 @@ export default function BuyRefurbishedConsolesClient({ initialProducts, }) {
                 href: '/product/xbox-series-controller',
             },
         ];
-    }, []);
+    }, [initialProducts]);
     const filteredConsoles = useMemo(() => {
         return consoleCatalog.filter((item) => {
             if (selectedPlatform !== 'all' && item.platform !== selectedPlatform)

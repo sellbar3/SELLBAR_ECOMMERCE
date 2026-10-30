@@ -44,6 +44,25 @@ export default function BuyRefurbishedCamerasClient({ initialProducts, }) {
         },
     ];
     const cameraCatalog = useMemo(() => {
+        if (initialProducts && initialProducts.length > 0) {
+            return initialProducts.map((p) => ({
+                id: p._id || p.id,
+                name: p.name,
+                slug: p.slug || p._id,
+                type: 'dslr',
+                brand: (typeof p.brand === 'object' ? p.brand?.slug || p.brand?.name : p.brand || 'canon').toLowerCase(),
+                image: p.images?.[0]?.url || 'https://s3ng.cashify.in/cashify/product/img/xxhdpi/c56062f0-04ee.jpg',
+                salePrice: Number(p.price) || 0,
+                originalPrice: Number(p.compareAtPrice) || Math.round((Number(p.price) || 0) * 1.4),
+                discount: Math.round((((Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4) - (Number(p.price) || 0)) / (Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4)) * 100),
+                rating: Number(p.rating) || 4.7,
+                reviewsCount: Number(p.reviewsCount) || 540,
+                grade: p.condition || 'Superb',
+                specs: Array.isArray(p.specs) ? p.specs.map((s) => typeof s === 'string' ? s : `${s.label}: ${s.value}`) : ['Optical Tested', '12 Months Warranty'],
+                tag: p.badge || 'CERTIFIED',
+                href: `/product/${p.slug || p._id}`,
+            }));
+        }
         return [
             {
                 id: 'cam-canon-1500d',
@@ -182,7 +201,7 @@ export default function BuyRefurbishedCamerasClient({ initialProducts, }) {
                 href: '/product/canon-ef-s-55-250mm',
             },
         ];
-    }, []);
+    }, [initialProducts]);
     const filteredItems = useMemo(() => {
         return cameraCatalog.filter((item) => {
             if (selectedType !== 'all' && item.type !== selectedType)

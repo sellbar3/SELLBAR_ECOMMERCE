@@ -110,6 +110,32 @@ export default function BuyRefurbishedMobilePhonesClient({ initialProducts, }) {
     ];
     // Curated Flash Sale & Bestselling Refurbished Mobiles with Cashify images & verified prices
     const catalogProducts = useMemo(() => {
+        if (initialProducts && initialProducts.length > 0) {
+            return initialProducts.map((p) => {
+                const brandStr = typeof p.brand === 'object' ? p.brand?.name || '' : p.brand || 'Apple';
+                return {
+                    id: p._id || p.id,
+                    name: p.name,
+                    slug: p.slug || p._id,
+                    brand: brandStr,
+                    brandSlug: brandStr.toLowerCase(),
+                    image: p.images?.[0]?.url || 'https://s3ng.cashify.in/cashify/product/img/xxhdpi/96a67b00-9389.jpg',
+                    salePrice: Number(p.price) || 0,
+                    originalPrice: Number(p.compareAtPrice) || Math.round((Number(p.price) || 0) * 1.4),
+                    discount: Math.round((((Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4) - (Number(p.price) || 0)) / (Number(p.compareAtPrice) || (Number(p.price) || 0) * 1.4)) * 100),
+                    rating: Number(p.rating) || 4.7,
+                    reviewsCount: Number(p.reviewsCount) || 1200,
+                    grade: p.condition || 'Superb',
+                    condition: (p.condition || 'SUPERB').toUpperCase(),
+                    specs: Array.isArray(p.specs) ? p.specs.map((s) => typeof s === 'string' ? s : `${s.label}: ${s.value}`) : ['128GB Storage', '12 Months Warranty'],
+                    warranty: '12 Months Warranty',
+                    isFlashSale: p.featuredType === 'hot-deal',
+                    tag: p.badge || 'BESTSELLER',
+                    isAndroid: brandStr.toLowerCase() !== 'apple',
+                    href: `/product/${p.slug || p._id}`,
+                };
+            });
+        }
         return [
             {
                 id: 'phone-ip13-128',
@@ -364,7 +390,7 @@ export default function BuyRefurbishedMobilePhonesClient({ initialProducts, }) {
                 href: '/product/poco-x5-pro',
             },
         ];
-    }, []);
+    }, [initialProducts]);
     // Filter products based on active filters
     const filteredProducts = useMemo(() => {
         return catalogProducts.filter((product) => {

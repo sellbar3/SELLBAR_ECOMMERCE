@@ -1,77 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Laptop, ShieldCheck, Star, ArrowRight } from "lucide-react";
-
-const FEATURED_LAPTOPS = [
-  {
-    id: "mba-m1",
-    name: "Apple MacBook Air 2020 M1 (8GB / 256GB SSD)",
-    brand: "Apple",
-    price: 49999,
-    mrp: 99900,
-    grade: "Flawless",
-    warranty: "12 Months Warranty",
-    rating: 4.9,
-  },
-  {
-    id: "len-x1",
-    name: "Lenovo ThinkPad X1 Carbon Gen 9 (Intel Core i7 / 16GB / 512GB)",
-    brand: "Lenovo",
-    price: 44999,
-    mrp: 145000,
-    grade: "Very Good",
-    warranty: "12 Months Warranty",
-    rating: 4.8,
-  },
-  {
-    id: "dell-5320",
-    name: "Dell Latitude 5000 Series 5320 (Intel Core i5 / 16GB / 512GB)",
-    brand: "Dell",
-    price: 24999,
-    mrp: 85000,
-    grade: "Good",
-    warranty: "6 Months Warranty",
-    rating: 4.7,
-  },
-  {
-    id: "mbp-16",
-    name: "Apple MacBook Pro 2023 16-inch M3 Max (32GB / 1TB)",
-    brand: "Apple",
-    price: 189999,
-    mrp: 349900,
-    grade: "Flawless",
-    warranty: "12 Months Warranty",
-    rating: 5.0,
-  },
-  {
-    id: "dell-3410",
-    name: "Dell Latitude 3000 Series 3410 (Core i5 / 8GB / 256GB)",
-    brand: "Dell",
-    price: 18999,
-    mrp: 58000,
-    grade: "Good",
-    warranty: "6 Months Warranty",
-    rating: 4.6,
-  },
-  {
-    id: "len-t14",
-    name: "Lenovo ThinkPad T14 Gen 1 (Ryzen 5 PRO / 16GB / 512GB)",
-    brand: "Lenovo",
-    price: 27999,
-    mrp: 89000,
-    grade: "Very Good",
-    warranty: "12 Months Warranty",
-    rating: 4.8,
-  },
-];
+import { fetchProducts } from "@/lib/productApi";
+import { getCloudinaryUrl } from "@/lib/cloudinary";
 
 export default function BuyRefurbishedLaptopsPage() {
   const [selectedBrand, setSelectedBrand] = useState("All");
+  const [laptops, setLaptops] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = FEATURED_LAPTOPS.filter(
-    (l) => selectedBrand === "All" || l.brand === selectedBrand
+  useEffect(() => {
+    async function loadLaptops() {
+      try {
+        setLoading(true);
+        const data = await fetchProducts({ category: "laptop", limit: 50 });
+        setLaptops(data.products || []);
+      } catch (err) {
+        console.error("Failed to load laptops:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadLaptops();
+  }, []);
+
+  const filtered = laptops.filter(
+    (l) => selectedBrand === "All" || (l.brand && l.brand.toLowerCase() === selectedBrand.toLowerCase())
   );
 
   return (
@@ -99,20 +55,21 @@ export default function BuyRefurbishedLaptopsPage() {
             </p>
           </div>
           <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center shrink-0 space-y-1">
-            <div className="text-3xl font-extrabold text-[#2bbda3]">Save 70%</div>
-            <div className="text-xs text-gray-200">vs Brand-New Laptop MRP</div>
-            <div className="text-xl font-bold text-white pt-2">Original OS</div>
-            <div className="text-xs text-gray-200">Genuine Windows &amp; macOS</div>
+            <div className="text-3xl font-extrabold text-[#2bbda3]">&gt; 80%</div>
+            <div className="text-xs text-gray-300">Minimum Battery Capacity</div>
+            <div className="text-xl font-bold text-white pt-2">Original</div>
+            <div className="text-xs text-gray-300">Fast Charger Included</div>
           </div>
         </div>
 
         {/* Brand Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          {["All", "Apple", "Lenovo", "Dell"].map((b) => (
+          {["All", "Dell", "Apple", "Lenovo"].map((b) => (
             <button
               key={b}
+              type="button"
               onClick={() => setSelectedBrand(b)}
-              className={`px-5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
+              className={`px-5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                 selectedBrand === b
                   ? "bg-[#2bbda3] text-white shadow-xs"
                   : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
@@ -123,55 +80,88 @@ export default function BuyRefurbishedLaptopsPage() {
           ))}
         </div>
 
-        {/* Laptop Cards Grid */}
+        {/* Product Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs hover:border-[#2bbda3]/40 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="px-2.5 py-0.5 rounded-md bg-teal-50 text-[#2bbda3] text-xs font-bold">
-                    Grade: {item.grade}
-                  </span>
-                  <div className="flex items-center gap-1 text-xs text-amber-500 font-bold">
-                    <Star className="w-3.5 h-3.5 fill-current" /> {item.rating}
+          {loading ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs animate-pulse space-y-4">
+                <div className="h-4 w-24 bg-gray-100 rounded" />
+                <div className="w-full h-44 bg-gray-100 rounded-xl" />
+                <div className="h-5 w-3/4 bg-gray-100 rounded" />
+                <div className="h-4 w-1/2 bg-gray-100 rounded" />
+                <div className="h-8 w-full bg-gray-100 rounded-xl" />
+              </div>
+            ))
+          ) : filtered.length === 0 ? (
+            <div className="col-span-full py-12 text-center text-gray-500 bg-white rounded-2xl border border-gray-100">
+              No laptops found matching the selected brand.
+            </div>
+          ) : (
+            filtered.map((item) => {
+              const imageUrl = item.images?.[0]?.url || getCloudinaryUrl("/cashify/laptop-dell-3410-i5.png");
+              const compareAtPrice = item.compareAtPrice || Math.round(item.price * 1.5);
+              const percentOff = compareAtPrice > item.price
+                ? Math.round(((compareAtPrice - item.price) / compareAtPrice) * 100)
+                : null;
+
+              return (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs hover:border-[#2bbda3]/40 transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="px-2.5 py-0.5 rounded-md bg-teal-50 text-[#2bbda3] text-xs font-bold">
+                        Grade: {item.condition || "Flawless"}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs text-amber-500 font-bold">
+                        <Star className="w-3.5 h-3.5 fill-current" /> {item.rating || 4.8}
+                      </div>
+                    </div>
+
+                    <div className="w-full h-44 bg-gray-50 rounded-xl mb-4 flex items-center justify-center p-3 overflow-hidden">
+                      <img
+                        src={imageUrl}
+                        alt={item.name}
+                        loading="lazy"
+                        className="max-h-full max-w-full object-contain hover:scale-105 transition duration-300"
+                      />
+                    </div>
+
+                    <h3 className="font-bold text-gray-900 text-base line-clamp-1">{item.name}</h3>
+                    <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5" /> 12 Months Comprehensive Warranty
+                    </p>
+
+                    <div className="mt-4 pt-4 border-t border-gray-100 flex items-baseline gap-2">
+                      <span className="text-xl font-extrabold text-[#2bbda3]">
+                        ₹{item.price.toLocaleString("en-IN")}
+                      </span>
+                      {compareAtPrice > item.price && (
+                        <>
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{compareAtPrice.toLocaleString("en-IN")}
+                          </span>
+                          <span className="text-xs font-bold text-emerald-600">
+                            Save {percentOff}%
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-5">
+                    <Link
+                      href={`/product/${item.slug || item._id}`}
+                      className="w-full py-2.5 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                    >
+                      View Details &amp; Buy Now <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
                 </div>
-
-                <div className="w-full h-44 bg-gray-50 rounded-xl mb-4 flex items-center justify-center">
-                  <Laptop className="w-16 h-16 text-gray-300" />
-                </div>
-
-                <h3 className="font-bold text-gray-900 text-base">{item.name}</h3>
-                <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> {item.warranty}
-                </p>
-
-                <div className="mt-4 pt-4 border-t border-gray-100 flex items-baseline gap-2">
-                  <span className="text-xl font-extrabold text-[#2bbda3]">
-                    ₹{item.price.toLocaleString("en-IN")}
-                  </span>
-                  <span className="text-xs text-gray-400 line-through">
-                    ₹{item.mrp.toLocaleString("en-IN")}
-                  </span>
-                  <span className="text-xs font-bold text-emerald-600">
-                    Save {Math.round(((item.mrp - item.price) / item.mrp) * 100)}%
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-5">
-                <Link
-                  href="/buy-refurbished"
-                  className="w-full py-2.5 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-                >
-                  View Details &amp; Buy Now <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          ))}
+              );
+            })
+          )}
         </div>
       </div>
     </div>

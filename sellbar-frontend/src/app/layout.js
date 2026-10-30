@@ -58,7 +58,7 @@ const jsonLd = {
             '@id': 'https://sellbar.in/#organization',
             name: 'Sellbar Technologies India Pvt. Ltd.',
             url: 'https://sellbar.in',
-            logo: 'https://sellbar.in/services/sell-phone.webp',
+            logo: 'https://res.cloudinary.com/dbd4anwt/image/upload/v1793353866/sellbar/services/sell-phone.webp',
             sameAs: [
                 'https://twitter.com/sellbar_in',
                 'https://www.linkedin.com/company/sellbar-india',
