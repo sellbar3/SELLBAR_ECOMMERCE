@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { ShieldCheck, Truck, Sparkles } from 'lucide-react';
 export default function Footer() {
   return (<footer className="bg-[#f7f8f9] text-[#555555] border-t border-gray-200/80 text-[13px] mt-16 antialiased">
     {/* Main Footer Container */}
@@ -302,33 +301,11 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Copyright & Trust Badges */}
-        <div className="border-t border-gray-200/90 mt-10 pt-6 space-y-4">
-          {/* Trust Highlights */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-gray-600">
-            <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#2bbda3]" />
-              <span>100% Safe Payments</span>
-            </span>
-            <span className="hidden sm:inline text-gray-300">•</span>
-            <span className="inline-flex items-center gap-1.5">
-              <Truck className="w-4 h-4 text-[#2bbda3]" />
-              <span>Free Doorstep Pickup</span>
-            </span>
-            <span className="hidden sm:inline text-gray-300">•</span>
-            <span className="inline-flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#2bbda3]" />
-              <span>Verified Refurbished Tech</span>
-            </span>
-          </div>
-
-          {/* Copyright & Creator Credit */}
-          <div className="pt-4 border-t border-gray-200/60 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-[#666666]">
-            <p className="text-center sm:text-left">
-              &copy; 2026 <span className="font-semibold text-gray-800">Sellbar</span>. All rights reserved.
-            </p>
-            <p className="text-center sm:text-right">
-              Created By{' '}
+        {/* Bottom Copyright & Trust Badges (One Single Line Layout) */}
+        <div className="border-t border-gray-200/80 mt-8 pt-4 text-center text-xs text-[#666666]">
+          <p className="m-0 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            <span>
+              &copy; 2026 <strong className="font-semibold text-gray-800">Sellbar</strong>. Created By{' '}
               <a
                 href="https://maajankiwebtech.com"
                 target="_blank"
@@ -337,8 +314,9 @@ export default function Footer() {
               >
                 Maajanki Web Tech
               </a>
-            </p>
-          </div>
+              . All rights reserved.
+            </span>
+          </p>
         </div>
 
       </div>
