@@ -270,8 +270,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/lp/ccu" className="hover:text-[#2bbda3] transition-colors">
-                  Cashify Comedy Universe
+                <Link href="/about" className="hover:text-[#2bbda3] transition-colors">
+                  Sellbar Community
                 </Link>
               </li>
             </ul>
@@ -299,6 +299,25 @@ export default function Footer() {
             </Link>
           </div>
 
+        </div>
+
+        {/* Bottom Copyright & Trust Badges */}
+        <div className="border-t border-gray-200/80 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[#666666] text-center md:text-left">
+          <p>
+            &copy; 2026 Sellbar. Created By{' '}
+            <a
+              href="https://maajankiwebtech.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-gray-800 hover:text-[#2bbda3] transition-colors underline decoration-[#2bbda3]/40 underline-offset-2"
+            >
+              Maajanki Web Tech
+            </a>
+            . All rights reserved.
+          </p>
+          <p className="font-medium text-gray-600">
+            100% Safe Payments, Free Doorstep Pickup, Verified Refurbished Tech
+          </p>
         </div>
 
       </div>
