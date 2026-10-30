@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 const Vendor = require("../../models/Vendor");
 const { generateToken } = require("../../utils/generateToken");
@@ -229,4 +230,71 @@ exports.registerVendor = async (req, res, next) => {
 
     next(error);
   }
+};
+
+exports.getMe = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const cookieToken = req.cookies?.token;
+    const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : cookieToken;
+
+    if (!token) {
+      return res.status(200).json({
+        success: false,
+        authenticated: false,
+        user: null,
+      });
+    }
+
+    try {
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_ACCESS_SECRET,
+        {
+          issuer: "sellbar-api",
+          audience: "sellbar-client",
+        }
+      );
+
+      const user = await User.findById(decoded.sub).select("-password");
+      if (!user || user.status !== "active") {
+        return res.status(200).json({
+          success: false,
+          authenticated: false,
+          user: null,
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        authenticated: true,
+        data: {
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            phone: user.phone || "",
+          },
+        },
+      });
+    } catch {
+      return res.status(200).json({
+        success: false,
+        authenticated: false,
+        user: null,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.logout = async (req, res) => {
+  res.clearCookie("token");
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
 };

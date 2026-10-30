@@ -55,10 +55,30 @@ async function bootstrapAdmin() {
 }
 
 async function startServer() {
-  await connectDB();
-  await bootstrapAdmin();
-
   const port = Number(process.env.PORT) || 5000;
+
+  try {
+    await connectDB();
+    await bootstrapAdmin();
+  } catch (dbErr) {
+    logger.error("MongoDB not yet connected (" + (dbErr.message || dbErr) + ").");
+    logger.info("SELLBAR backend server starting; database retry will continue in background.");
+
+    let retrying = false;
+    const retryInterval = setInterval(async () => {
+      if (retrying || mongoose.connection.readyState === 1) return;
+      retrying = true;
+      try {
+        await connectDB();
+        await bootstrapAdmin();
+        clearInterval(retryInterval);
+      } catch {
+        // Will retry on next tick
+      } finally {
+        retrying = false;
+      }
+    }, 10000);
+  }
 
   const server = app.listen(port, () => {
     logger.info(`SELLBAR API running on port ${port}`);

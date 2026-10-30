@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/+$/, "");
+
 const nextConfig = {
   /* config options here */
   experimental: {
@@ -14,6 +16,46 @@ const nextConfig = {
         as: "*.css",
       },
     },
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/public/:path*",
+        destination: `${backendUrl}/public/:path*`,
+      },
+      {
+        source: "/api/products/:path*",
+        destination: `${backendUrl}/products/:path*`,
+      },
+      {
+        source: "/api/categories/:path*",
+        destination: `${backendUrl}/categories/:path*`,
+      },
+      {
+        source: "/api/cart/:path*",
+        destination: `${backendUrl}/cart/:path*`,
+      },
+      {
+        source: "/api/orders/:path*",
+        destination: `${backendUrl}/orders/:path*`,
+      },
+      {
+        source: "/api/vendor/:path*",
+        destination: `${backendUrl}/vendor/:path*`,
+      },
+      {
+        source: "/api/admin/:path*",
+        destination: `${backendUrl}/admin/:path*`,
+      },
+      {
+        source: "/api/payments/:path*",
+        destination: `${backendUrl}/payments/:path*`,
+      },
+      {
+        source: "/api/reviews/:path*",
+        destination: `${backendUrl}/reviews/:path*`,
+      },
+    ];
   },
 };
 

@@ -19,7 +19,7 @@ export async function POST(request) {
       const backendRes = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, role: body.role || "customer" }),
       });
       const data = await backendRes.json();
       if (backendRes.ok && data.success) {

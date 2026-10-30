@@ -1,0 +1,13 @@
+{
+  "name": "sellbar-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SELLBAR Refurbished E-Commerce Platform (Frontend + Backend)",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix sellbar-frontend run dev",
+    "build:frontend": "npm --prefix sellbar-frontend run build",
+    "start:backend": "npm --prefix backend start",
+    "start:frontend": "npm --prefix sellbar-frontend start"
+  }
+}

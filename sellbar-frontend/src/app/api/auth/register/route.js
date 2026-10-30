@@ -15,6 +15,41 @@ export async function POST(request) {
       );
     }
 
+    // Try backend registration if available
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    try {
+      const backendRes = await fetch(`${API_URL}/auth/register/customer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await backendRes.json();
+      if (backendRes.ok && data.success) {
+        const registeredUser = data.data?.user || { name, email, role: "customer" };
+        const sessionData = {
+          token: data.data?.token || `sellbar_jwt_${Date.now()}`,
+          user: registeredUser,
+        };
+        const response = NextResponse.json({
+          success: true,
+          message: data.message || "Registration successful",
+          user: registeredUser,
+          token: sessionData.token,
+        });
+        response.cookies.set({
+          name: "sellbar_session",
+          value: encodeURIComponent(JSON.stringify(sessionData)),
+          path: "/",
+          maxAge: 30 * 24 * 60 * 60,
+        });
+        return response;
+      } else if (data.message) {
+        return NextResponse.json({ success: false, message: data.message }, { status: backendRes.status || 400 });
+      }
+    } catch {
+      // Backend unavailable or starting up, fall back seamlessly
+    }
+
     const user = {
       id: `usr_${Date.now()}`,
       name: name || "Customer",

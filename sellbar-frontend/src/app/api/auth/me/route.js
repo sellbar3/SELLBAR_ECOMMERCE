@@ -23,6 +23,23 @@ export async function GET(request) {
     }
 
     if (!user && bearerToken) {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      try {
+        const backendRes = await fetch(`${API_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${bearerToken}` },
+        });
+        const data = await backendRes.json();
+        if (backendRes.ok && data.success && (data.data?.user || data.user)) {
+          return NextResponse.json({
+            success: true,
+            authenticated: true,
+            user: data.data?.user || data.user,
+          });
+        }
+      } catch {
+        // Fallback to local parsing
+      }
+
       try {
         const parts = bearerToken.split(".");
         if (parts.length === 3) {
