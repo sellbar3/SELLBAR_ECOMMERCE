@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import cachedProducts from "@/config/products-cache.json";
 
 const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/+$/, "");
+let backendOfflineUntil = 0;
 
 export async function GET(request, { params }) {
   const resolvedParams = await params;
@@ -11,29 +12,33 @@ export async function GET(request, { params }) {
   const queryString = searchParams.toString();
   const targetUrl = `${backendUrl}/public/${endpoint}${queryString ? `?${queryString}` : ""}`;
 
-  // 1. Try to fetch from live backend with a 1.5s timeout
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1500);
+  // 1. Try live backend if not currently in offline cooldown
+  const now = Date.now();
+  if (now > backendOfflineUntil) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 350);
 
-    const res = await fetch(targetUrl, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      signal: controller.signal,
-      cache: "no-store",
-    });
+      const res = await fetch(targetUrl, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        cache: "no-store",
+      });
 
-    clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
 
-    if (res.ok) {
-      const data = await res.json();
-      return NextResponse.json(data, { status: 200 });
+      if (res.ok) {
+        const data = await res.json();
+        return NextResponse.json(data, { status: 200 });
+      }
+    } catch {
+      // Backend not running locally -> enter silent cache-serving mode for 30 seconds
+      backendOfflineUntil = Date.now() + 30000;
     }
-  } catch {
-    // Backend offline / connection refused -> seamlessly fallback to cache
   }
 
-  // 2. Offline / resilient fallback using cached electronics database
+  // 2. Offline / resilient fallback using certified electronics cache
   if (endpoint.startsWith("categories")) {
     return NextResponse.json({
       success: true,
@@ -66,13 +71,38 @@ export async function GET(request, { params }) {
 
   if (endpoint.startsWith("products/")) {
     // Single product lookup
-    const idOrSlug = decodeURIComponent(endpoint.replace("products/", "")).toLowerCase().trim();
-    const product = cachedProducts.find(
+    const rawIdOrSlug = decodeURIComponent(endpoint.replace("products/", "")).trim();
+    const idOrSlug = rawIdOrSlug.toLowerCase();
+
+    // 1. Exact match by _id, slug, or sku
+    let product = cachedProducts.find(
       (p) =>
-        p._id === idOrSlug ||
+        p._id === rawIdOrSlug ||
         p.slug?.toLowerCase() === idOrSlug ||
         p.sku?.toLowerCase() === idOrSlug
     );
+
+    // 2. Normalized name match
+    if (!product) {
+      const cleanTarget = idOrSlug.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      product = cachedProducts.find((p) => {
+        const pClean = p.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        return (
+          pClean === cleanTarget ||
+          pClean?.includes(cleanTarget) ||
+          cleanTarget?.includes(pClean)
+        );
+      });
+    }
+
+    // 3. Fallback partial slug match
+    if (!product) {
+      product = cachedProducts.find(
+        (p) =>
+          p.slug &&
+          (p.slug.toLowerCase().includes(idOrSlug) || idOrSlug.includes(p.slug.toLowerCase()))
+      );
+    }
 
     if (product) {
       const relatedProducts = cachedProducts
@@ -90,7 +120,7 @@ export async function GET(request, { params }) {
     );
   }
 
-  // Products listing with filters
+  // Products listing with robust category & filters handling
   let list = Array.isArray(cachedProducts) ? [...cachedProducts] : [];
   const category = searchParams.get("category");
   const brand = searchParams.get("brand");
@@ -105,8 +135,18 @@ export async function GET(request, { params }) {
   if (category) {
     const cat = category.toLowerCase().trim();
     list = list.filter((p) => {
-      const pCat = (typeof p.category === "object" ? p.category?.slug || p.category?.name : p.category || "").toLowerCase();
-      return pCat === cat || pCat.includes(cat);
+      const pCatSlug = (typeof p.category === "object" ? p.category?.slug : p.category || "").toLowerCase();
+      const pCatName = (typeof p.category === "object" ? p.category?.name : "").toLowerCase();
+      return (
+        pCatSlug === cat ||
+        pCatName === cat ||
+        (cat.includes("laptop") && (pCatSlug.includes("laptop") || pCatName.includes("laptop"))) ||
+        (cat.includes("phone") && (pCatSlug.includes("phone") || pCatName.includes("phone"))) ||
+        (cat.includes("tablet") && (pCatSlug.includes("tablet") || pCatName.includes("tablet"))) ||
+        (cat.includes("watch") && (pCatSlug.includes("watch") || pCatName.includes("watch"))) ||
+        (cat.includes("camera") && (pCatSlug.includes("camera") || pCatName.includes("camera"))) ||
+        (cat.includes("console") && (pCatSlug.includes("console") || pCatName.includes("console")))
+      );
     });
   }
 

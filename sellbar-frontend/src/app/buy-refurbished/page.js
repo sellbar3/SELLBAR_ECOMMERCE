@@ -101,7 +101,21 @@ export default function BuyRefurbishedPage() {
     let list = [...products];
 
     if (category !== "All") {
-      list = list.filter((p) => p.category === category);
+      const targetCat = category.toLowerCase().trim();
+      list = list.filter((p) => {
+        const pCatName = (typeof p.category === "object" ? p.category?.name : p.category || "").toLowerCase();
+        const pCatSlug = (typeof p.category === "object" ? p.category?.slug : p.category || "").toLowerCase();
+        return (
+          pCatName === targetCat ||
+          pCatSlug === targetCat ||
+          (targetCat.includes("laptop") && (pCatSlug.includes("laptop") || pCatName.includes("laptop"))) ||
+          (targetCat.includes("phone") && (pCatSlug.includes("phone") || pCatName.includes("phone"))) ||
+          (targetCat.includes("tablet") && (pCatSlug.includes("tablet") || pCatName.includes("tablet"))) ||
+          (targetCat.includes("watch") && (pCatSlug.includes("watch") || pCatName.includes("watch"))) ||
+          (targetCat.includes("camera") && (pCatSlug.includes("camera") || pCatName.includes("camera"))) ||
+          (targetCat.includes("console") && (pCatSlug.includes("console") || pCatName.includes("console")))
+        );
+      });
     }
 
     if (maxPrice > 0) {

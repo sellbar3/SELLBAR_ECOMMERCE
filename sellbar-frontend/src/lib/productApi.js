@@ -5,21 +5,72 @@
 
 import cachedProducts from "@/config/products-cache.json";
 
+// In-flight request deduplication map to prevent redundant concurrent fetches
+const inFlightRequests = new Map();
+
+function normalizeCategory(cat) {
+  if (!cat) return "";
+  const s = String(cat).toLowerCase().trim();
+  if (s === "laptop" || s === "laptops") return "laptop";
+  if (
+    s === "mobile-phone" ||
+    s === "mobile-phones" ||
+    s === "phone" ||
+    s === "phones" ||
+    s === "mobile" ||
+    s === "mobiles"
+  )
+    return "mobile-phones";
+  if (s === "tablet" || s === "tablets") return "tablets";
+  if (
+    s === "smart-watch" ||
+    s === "smart-watches" ||
+    s === "smartwatch" ||
+    s === "smartwatches" ||
+    s === "watches"
+  )
+    return "smart-watches";
+  if (s === "camera" || s === "cameras") return "cameras";
+  if (
+    s === "gaming-console" ||
+    s === "gaming-consoles" ||
+    s === "gaming" ||
+    s === "console" ||
+    s === "consoles"
+  )
+    return "gaming-consoles";
+  return s;
+}
+
 function getFallbackFiltered(params = {}) {
   let list = Array.isArray(cachedProducts) ? [...cachedProducts] : [];
 
   if (params.category) {
-    const cat = String(params.category).toLowerCase().trim();
+    const targetCat = normalizeCategory(params.category);
     list = list.filter((p) => {
-      const pCatSlug = (typeof p.category === "object" ? p.category?.slug || p.category?.name : p.category || "").toLowerCase();
-      return pCatSlug === cat || pCatSlug.includes(cat);
+      const pCat = (
+        typeof p.category === "object"
+          ? p.category?.slug || p.category?.name
+          : p.category || ""
+      ).toLowerCase();
+      const normPCat = normalizeCategory(pCat);
+      return (
+        normPCat === targetCat ||
+        pCat === targetCat ||
+        pCat.includes(targetCat) ||
+        targetCat.includes(pCat)
+      );
     });
   }
 
   if (params.brand) {
     const b = String(params.brand).toLowerCase().trim();
     list = list.filter((p) => {
-      const pBrand = (typeof p.brand === "object" ? p.brand?.name || p.brand?.slug : p.brand || "").toLowerCase();
+      const pBrand = (
+        typeof p.brand === "object"
+          ? p.brand?.name || p.brand?.slug
+          : p.brand || ""
+      ).toLowerCase();
       return pBrand === b || pBrand.includes(b);
     });
   }
@@ -29,7 +80,10 @@ function getFallbackFiltered(params = {}) {
   }
 
   if (params.isFeatured !== undefined) {
-    const isF = params.isFeatured === true || params.isFeatured === "true" || params.isFeatured === "1";
+    const isF =
+      params.isFeatured === true ||
+      params.isFeatured === "true" ||
+      params.isFeatured === "1";
     list = list.filter((p) => Boolean(p.isFeatured) === isF);
   }
 
@@ -61,7 +115,9 @@ function getFallbackFiltered(params = {}) {
   } else if (params.sort === "rating") {
     list.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
   } else if (params.sort === "popular") {
-    list.sort((a, b) => (Number(b.reviewsCount) || 0) - (Number(a.reviewsCount) || 0));
+    list.sort(
+      (a, b) => (Number(b.reviewsCount) || 0) - (Number(a.reviewsCount) || 0)
+    );
   }
 
   const total = list.length;
@@ -82,47 +138,66 @@ function getFallbackFiltered(params = {}) {
 }
 
 export async function fetchProducts(params = {}) {
-  try {
-    const query = new URLSearchParams();
-    if (params.category) query.set("category", params.category);
-    if (params.brand) query.set("brand", params.brand);
-    if (params.isFeatured !== undefined) query.set("isFeatured", String(params.isFeatured));
-    if (params.featuredType) query.set("featuredType", params.featuredType);
-    if (params.search) query.set("search", params.search);
-    if (params.minPrice) query.set("minPrice", String(params.minPrice));
-    if (params.maxPrice) query.set("maxPrice", String(params.maxPrice));
-    if (params.sort) query.set("sort", params.sort);
-    if (params.page) query.set("page", String(params.page));
-    if (params.limit) query.set("limit", String(params.limit));
+  const query = new URLSearchParams();
+  if (params.category) query.set("category", params.category);
+  if (params.brand) query.set("brand", params.brand);
+  if (params.isFeatured !== undefined)
+    query.set("isFeatured", String(params.isFeatured));
+  if (params.featuredType) query.set("featuredType", params.featuredType);
+  if (params.search) query.set("search", params.search);
+  if (params.minPrice) query.set("minPrice", String(params.minPrice));
+  if (params.maxPrice) query.set("maxPrice", String(params.maxPrice));
+  if (params.sort) query.set("sort", params.sort);
+  if (params.page) query.set("page", String(params.page));
+  if (params.limit) query.set("limit", String(params.limit));
 
-    const url = `/api/public/products${query.toString() ? `?${query.toString()}` : ""}`;
-    const res = await fetch(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
-
-    if (res.ok) {
-      const json = await res.json();
-      if (json?.data?.products) {
-        return json.data;
-      }
-    }
-    // Graceful fallback to verified certified electronics data
-    return getFallbackFiltered(params);
-  } catch (error) {
-    return getFallbackFiltered(params);
+  const cacheKey = `products_${query.toString()}`;
+  if (inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey);
   }
+
+  const fetchPromise = (async () => {
+    try {
+      const url = `/api/public/products${
+        query.toString() ? `?${query.toString()}` : ""
+      }`;
+      const res = await fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json?.data?.products) {
+          return json.data;
+        }
+      }
+      return getFallbackFiltered(params);
+    } catch {
+      return getFallbackFiltered(params);
+    } finally {
+      setTimeout(() => inFlightRequests.delete(cacheKey), 800);
+    }
+  })();
+
+  inFlightRequests.set(cacheKey, fetchPromise);
+  return fetchPromise;
 }
 
 export async function fetchProductByIdOrSlug(idOrSlug) {
   try {
     if (!idOrSlug) return null;
-    const res = await fetch(`/api/public/products/${encodeURIComponent(idOrSlug)}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-    });
+    const cleanId = String(idOrSlug).trim();
+
+    const res = await fetch(
+      `/api/public/products/${encodeURIComponent(cleanId)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+      }
+    );
 
     if (res.ok) {
       const json = await res.json();
@@ -131,15 +206,19 @@ export async function fetchProductByIdOrSlug(idOrSlug) {
       }
     }
 
-    // Fallback lookup from cache
-    const target = String(idOrSlug).toLowerCase().trim();
-    const product = cachedProducts.find(
-      (p) =>
-        p._id === idOrSlug ||
-        p.slug?.toLowerCase() === target ||
-        p.sku?.toLowerCase() === target ||
-        p.name?.toLowerCase().replace(/\s+/g, "-") === target
-    );
+    // Comprehensive Fallback lookup from cache
+    const target = cleanId.toLowerCase();
+    const cleanSlugTarget = target.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+    const product = cachedProducts.find((p) => {
+      if (p._id === cleanId) return true;
+      if (p.slug?.toLowerCase() === target) return true;
+      if (p.sku?.toLowerCase() === target) return true;
+      const pClean = p.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+      if (pClean === cleanSlugTarget) return true;
+      if (p.slug && (p.slug.toLowerCase().includes(target) || target.includes(p.slug.toLowerCase()))) return true;
+      return false;
+    });
 
     if (!product) return null;
 
@@ -148,7 +227,7 @@ export async function fetchProductByIdOrSlug(idOrSlug) {
       .slice(0, 4);
 
     return { product, relatedProducts };
-  } catch (error) {
+  } catch {
     const target = String(idOrSlug || "").toLowerCase().trim();
     const product = cachedProducts.find(
       (p) =>
@@ -182,7 +261,7 @@ export async function fetchFeaturedProducts(type = "") {
 
     const fallback = getFallbackFiltered({ featuredType: type || undefined });
     return fallback.products;
-  } catch (error) {
+  } catch {
     const fallback = getFallbackFiltered({ featuredType: type || undefined });
     return fallback.products;
   }
@@ -211,7 +290,7 @@ export async function fetchCategories() {
       { name: "Cameras", slug: "cameras", count: 2 },
       { name: "Gaming Consoles", slug: "gaming-consoles", count: 2 },
     ];
-  } catch (error) {
+  } catch {
     return [
       { name: "Mobile Phones", slug: "mobile-phones", count: 9 },
       { name: "Laptops", slug: "laptop", count: 6 },
