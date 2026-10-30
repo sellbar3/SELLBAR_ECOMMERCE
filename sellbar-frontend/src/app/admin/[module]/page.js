@@ -274,7 +274,13 @@ function AdminModuleContent() {
     ? params.module[0]
     : params.module;
 
-  const config = MODULES[moduleName];
+  const isKnownModule = !!MODULES[moduleName];
+  const config = MODULES[moduleName] || {
+    title: moduleName || "Module",
+    fields: [],
+    statuses: ["Pending"],
+    initial: [],
+  };
 
   const [rows, setRows] = useState([]);
   const [ready, setReady] = useState(false);
@@ -294,7 +300,7 @@ function AdminModuleContent() {
     setFilter("All");
     setError("");
 
-    if (!config) return;
+    if (!isKnownModule) return;
 
     setRows(readRecords(moduleName, config.initial));
     setReady(true);

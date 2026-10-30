@@ -22,7 +22,7 @@ export default function PanelShell({ role, title, children }) {
   useEffect(() => {
     const s = getPanelSession(role);
     if (!s) {
-      router.replace("/panel-login");
+      router.replace(role === "admin" ? "/admin/login" : "/vendor/login");
       return;
     }
     setSession(s);
@@ -61,7 +61,7 @@ export default function PanelShell({ role, title, children }) {
             <button
               onClick={() => {
                 clearPanelSession();
-                router.replace("/panel-login");
+                router.replace(role === "admin" ? "/admin/login" : "/vendor/login");
               }}
             >
               Logout
