@@ -603,10 +603,6 @@ node backend/src/scripts/export-cache.js
 
 ---
 
-## 👥 Contributors & License
+## 👥 Maintained & License
 
-We welcome contributions from developers, designers, and testers! Feel free to open issues or submit pull requests.
-
-- View all contributors: [GitHub Contributors Graph](https://github.com/sellbar3/SELLBAR_ECOMMERCE/graphs/contributors)
-- Maintained by: **Sellbar Engineering Team** & [Maajanki Web Tech](https://maajankiwebtech.com)
-- Licensed under the **MIT License**.
+- Maintained by: Maajanki Web Tech(https://maajankiwebtech.com).
