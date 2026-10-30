@@ -8,10 +8,10 @@ export default function Footer() {
     <footer className="bg-[#f7f8f9] text-[#555555] border-t border-gray-200/80 text-[13px] mt-16 antialiased">
       {/* Main Footer Container */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
-        
+
         {/* 6-Column Grid Layout (Exact Structure) */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-6 items-start">
-          
+
           {/* Column 1: Brand Logo & Social Icons */}
           <div className="col-span-2 md:col-span-3 lg:col-span-1 flex flex-col space-y-5">
             {/* Logo */}
@@ -360,7 +360,7 @@ export default function Footer() {
               href="https://maajankiwebtech.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-gray-800 hover:text-[#2bbda3] transition-colors underline decoration-[#2bbda3]/40 underline-offset-2 hover:decoration-[#2bbda3]"
+              className="font-semibold text-gray-800 hover:text-[#2bbda3] transition-colors"
             >
               Maajanki Web Tech
             </a>
