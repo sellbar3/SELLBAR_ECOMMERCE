@@ -195,7 +195,7 @@ exports.getProductById = async (req, res, next) => {
 
     const product = await Product.findOne(query)
       .select(
-        "name slug description category brand price compareAtPrice stock images tags vendor rating reviewsCount badge condition featuredType specs isFeatured createdAt"
+        "name slug description category brand sku modelNumber price compareAtPrice stock images tags vendor rating reviewsCount badge condition featuredType specs specifications warranty whatInTheBox variants customerReviews faqs isFeatured createdAt"
       )
       .populate("category", "name slug")
       .populate("vendor", "storeName")
@@ -218,7 +218,7 @@ exports.getProductById = async (req, res, next) => {
         { brand: product.brand }
       ]
     })
-      .select("name slug brand price compareAtPrice images rating reviewsCount badge condition")
+      .select("name slug brand price compareAtPrice images rating reviewsCount badge condition stock category")
       .limit(4)
       .lean();
 

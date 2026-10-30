@@ -168,6 +168,59 @@ const productSchema = new mongoose.Schema(
         value: { type: String, trim: true },
       },
     ],
+
+    modelNumber: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    warranty: {
+      type: String,
+      trim: true,
+      default: "12 Months Doorstep Replacement Warranty",
+    },
+
+    whatInTheBox: {
+      type: [String],
+      default: [],
+    },
+
+    variants: [
+      {
+        name: { type: String, trim: true },
+        sku: { type: String, trim: true },
+        price: { type: Number, required: true },
+        compareAtPrice: { type: Number },
+        stock: { type: Number, default: 5 },
+        attributes: { type: mongoose.Schema.Types.Mixed, default: {} },
+        image: { type: String, trim: true },
+      },
+    ],
+
+    specifications: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
+
+    customerReviews: [
+      {
+        reviewerName: { type: String, required: true },
+        rating: { type: Number, default: 5 },
+        title: { type: String, default: "" },
+        comment: { type: String, default: "" },
+        date: { type: String, default: "" },
+        verifiedBuyer: { type: Boolean, default: true },
+        photos: [{ type: String }],
+      },
+    ],
+
+    faqs: [
+      {
+        question: { type: String, required: true },
+        answer: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,
