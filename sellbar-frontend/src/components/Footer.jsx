@@ -301,21 +301,19 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Copyright & Trust Badges (One Single Line Layout) */}
-        <div className="border-t border-gray-200/80 mt-8 pt-4 text-center text-xs text-[#666666]">
-          <p className="m-0 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
-            <span>
-              &copy; 2026 <strong className="font-semibold text-gray-800">Sellbar</strong>. Created By{' '}
-              <a
-                href="https://maajankiwebtech.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-gray-800 hover:text-[#2bbda3] transition-colors underline decoration-[#2bbda3]/40 underline-offset-2 hover:decoration-[#2bbda3]"
-              >
-                Maajanki Web Tech
-              </a>
-              . All rights reserved.
-            </span>
+        {/* Bottom Copyright (Strictly 1 Row) */}
+        <div className="border-t border-gray-200/80 mt-8 pt-4 flex items-center justify-center text-center text-xs text-[#666666]">
+          <p className="m-0 whitespace-nowrap">
+            &copy; 2026 <strong className="font-semibold text-gray-800">Sellbar</strong>. Created By{' '}
+            <a
+              href="https://maajankiwebtech.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-gray-800 hover:text-[#2bbda3] transition-colors underline decoration-[#2bbda3]/40 underline-offset-2 hover:decoration-[#2bbda3]"
+            >
+              Maajanki Web Tech
+            </a>
+            . All rights reserved.
           </p>
         </div>
 
