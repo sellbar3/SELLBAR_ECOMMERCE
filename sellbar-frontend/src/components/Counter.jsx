@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import './Counter.css';
+import '@/css/Counter.css';
 const ROOT = 'counter';
 const SR = 'counter__sr';
 const ROW = 'counter__row';

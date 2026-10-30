@@ -1,6 +1,6 @@
 "use client";
 
-import "./panel.css";
+import "@/css/panel.css";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";

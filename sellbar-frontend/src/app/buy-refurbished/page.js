@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import "@/components/Refurb.css";
+import "@/css/Refurb.css";
 
 const API = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"

@@ -1,6 +1,6 @@
 "use client";
 
-import "../../components/panel.css";
+import "@/css/panel.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiRequest } from "../../lib/api";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import "@/components/Refurb.css";
+import "@/css/Refurb.css";
 
 function Pic({ src, alt, emoji }) {
   const [failed, setFailed] = useState(false);

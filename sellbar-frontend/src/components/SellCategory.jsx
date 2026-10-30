@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import "./Refurb.css";
-import "./Sell.css";
+import "@/css/Refurb.css";
+import "@/css/Sell.css";
 
 const CONDITIONS = [
   ["flawless", "Flawless", 1],

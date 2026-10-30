@@ -1,6 +1,6 @@
 'use client';
 import React, { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import './LogoLoop.css';
+import '@/css/LogoLoop.css';
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 const SMOOTH_TAU = 0.25;
 const GLIDE_TAU = 0.8;

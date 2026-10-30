@@ -2,7 +2,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import './FoldText.css';
+import '@/css/FoldText.css';
 if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 }
