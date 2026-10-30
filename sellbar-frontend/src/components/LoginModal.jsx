@@ -89,6 +89,9 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
             if (data.success) {
                 // Trigger cart / auth sync across the application
                 if (typeof window !== 'undefined') {
+                    if (data.token) {
+                        localStorage.setItem('sellbar_session', JSON.stringify({ token: data.token, user: data.user }));
+                    }
                     window.dispatchEvent(new Event('sellbar-cart-updated'));
                     window.dispatchEvent(new CustomEvent('sellbar-user-logged-in', { detail: data.user }));
                 }
