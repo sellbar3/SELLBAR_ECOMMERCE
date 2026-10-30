@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ShieldCheck, Lock, Mail, ArrowRight, ArrowLeft } from "lucide-react";
 import { apiRequest } from "../../../lib/api";
 import { savePanelSession } from "../../../lib/panel";
+import PortalShellWrapper from "../../../components/PortalShellWrapper";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -77,7 +78,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex flex-col justify-center items-center p-4 font-sans antialiased">
+    <PortalShellWrapper className="min-h-screen bg-[#f3f4f6] flex flex-col justify-center items-center p-4 font-sans antialiased">
       <div className="w-full max-w-md bg-white border border-gray-200/90 rounded-3xl p-7 sm:p-9 shadow-lg">
         {/* Header with Admin Shield */}
         <div className="text-center mb-7">
@@ -156,6 +157,6 @@ export default function AdminLoginPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </PortalShellWrapper>
   );
 }

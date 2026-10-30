@@ -31,7 +31,7 @@ export default function PanelShell({ role, title, children }) {
   if (!session) return <p className="pn-loading">Loading...</p>;
 
   return (
-    <div className="pn">
+    <div data-portal-shell="true" className="pn">
       <aside className="pn-side">
         <div className="pn-brand">
           SELL<span>BAR</span>

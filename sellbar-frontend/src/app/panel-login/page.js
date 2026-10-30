@@ -35,7 +35,7 @@ export default function PanelLogin() {
   }
 
   return (
-    <form className="pn-login" onSubmit={submit}>
+    <form data-portal-shell="true" className="pn-login" onSubmit={submit}>
       <h2 style={{ margin: 0 }}>SELLBAR Panel Login</h2>
       <select value={role} onChange={(e) => setRole(e.target.value)}>
         <option value="vendor">Vendor</option>

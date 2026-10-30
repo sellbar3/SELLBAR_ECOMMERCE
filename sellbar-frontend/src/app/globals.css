@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* Hide customer store Navbar & Footer on Admin and Vendor Portal pages */
+body:has([data-portal-shell]) header,
+body:has([data-portal-shell]) footer,
+body.portal-shell-active header,
+body.portal-shell-active footer {
+  display: none !important;
+}

@@ -90,13 +90,13 @@ const jsonLd = {
     ],
 };
 export default function RootLayout({ children, }) {
-    return (<html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    return (<html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
         <head>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </head>
         <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-[#f8fafc] text-gray-900 flex flex-col selection:bg-[#13b59b] selection:text-white`}>
             <Navbar />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 flex flex-col">{children}</main>
             <Footer />
         </body>
     </html>);

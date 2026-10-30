@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Store, Lock, Mail, ArrowRight, ArrowLeft } from "lucide-react";
 import { apiRequest } from "../../../lib/api";
 import { savePanelSession } from "../../../lib/panel";
+import PortalShellWrapper from "../../../components/PortalShellWrapper";
 
 export default function VendorLoginPage() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function VendorLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] flex flex-col justify-center items-center p-4 font-sans antialiased">
+    <PortalShellWrapper className="min-h-screen bg-[#f3f4f6] flex flex-col justify-center items-center p-4 font-sans antialiased">
       <div className="w-full max-w-md bg-white border border-gray-200/90 rounded-3xl p-7 sm:p-9 shadow-lg">
         {/* Header */}
         <div className="text-center mb-7">
@@ -145,16 +146,23 @@ export default function VendorLoginPage() {
           </button>
         </form>
 
-        <div className="mt-8 pt-5 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+        <div className="mt-5 text-center text-xs text-gray-500">
+          Want to sell on Sellbar?{" "}
+          <Link href="/vendor/signup" className="text-[#13b59b] font-bold hover:underline transition ml-1">
+            Register as Vendor
+          </Link>
+        </div>
+
+        <div className="mt-6 pt-5 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
           <Link href="/" className="inline-flex items-center gap-1 hover:text-[#13b59b] transition font-medium">
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Store
           </Link>
-          <Link href="/admin/login" className="text-gray-500 hover:text-gray-800 font-medium">
-            Admin Login &rarr;
+          <Link href="/vendor/signup" className="text-gray-600 hover:text-[#13b59b] font-medium transition inline-flex items-center gap-1">
+            Create Account &rarr;
           </Link>
         </div>
       </div>
-    </div>
+    </PortalShellWrapper>
   );
 }
