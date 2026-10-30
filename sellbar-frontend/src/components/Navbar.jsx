@@ -269,6 +269,11 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Active hover states inside dropdowns
+  const [allActiveSub, setAllActiveSub] = useState('sell');
+  const [allSellNestedSub, setAllSellNestedSub] = useState('phone');
+  const [gadgetActiveSub, setGadgetActiveSub] = useState('phone');
+  const [buyRefurbishedSub, setBuyRefurbishedSub] = useState('phones');
+  const [findGadgetSub, setFindGadgetSub] = useState('phone');
   const [allHoveredId, setAllHoveredId] = useState('phone');
   const [sellPhoneBrand, setSellPhoneBrand] = useState('apple');
   const [gadgetType, setGadgetType] = useState('phone');
@@ -707,812 +712,842 @@ export default function Navbar() {
         {/* ========================================================= */}
         {/* 2. SECONDARY CATEGORY BAR (Cashify 8 Menu Items With ∨)    */}
         {/* ========================================================= */}
-        <div className="border-t border-gray-200 bg-white relative">
+        <div className="border-t border-gray-200 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav
-              ref={navBarRef}
-              className="hidden lg:flex items-center justify-between text-sm py-2.5 font-bold text-gray-900"
-            >
-              {/* ===================================================== */}
-              {/* ITEM 1: ALL ∨ (Exact Menu from User Uploaded Screenshot) */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('all')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(activeDropdown === 'all' ? null : 'all');
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'all'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
+            <nav ref={navBarRef} className="hidden lg:flex items-center justify-between text-sm py-2.5">
+              
+              {/* ITEM 1: All ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('all')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'all' ? null : 'all');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'all'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
                   <span>All</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'all'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'all' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
                 </button>
 
-                {/* Dropdown for All: Exact layout from uploaded image */}
-                {activeDropdown === 'all' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    {/* Main Menu Card: EXACT MATCH TO USER'S IMAGE */}
-                    <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans">
-                        {/* Section: Sell (Bold title) */}
-                        <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
+                {/* Dropdown Menu for All: Matching Cashify Image 1 exactly */}
+                {activeDropdown === 'all' && (<div className="absolute left-0 top-full pt-2 z-50 w-[820px]">
+                    <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden flex">
+                      {/* Left categories list */}
+                      <div className="w-56 bg-white border-r border-gray-100 p-2.5 space-y-1 shrink-0">
+                        {/* Sell Section Header */}
+                        <div className="bg-[#e6f9f6] text-[#13b59b] font-bold px-3 py-2 text-xs rounded-lg mb-1">
                           Sell
                         </div>
 
-                        {/* Subitems under Sell (Indented, regular font, right chevron) */}
-                        <div className="space-y-0.5">
-                          {ALL_SUB_ITEMS.filter((i) => i.parent === 'sell').map(
-                            (item) => {
-                              const isHovered = allHoveredId === item.id;
-                              return (
-                                <Link
-                                  key={item.id}
-                                  href={item.href}
-                                  onMouseEnter={() => setAllHoveredId(item.id)}
-                                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] transition text-left cursor-pointer ${
-                                    isHovered
-                                      ? 'bg-[#EAF8F5] text-[#13b59b] font-medium'
-                                      : 'text-gray-800 font-normal hover:bg-gray-50'
-                                  }`}
-                                >
-                                  <span className="pl-3.5">{item.label}</span>
-                                  <ChevronRight
-                                    className={`w-4 h-4 stroke-[2] transition-colors ${
-                                      isHovered
-                                        ? 'text-[#13b59b]'
-                                        : 'text-gray-400'
-                                    }`}
-                                  />
-                                </Link>
-                              );
-                            }
-                          )}
-                        </div>
-
-                        {/* Root Categories under Sell (Bold font, aligned directly with Sell) */}
-                        <div className="pt-1 space-y-0.5">
-                          {ALL_SUB_ITEMS.filter((i) => i.isRoot).map(
-                            (item) => {
-                              const isHovered = allHoveredId === item.id;
-                              return (
-                                <Link
-                                  key={item.id}
-                                  href={item.href}
-                                  onMouseEnter={() =>
-                                    setAllHoveredId(item.id)
-                                  }
-                                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] font-bold transition text-left cursor-pointer ${
-                                    isHovered
-                                      ? 'bg-[#EAF8F5] text-[#13b59b]'
-                                      : 'text-gray-950 hover:bg-gray-50'
-                                  }`}
-                                >
-                                  <span>{item.label}</span>
-                                  <ChevronRight
-                                    className={`w-4 h-4 stroke-[2] transition-colors ${
-                                      isHovered
-                                        ? 'text-[#13b59b]'
-                                        : 'text-gray-700'
-                                    }`}
-                                  />
-                                </Link>
-                              );
-                            }
-                          )}
-                        </div>
-                      </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 2: SELL PHONE ∨                                  */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('sell-phone')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'sell-phone' ? null : 'sell-phone'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'sell-phone'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>Sell Phone</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'sell-phone'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'sell-phone' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="relative flex items-start">
-                      {/* Left Menu Card (Matches Second Image) */}
-                      <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans shrink-0">
-                        <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
-                          Sell Phone
-                        </div>
-                        <div className="space-y-0.5">
-                          {PHONE_BRANDS.map((b) => {
-                            const isHovered = sellPhoneBrand === b.id;
-                            return (
-                              <Link
-                                key={b.id}
-                                href={b.href}
-                                onMouseEnter={() => setSellPhoneBrand(b.id)}
-                                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] transition text-left cursor-pointer ${
-                                  isHovered
-                                    ? 'bg-[#EAF8F5] text-[#13b59b] font-medium'
-                                    : 'text-gray-800 font-normal hover:bg-gray-50'
-                                }`}
-                              >
-                                <span className="pl-3.5">{b.name}</span>
-                                <ChevronRight
-                                  className={`w-4 h-4 stroke-[2] transition-colors ${
-                                    isHovered ? 'text-[#13b59b]' : 'text-gray-400'
-                                  }`}
-                                />
-                              </Link>
-                            );
-                          })}
-                        </div>
-                        <div className="pt-2 border-t border-gray-100">
-                          <Link
-                            href="/sell-old-mobile-phone"
-                            className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[13px] font-bold text-[#13b59b] hover:bg-[#EAF8F5] transition"
-                          >
-                            <span>View All Phone Brands</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Right Submenu Flyout for Phone Brand */}
-                      {currentPhoneBrand && (
-                        <div
-                          className="ml-2 w-[420px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-5 shrink-0 flex flex-col justify-between font-sans min-h-[380px] animate-in fade-in-0 duration-150"
-                          onMouseEnter={() => {
-                            if (dropdownTimeoutRef.current)
-                              clearTimeout(dropdownTimeoutRef.current);
-                          }}
-                        >
-                          <div>
-                            <div className="flex items-center justify-between border-b border-gray-100 pb-2 mb-3">
-                              <h4 className="text-sm font-bold text-gray-900">
-                                Top Selling {currentPhoneBrand.name} Models
-                              </h4>
-                              <Link
-                                href={currentPhoneBrand.href}
-                                className="text-xs font-bold text-[#13b59b] hover:underline"
-                              >
-                                All Models →
-                              </Link>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2">
-                              {currentPhoneBrand.models.map((m, idx) => (
-                                <Link
-                                  key={idx}
-                                  href={currentPhoneBrand.href}
-                                  className="p-2.5 rounded-xl border border-gray-100 hover:border-[#13b59b] hover:bg-[#EAF8F5] transition flex items-center justify-between text-xs"
-                                >
-                                  <span className="font-medium text-gray-800 truncate">
-                                    {m.name}
-                                  </span>
-                                  <span className="font-bold text-[#13b59b] text-[11px] shrink-0 ml-1">
-                                    Up to {m.max}
-                                  </span>
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                            <span>Instant UPI cash payment at doorstep</span>
-                            <Link
-                              href="/sell-old-mobile-phone"
-                              className="font-bold text-[#13b59b] hover:underline"
-                            >
-                              Search Phone →
-                            </Link>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 3: SELL GADGETS ∨                                */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('sell-gadgets')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'sell-gadgets' ? null : 'sell-gadgets'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'sell-gadgets'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>Sell Gadgets</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'sell-gadgets'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'sell-gadgets' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans">
-                      <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
-                        Sell Gadgets
-                      </div>
-                      <div className="space-y-0.5">
-                        {GADGET_TYPES.map((g) => {
-                          const isHovered = gadgetType === g.id;
-                          return (
-                            <Link
-                              key={g.id}
-                              href={g.href}
-                              onMouseEnter={() => setGadgetType(g.id)}
-                              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] transition text-left cursor-pointer ${
-                                isHovered
-                                  ? 'bg-[#EAF8F5] text-[#13b59b] font-medium'
-                                  : 'text-gray-800 font-normal hover:bg-gray-50'
-                              }`}
-                            >
-                              <span className="pl-3.5">{g.label}</span>
-                              <ChevronRight
-                                className={`w-4 h-4 stroke-[2] transition-colors ${
-                                  isHovered ? 'text-[#13b59b]' : 'text-gray-400'
-                                }`}
-                              />
-                            </Link>
-                          );
-                        })}
-                      </div>
-                      <div className="pt-2 border-t border-gray-100">
-                        <Link
-                          href="/sell"
-                          className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[13px] font-bold text-[#13b59b] hover:bg-[#EAF8F5] transition"
-                        >
-                          <span>Explore All Gadgets</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 4: BUY REFURBISHED DEVICES ∨                     */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('buy-refurbished')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'buy-refurbished'
-                        ? null
-                        : 'buy-refurbished'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'buy-refurbished'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>Buy Refurbished Devices</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'buy-refurbished'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'buy-refurbished' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans">
-                      <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
-                        Buy Gadgets
-                      </div>
-                      <div className="space-y-0.5">
-                        {BUY_REFURB_CATEGORIES.map((c) => {
-                          const isHovered = buyRefurbCat === c.id;
-                          return (
-                            <Link
-                              key={c.id}
-                              href={c.href}
-                              onMouseEnter={() => setBuyRefurbCat(c.id)}
-                              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] transition text-left cursor-pointer ${
-                                isHovered
-                                  ? 'bg-[#EAF8F5] text-[#13b59b] font-medium'
-                                  : 'text-gray-800 font-normal hover:bg-gray-50'
-                              }`}
-                            >
-                              <span className="pl-3.5">{c.label}</span>
-                              <ChevronRight
-                                className={`w-4 h-4 stroke-[2] transition-colors ${
-                                  isHovered ? 'text-[#13b59b]' : 'text-gray-400'
-                                }`}
-                              />
-                            </Link>
-                          );
-                        })}
-                      </div>
-                      <div className="pt-2 border-t border-gray-100">
-                        <Link
-                          href="/buy-refurbished"
-                          className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[13px] font-bold text-[#13b59b] hover:bg-[#EAF8F5] transition"
-                        >
-                          <span>Explore Refurbished Catalog</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 5: FIND NEW GADGET ∨                             */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('find-new')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'find-new' ? null : 'find-new'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'find-new'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>Find New Gadget</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'find-new'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'find-new' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="bg-white border border-gray-200/90 rounded-2xl shadow-2xl p-3 w-[260px] text-gray-900 font-sans space-y-1">
-                      <Link
-                        href="/find-new-phone"
-                        className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-gray-800 hover:bg-[#f0faf8] hover:text-[#13b59b] transition"
-                      >
-                        <span>Find New Phone</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                      </Link>
-                      <Link
-                        href="/find-new-phone"
-                        className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-gray-800 hover:bg-[#f0faf8] hover:text-[#13b59b] transition"
-                      >
-                        <span>Find New Laptop</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                      </Link>
-                      <Link
-                        href="/find-new-phone"
-                        className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-gray-800 hover:bg-[#f0faf8] hover:text-[#13b59b] transition"
-                      >
-                        <span>Compare Mobile Phones</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
-                      </Link>
-                      <div className="pt-2 border-t border-gray-100">
-                        <Link
-                          href="/articles"
-                          className="block px-3 py-1.5 text-xs text-gray-600 hover:text-[#13b59b]"
-                        >
-                          Smartphone Reviews &amp; News
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 6: BUY LAPTOP ∨                                  */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('buy-laptop')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'buy-laptop' ? null : 'buy-laptop'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'buy-laptop'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>Buy Laptop</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'buy-laptop'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'buy-laptop' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="relative flex items-start">
-                      {/* Left Menu Card (Matches Second Image) */}
-                      <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans shrink-0">
-                        <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
-                          Buy Laptop
-                        </div>
-                        <div className="space-y-0.5">
-                          {LAPTOP_BRANDS.map((lb) => {
-                            const isHovered = laptopBrand === lb.id;
-                            return (
-                              <Link
-                                key={lb.id}
-                                href="/buy-refurbished-laptops"
-                                onMouseEnter={() => setLaptopBrand(lb.id)}
-                                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] transition text-left cursor-pointer ${
-                                  isHovered
-                                    ? 'bg-[#EAF8F5] text-[#13b59b] font-medium'
-                                    : 'text-gray-800 font-normal hover:bg-gray-50'
-                                }`}
-                              >
-                                <span className="pl-3.5">{lb.name}</span>
-                                <ChevronRight
-                                  className={`w-4 h-4 stroke-[2] transition-colors ${
-                                    isHovered ? 'text-[#13b59b]' : 'text-gray-400'
-                                  }`}
-                                />
-                              </Link>
-                            );
-                          })}
-                        </div>
-                        <div className="pt-2 border-t border-gray-100">
-                          <Link
-                            href="/buy-refurbished-laptops"
-                            className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[13px] font-bold text-[#13b59b] hover:bg-[#EAF8F5] transition"
-                          >
-                            <span>Browse All Laptops</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-
-                      {/* Right Submenu Flyout for Laptop Brand */}
-                      {currentLaptopBrand && (
-                        <div
-                          className="ml-2 w-[380px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-5 shrink-0 flex flex-col justify-between font-sans min-h-[340px] animate-in fade-in-0 duration-150"
-                          onMouseEnter={() => {
-                            if (dropdownTimeoutRef.current)
-                              clearTimeout(dropdownTimeoutRef.current);
-                          }}
-                        >
-                          <div>
-                            <div className="border-b border-gray-100 pb-2 mb-3 flex items-center justify-between">
-                              <h4 className="text-sm font-bold text-gray-900">
-                                Certified {currentLaptopBrand.name} Laptops
-                              </h4>
-                              <span className="text-xs text-[#13b59b] font-bold">
-                                12M Warranty
-                              </span>
-                            </div>
-                            <div className="space-y-1.5 text-xs text-gray-800">
-                              {currentLaptopBrand.models.map((m, idx) => (
-                                <Link
-                                  key={idx}
-                                  href="/buy-refurbished-laptops"
-                                  className="block p-2.5 rounded-xl border border-gray-100 hover:border-[#13b59b] hover:bg-[#EAF8F5] transition"
-                                >
-                                  {m}
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="pt-3 border-t border-gray-100">
-                            <Link
-                              href="/buy-refurbished-laptops"
-                              className="text-xs font-bold text-[#13b59b] hover:underline"
-                            >
-                              Explore All {currentLaptopBrand.name} →
-                            </Link>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 7: SELLBAR STORE ∨                               */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('store')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'store' ? null : 'store'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition pb-1 border-b-2 cursor-pointer ${
-                    activeDropdown === 'store'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>Sellbar Store</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'store'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'store' && (
-                  <div
-                    className="absolute left-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans">
-                      <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
-                        Sellbar Store
-                      </div>
-                      <div className="space-y-0.5">
-                        {STORE_CITIES.map((sc, i) => (
-                          <Link
-                            key={i}
-                            href="/about-us"
-                            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] text-gray-800 font-normal hover:bg-[#EAF8F5] hover:text-[#13b59b] hover:font-medium transition cursor-pointer"
-                          >
-                            <span className="pl-3.5">{sc.name}</span>
-                            <ChevronRight className="w-4 h-4 stroke-[2] text-gray-400" />
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="pt-2 border-t border-gray-100">
-                        <Link
-                          href="/about-us"
-                          className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-[13px] font-bold text-[#13b59b] hover:bg-[#EAF8F5] transition"
-                        >
-                          <span>Find All Experience Centers</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* ===================================================== */}
-              {/* ITEM 8: MORE ∨                                        */}
-              {/* ===================================================== */}
-              <div
-                className="relative"
-                onMouseEnter={() => handleDropdownEnter('more')}
-                onMouseLeave={handleDropdownLeave}
-              >
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveDropdown(
-                      activeDropdown === 'more' ? null : 'more'
-                    );
-                  }}
-                  className={`flex items-center gap-1 font-bold text-[14px] transition cursor-pointer pb-1 border-b-2 ${
-                    activeDropdown === 'more'
-                      ? 'text-[#13b59b] border-[#13b59b]'
-                      : 'text-gray-900 hover:text-[#13b59b] border-transparent'
-                  }`}
-                >
-                  <span>More</span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                      activeDropdown === 'more'
-                        ? 'rotate-180 text-[#13b59b]'
-                        : 'text-gray-600'
-                    }`}
-                  />
-                </button>
-
-                {activeDropdown === 'more' && (
-                  <div
-                    className="absolute right-0 top-full pt-1.5 z-50 animate-in fade-in-0 slide-in-from-top-1.5 duration-150"
-                    onMouseEnter={() => {
-                      if (dropdownTimeoutRef.current)
-                        clearTimeout(dropdownTimeoutRef.current);
-                    }}
-                    onMouseLeave={handleDropdownLeave}
-                  >
-                    <div className="w-[285px] bg-white border border-gray-100 rounded-2xl shadow-[0_12px_36px_rgba(0,0,0,0.12)] p-2.5 space-y-0.5 text-gray-900 font-sans">
-                      <div className="px-3.5 pt-2 pb-1.5 text-[15px] font-bold text-gray-950 tracking-tight">
-                        More Services
-                      </div>
-                      <div className="space-y-0.5">
+                        {/* Nested items under Sell */}
                         {[
-                          { label: 'Device Repair Service', href: '/repair' },
-                          { label: 'Certified Recycling', href: '/recycle-old-mobile-phone' },
-                          { label: 'Partner With Us', href: '/partner-with-us' },
-                          { label: 'Vendor Portal Login', href: '/vendor/login' },
-                          { label: 'Warranty Policy', href: '/warranty-policy' },
-                          { label: 'About Sellbar', href: '/about-us' },
-                          { label: 'Contact Us', href: '/contact' },
-                        ].map((item, idx) => (
-                          <Link
-                            key={idx}
-                            href={item.href}
-                            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[14px] text-gray-800 font-normal hover:bg-[#EAF8F5] hover:text-[#13b59b] hover:font-medium transition cursor-pointer"
-                          >
-                            <span className="pl-3.5">{item.label}</span>
-                            <ChevronRight className="w-4 h-4 stroke-[2] text-gray-400" />
-                          </Link>
-                        ))}
+                { id: 'phone', label: 'Phone' },
+                { id: 'laptop', label: 'Laptop' },
+                { id: 'smartwatch', label: 'Smartwatch' },
+                { id: 'tablet', label: 'Tablet' },
+                { id: 'more', label: 'More' },
+            ].map((item) => {
+                const isSelected = allActiveSub === 'sell' && allSellNestedSub === item.id;
+                return (<button key={item.id} type="button" onMouseEnter={() => {
+                        setAllActiveSub('sell');
+                        setAllSellNestedSub(item.id);
+                    }} className={`w-full flex items-center justify-between pl-4 pr-3 py-2 rounded-lg text-xs font-semibold transition text-left cursor-pointer ${isSelected
+                        ? 'bg-gray-100/90 text-[#13b59b]'
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}>
+                              <span>{item.label}</span>
+                              <ChevronRight className={`w-3.5 h-3.5 ${isSelected ? 'text-[#13b59b]' : 'text-gray-400'}`}/>
+                            </button>);
+            })}
+
+                        {/* Main Categories following Sell */}
+                        {[
+                { id: 'repair', label: 'Repair' },
+                { id: 'sell-gadgets', label: 'Sell Gadgets' },
+                { id: 'buy-gadgets', label: 'Buy Gadgets' },
+                { id: 'recycle', label: 'Recycle' },
+                { id: 'find-new-phone', label: 'Find New Phone' },
+                { id: 'stores', label: 'Sellbar Store' },
+            ].map((cat) => {
+                const isSelected = allActiveSub === cat.id;
+                return (<button key={cat.id} type="button" onMouseEnter={() => setAllActiveSub(cat.id)} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition text-left mt-1 cursor-pointer ${isSelected
+                        ? 'bg-[#e6f9f6] text-[#13b59b]'
+                        : 'text-gray-800 hover:bg-gray-50'}`}>
+                              <span>{cat.label}</span>
+                              <ChevronRight className={`w-3.5 h-3.5 ${isSelected ? 'text-[#13b59b]' : 'text-gray-400'}`}/>
+                            </button>);
+            })}
+                      </div>
+
+                      {/* Right dynamic content */}
+                      <div className="flex-1 p-5 min-h-[420px] bg-white">
+                        {/* 1. SELL -> PHONE */}
+                        {allActiveSub === 'sell' && allSellNestedSub === 'phone' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Sell
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Brands</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/sell-old-mobile-phone/sell-apple" className="block hover:text-[#13b59b] py-0.5">Apple</Link>
+                                  <Link href="/sell-old-mobile-phone/sell-xiaomi" className="block hover:text-[#13b59b] py-0.5">Xiaomi</Link>
+                                  <Link href="/sell-old-mobile-phone/sell-samsung" className="block hover:text-[#13b59b] py-0.5">Samsung</Link>
+                                  <Link href="/sell-old-mobile-phone/sell-oneplus" className="block hover:text-[#13b59b] py-0.5">Oneplus</Link>
+                                  <Link href="/sell-old-mobile-phone/sell-nokia" className="block hover:text-[#13b59b] py-0.5">Nokia</Link>
+                                  <Link href="/sell-old-mobile-phone/sell-poco" className="block hover:text-[#13b59b] py-0.5">Poco</Link>
+                                  <Link href="/sell-old-mobile-phone?brand=1" className="block text-[#13b59b] font-bold hover:underline pt-1">More Phone Brands →</Link>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Selling Phones</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/sell-old-mobile-phone/used-apple-iphone-12" className="block hover:text-[#13b59b] py-0.5">Apple iPhone 12</Link>
+                                  <Link href="/sell-old-mobile-phone/used-apple-iphone-11" className="block hover:text-[#13b59b] py-0.5">Apple iPhone 11</Link>
+                                  <Link href="/sell-old-mobile-phone/used-samsung-galaxy-note-20-8-gb-256-gb" className="block hover:text-[#13b59b] py-0.5">Samsung Galaxy Note 20</Link>
+                                  <Link href="/sell-old-mobile-phone/used-oneplus-9-pro-5g" className="block hover:text-[#13b59b] py-0.5">One Plus 9 Pro</Link>
+                                  <Link href="/sell-old-mobile-phone/used-redmi-note-4" className="block hover:text-[#13b59b] py-0.5">Xiaomi Redmi Note 4</Link>
+                                  <Link href="/sell-old-mobile-phone/used-iphone-6" className="block hover:text-[#13b59b] py-0.5">Apple iPhone 6</Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 2. SELL -> LAPTOP */}
+                        {allActiveSub === 'sell' && allSellNestedSub === 'laptop' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Sell
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Brands</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/sell-old-laptop/sell-apple" className="block hover:text-[#13b59b] py-0.5">Apple</Link>
+                                  <Link href="/sell-old-laptop/sell-hp-compaq" className="block hover:text-[#13b59b] py-0.5">HP</Link>
+                                  <Link href="/sell-old-laptop/sell-samsung" className="block hover:text-[#13b59b] py-0.5">Samsung</Link>
+                                  <Link href="/sell-old-laptop/sell-lenovo" className="block hover:text-[#13b59b] py-0.5">Lenovo</Link>
+                                  <Link href="/sell-old-laptop/sell-dell" className="block hover:text-[#13b59b] py-0.5">Dell</Link>
+                                  <Link href="/sell-old-laptop/sell-honor" className="block hover:text-[#13b59b] py-0.5">Honor</Link>
+                                  <Link href="/sell-old-laptop?brand=1" className="block text-[#13b59b] font-bold hover:underline pt-1">More Laptop Brands →</Link>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Selling Models</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/sell-old-laptop/used-pavilion-series" className="block hover:text-[#13b59b] py-0.5">Pavilion Series</Link>
+                                  <Link href="/sell-old-laptop/used-vostro-series" className="block hover:text-[#13b59b] py-0.5">Vostro Series</Link>
+                                  <Link href="/sell-old-laptop/used-inspiron-series" className="block hover:text-[#13b59b] py-0.5">Inspiron Series</Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 3. SELL -> SMARTWATCH */}
+                        {allActiveSub === 'sell' && allSellNestedSub === 'smartwatch' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Sell
+                            </div>
+                            <div>
+                              <div className="text-sm font-bold text-gray-900 mb-2.5">Top Brands</div>
+                              <div className="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700">
+                                <Link href="/sell-old-smart-watch/sell-apple" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Apple</Link>
+                                <Link href="/sell-old-smart-watch/sell-xiaomi" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Xiaomi</Link>
+                                <Link href="/sell-old-smart-watch/sell-samsung" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Samsung</Link>
+                                <Link href="/sell-old-smart-watch/sell-oneplus" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">OnePlus</Link>
+                              </div>
+                              <div className="mt-4">
+                                <Link href="/sell-old-smart-watch" className="text-xs font-bold text-[#13b59b] hover:underline">
+                                  More Smartwatch Brands →
+                                </Link>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 4. SELL -> TABLET */}
+                        {allActiveSub === 'sell' && allSellNestedSub === 'tablet' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Sell
+                            </div>
+                            <div>
+                              <div className="text-sm font-bold text-gray-900 mb-2.5">Top Brands</div>
+                              <div className="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700">
+                                <Link href="/sell-old-tablet/sell-apple" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Apple</Link>
+                                <Link href="/sell-old-tablet/sell-lenovo" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Lenovo</Link>
+                                <Link href="/sell-old-tablet/sell-samsung" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Samsung</Link>
+                                <Link href="/sell-old-tablet/sell-honor" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Honor</Link>
+                              </div>
+                              <div className="mt-4">
+                                <Link href="/sell-old-tablet" className="text-xs font-bold text-[#13b59b] hover:underline">
+                                  More Tablet Brands →
+                                </Link>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 5. SELL -> MORE */}
+                        {allActiveSub === 'sell' && allSellNestedSub === 'more' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Sell
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700">
+                              {[
+                    { title: 'Smart Speaker', href: '/sell-old-smart-speaker' },
+                    { title: 'TV', href: '/sell-old-television' },
+                    { title: 'DSLR Camera', href: '/sell-old-dslr-camera' },
+                    { title: 'Earbuds', href: '/sell-old-earbuds' },
+                    { title: 'iMac', href: '/sell-old-imac' },
+                    { title: 'Gaming Consoles', href: '/sell-old-gaming-consoles' },
+                    { title: 'AC', href: '/sell-old-air-conditioner' },
+                ].map((item, idx) => (<Link key={idx} href={item.href} className="p-3 rounded-xl border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition flex items-center justify-between">
+                                  <span>{item.title}</span>
+                                  <ArrowRight className="w-3.5 h-3.5 text-gray-400"/>
+                                </Link>))}
+                            </div>
+                          </div>)}
+
+                        {/* 6. REPAIR */}
+                        {allActiveSub === 'repair' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Repair
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Repair Services</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/screen-repair" className="block hover:text-[#13b59b] py-0.5">Screen</Link>
+                                  <Link href="/battery-repair" className="block hover:text-[#13b59b] py-0.5">Battery</Link>
+                                  <Link href="/mic-repair" className="block hover:text-[#13b59b] py-0.5">Mic</Link>
+                                  <Link href="/back-panel-repair" className="block hover:text-[#13b59b] py-0.5">Back Panel</Link>
+                                  <Link href="/proximity-sensor-repair" className="block hover:text-[#13b59b] py-0.5">Proximity Sensor</Link>
+                                  <Link href="/charging-jack-repair" className="block hover:text-[#13b59b] py-0.5">Charging Jack</Link>
+                                  <Link href="/aux-jack-repair" className="block hover:text-[#13b59b] py-0.5">Aux Jack</Link>
+                                  <Link href="/repair" className="block text-[#13b59b] font-bold hover:underline pt-1">More in Repair →</Link>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Repaired Phones</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/charging-jack-repair/xiaomi/redmi-note-4" className="block hover:text-[#13b59b] py-0.5">Xiaomi Redmi Note 4</Link>
+                                  <Link href="/screen-repair/xiaomi/redmi-note-3" className="block hover:text-[#13b59b] py-0.5">Xiaomi Redmi Note 3</Link>
+                                  <Link href="/screen-repair/apple/iphone-6" className="block hover:text-[#13b59b] py-0.5">Apple iPhone 6</Link>
+                                  <Link href="/screen-repair/xiaomi/xiaomi-redmi-note-4-4-gb-64-gb" className="block hover:text-[#13b59b] py-0.5">Redmi Note 4</Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 7. SELL GADGETS */}
+                        {allActiveSub === 'sell-gadgets' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Sell Gadgets
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-medium text-gray-700">
+                              {[
+                    { title: 'Phone', href: '/sell-old-mobile-phone' },
+                    { title: 'Laptop', href: '/sell-old-laptop' },
+                    { title: 'TV', href: '/sell-old-television' },
+                    { title: 'Smart Speaker', href: '/sell-old-smart-speaker' },
+                    { title: 'Tablet', href: '/sell-old-tablet' },
+                    { title: 'Gaming Consoles', href: '/sell-old-gaming-consoles' },
+                    { title: 'iMac', href: '/sell-old-imac' },
+                    { title: 'Smartwatch', href: '/sell-old-smart-watch' },
+                    { title: 'DSLR Camera', href: '/sell-old-dslr-camera' },
+                    { title: 'Earbuds', href: '/sell-old-earbuds' },
+                    { title: 'AC', href: '/sell-old-air-conditioner' },
+                ].map((g, idx) => (<Link key={idx} href={g.href} className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition flex items-center justify-between">
+                                  <span>{g.title}</span>
+                                  <ArrowRight className="w-3.5 h-3.5 text-gray-400"/>
+                                </Link>))}
+                            </div>
+                          </div>)}
+
+                        {/* 8. BUY GADGETS */}
+                        {allActiveSub === 'buy-gadgets' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Buy Gadgets
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700">
+                              {[
+                    { title: 'Refurbished Phones', href: '/buy-refurbished-mobile-phones' },
+                    { title: 'Refurbished Laptops', href: '/buy-refurbished-laptops' },
+                    { title: 'Refurbished Smart Watches', href: '/buy-refurbished-smart-watches' },
+                    { title: 'Refurbished Tablets', href: '/buy-refurbished-tablets' },
+                    { title: 'Refurbished Gaming Consoles', href: '/buy-refurbished-gaming-consoles' },
+                    { title: 'Refurbished Cameras', href: '/buy-refurbished-dslr-cameras' },
+                    { title: 'Speakers', href: '/buy-openbox-audio-devices' },
+                    { title: 'Amazon Devices', href: '/buy-refurbished-amazon-devices' },
+                ].map((b, idx) => (<Link key={idx} href={b.href} className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition flex items-center justify-between">
+                                  <span>{b.title}</span>
+                                  <ArrowRight className="w-3.5 h-3.5 text-gray-400"/>
+                                </Link>))}
+                            </div>
+                          </div>)}
+
+                        {/* 9. RECYCLE */}
+                        {allActiveSub === 'recycle' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Recycle
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Brands</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/recycle-old-mobile-phone/recycle-apple" className="block hover:text-[#13b59b] py-0.5">Apple</Link>
+                                  <Link href="/recycle-old-mobile-phone/recycle-xiaomi" className="block hover:text-[#13b59b] py-0.5">Xiaomi</Link>
+                                  <Link href="/recycle-old-mobile-phone/recycle-samsung" className="block hover:text-[#13b59b] py-0.5">Samsung</Link>
+                                  <Link href="/recycle-old-mobile-phone/recycle-realme" className="block hover:text-[#13b59b] py-0.5">Realme</Link>
+                                  <Link href="/recycle-old-mobile-phone/recycle-oneplus" className="block hover:text-[#13b59b] py-0.5">One Plus</Link>
+                                  <Link href="/recycle-old-mobile-phone/recycle-poco" className="block hover:text-[#13b59b] py-0.5">Poco</Link>
+                                  <Link href="/recycle-old-mobile-phone" className="block text-[#13b59b] font-bold hover:underline pt-1">Other Brands →</Link>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Recycled Phones</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/recycle-old-mobile-phone/reuse-redmi-note-4" className="block hover:text-[#13b59b] py-0.5">Xiaomi Redmi Note 4</Link>
+                                  <Link href="/recycle-old-mobile-phone/reuse-redmi-note-3" className="block hover:text-[#13b59b] py-0.5">Xiaomi Redmi Note 3</Link>
+                                  <Link href="/recycle-old-mobile-phone/reuse-iphone-6" className="block hover:text-[#13b59b] py-0.5">Apple iPhone 6</Link>
+                                  <Link href="/recycle-old-mobile-phone/reuse-xiaomi-redmi-note-4-4-gb-64-gb" className="block hover:text-[#13b59b] py-0.5">Redmi Note 4</Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 10. FIND NEW PHONE */}
+                        {allActiveSub === 'find-new-phone' && (<div className="space-y-4">
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                              More in Find New Phone
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Tools &amp; Content</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/find-new-phone" className="block hover:text-[#13b59b] py-0.5">Phone Finder</Link>
+                                  <Link href="/compare-mobile-phones" className="block hover:text-[#13b59b] py-0.5">Compare Phones</Link>
+                                  <Link href="/new-smartphone-launches" className="block hover:text-[#13b59b] py-0.5">Latest Phones</Link>
+                                  <Link href="/category/videos" className="block hover:text-[#13b59b] py-0.5">Videos</Link>
+                                  <Link href="/news" className="block hover:text-[#13b59b] py-0.5">News</Link>
+                                  <Link href="/smartphone-reviews" className="block hover:text-[#13b59b] py-0.5">Reviews</Link>
+                                  <Link href="/articles" className="block hover:text-[#13b59b] py-0.5">Articles</Link>
+                                  <Link href="/questions" className="block hover:text-[#13b59b] py-0.5">QnA</Link>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm font-bold text-gray-900 mb-2">Top Selling Phones</div>
+                                <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                                  <Link href="/apple-mobile-price-list-in-india" className="block hover:text-[#13b59b] py-0.5">Apple</Link>
+                                  <Link href="/xiaomi-mobile-price-list-in-india" className="block hover:text-[#13b59b] py-0.5">Xiaomi</Link>
+                                  <Link href="/samsung-mobile-price-list-in-india" className="block hover:text-[#13b59b] py-0.5">Samsung</Link>
+                                  <Link href="/oneplus-mobile-price-list-in-india" className="block hover:text-[#13b59b] py-0.5">Oneplus</Link>
+                                  <Link href="/google-mobile-price-list-in-india" className="block hover:text-[#13b59b] py-0.5">Google</Link>
+                                  <Link href="/poco-mobile-price-list-in-india" className="block hover:text-[#13b59b] py-0.5">Poco</Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>)}
+
+                        {/* 11. SELLBAR STORES */}
+                        {allActiveSub === 'stores' && (<div>
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                              Sellbar Experience Hubs pan-India
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 text-xs font-medium text-gray-700">
+                              {[
+                    'Delhi NCR', 'Gurgaon', 'Noida', 'Bengaluru',
+                    'Chennai', 'Pune', 'Agra', 'Patna',
+                    'Ghaziabad', 'Faridabad', 'Meerut', 'Mohali'
+                ].map((city, i) => (<Link key={i} href="/about-us" className="px-2.5 py-2 rounded-md hover:bg-[#f0faf8] hover:text-[#13b59b] transition flex items-center gap-1.5">
+                                  <Store className="w-3.5 h-3.5 text-[#13b59b]"/>
+                                  <span>{city}</span>
+                                </Link>))}
+                            </div>
+                            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+                              <span className="text-gray-500">200+ Retail Outlets Across India</span>
+                              <Link href="/about-us" className="font-bold text-[#13b59b] hover:underline">
+                                Find Nearest Store →
+                              </Link>
+                            </div>
+                          </div>)}
                       </div>
                     </div>
-                  </div>
-                )}
+                  </div>)}
+              </div>
+
+              {/* ITEM 2: Sell Phone ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('sell-phone')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'sell-phone' ? null : 'sell-phone');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'sell-phone'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>Sell Phone</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'sell-phone' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for Sell Phone: 2-column layout matching Cashify Image 2 */}
+                {activeDropdown === 'sell-phone' && (<div className="absolute left-0 top-full pt-2 z-50 w-[540px]">
+                    <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-5 grid grid-cols-2 gap-6">
+                      <div>
+                        <div className="text-sm font-bold text-gray-900 mb-2.5">
+                          Top Brands
+                        </div>
+                        <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                          <Link href="/sell-old-mobile-phone/sell-apple" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple</Link>
+                          <Link href="/sell-old-mobile-phone/sell-xiaomi" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Xiaomi</Link>
+                          <Link href="/sell-old-mobile-phone/sell-samsung" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Samsung</Link>
+                          <Link href="/sell-old-mobile-phone/sell-oneplus" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Oneplus</Link>
+                          <Link href="/sell-old-mobile-phone/sell-nokia" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Nokia</Link>
+                          <Link href="/sell-old-mobile-phone/sell-poco" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Poco</Link>
+                          <Link href="/sell-old-mobile-phone?brand=1" className="block px-2 py-1 text-xs font-bold text-[#13b59b] hover:underline pt-1">
+                            More Phone Brands
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-sm font-bold text-gray-900 mb-2.5">
+                          Top Selling Phones
+                        </div>
+                        <div className="space-y-1.5 text-xs font-medium text-gray-700">
+                          <Link href="/sell-old-mobile-phone/used-apple-iphone-12" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple iPhone 12</Link>
+                          <Link href="/sell-old-mobile-phone/used-samsung-galaxy-note-20-8-gb-256-gb" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Samsung Galaxy Note 20</Link>
+                          <Link href="/sell-old-mobile-phone/used-apple-iphone-11" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple iPhone 11</Link>
+                          <Link href="/sell-old-mobile-phone/used-oneplus-9-pro-5g" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">One Plus 9 Pro</Link>
+                          <Link href="/sell-old-mobile-phone/used-redmi-note-4" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Xiaomi Redmi Note 4</Link>
+                          <Link href="/sell-old-mobile-phone/used-iphone-6" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple iPhone 6</Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>)}
+              </div>
+
+              {/* ITEM 3: Sell Gadgets ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('sell-gadgets')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'sell-gadgets' ? null : 'sell-gadgets');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'sell-gadgets'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>Sell Gadgets</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'sell-gadgets' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for Sell Gadgets matching Image 3 */}
+                {activeDropdown === 'sell-gadgets' && (<div className="absolute left-0 top-full pt-2 z-50 w-[760px]">
+                    <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden flex">
+                      {/* Left list matching Image 3 exactly */}
+                      <div className="w-56 bg-white border-r border-gray-100 p-2.5 space-y-1 shrink-0">
+                        {[
+                { id: 'phone', label: 'Phone', hasArrow: true, href: '/sell-old-mobile-phone' },
+                { id: 'laptop', label: 'Laptop', hasArrow: true, href: '/sell-old-laptop' },
+                { id: 'speaker', label: 'Smart Speaker', hasArrow: true, href: '/sell-old-smart-speaker' },
+                { id: 'tablet', label: 'Tablet', hasArrow: true, href: '/sell-old-tablet' },
+                { id: 'gaming', label: 'Gaming Consoles', hasArrow: true, href: '/sell-old-gaming-consoles' },
+                { id: 'imac', label: 'iMac', hasArrow: false, href: '/sell-old-imac' },
+                { id: 'smartwatch', label: 'Smartwatch', hasArrow: true, href: '/sell-old-smart-watch' },
+                { id: 'tv', label: 'TV', hasArrow: true, href: '/sell-old-television' },
+                { id: 'earbuds', label: 'Earbuds', hasArrow: true, href: '/sell-old-earbuds' },
+                { id: 'dslr', label: 'DSLR Camera', hasArrow: true, href: '/sell-old-dslr-camera' },
+                { id: 'ac', label: 'AC', hasArrow: true, href: '/sell-old-air-conditioner' },
+            ].map((cat) => {
+                const isSelected = gadgetActiveSub === cat.id;
+                return (<div key={cat.id} onMouseEnter={() => setGadgetActiveSub(cat.id)} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition text-left cursor-pointer ${isSelected
+                        ? 'bg-[#e6f9f6] text-[#13b59b]'
+                        : 'text-gray-900 hover:bg-gray-50'}`}>
+                              <Link href={cat.href} className="flex-1">
+                                {cat.label}
+                              </Link>
+                              {cat.hasArrow && (<ChevronRight className={`w-3.5 h-3.5 ${isSelected ? 'text-[#13b59b]' : 'text-gray-400'}`}/>)}
+                            </div>);
+            })}
+                      </div>
+
+                      {/* Right Brands & Models */}
+                      <div className="flex-1 p-5 bg-white min-h-95">
+                        {gadgetActiveSub === 'phone' ? (<div className="grid grid-cols-2 gap-6">
+                            <div>
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                                Top Brands
+                              </div>
+                              <div className="space-y-1 text-xs font-medium text-gray-700">
+                                <Link href="/sell-old-mobile-phone/sell-apple" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple</Link>
+                                <Link href="/sell-old-mobile-phone/sell-xiaomi" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Xiaomi</Link>
+                                <Link href="/sell-old-mobile-phone/sell-samsung" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Samsung</Link>
+                                <Link href="/sell-old-mobile-phone/sell-oneplus" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Oneplus</Link>
+                                <Link href="/sell-old-mobile-phone/sell-nokia" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Nokia</Link>
+                                <Link href="/sell-old-mobile-phone/sell-poco" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Poco</Link>
+                                <Link href="/sell-old-mobile-phone?brand=1" className="block px-2 py-1 text-xs font-bold text-[#13b59b] hover:underline pt-1">More Phone Brands →</Link>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                                Top Selling Phones
+                              </div>
+                              <div className="space-y-1 text-xs font-medium text-gray-700">
+                                <Link href="/sell-old-mobile-phone/used-apple-iphone-12" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple iPhone 12</Link>
+                                <Link href="/sell-old-mobile-phone/used-apple-iphone-11" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple iPhone 11</Link>
+                                <Link href="/sell-old-mobile-phone/used-samsung-galaxy-note-20-8-gb-256-gb" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Samsung Galaxy Note 20</Link>
+                                <Link href="/sell-old-mobile-phone/used-oneplus-9-pro-5g" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">One Plus 9 Pro</Link>
+                                <Link href="/sell-old-mobile-phone/used-redmi-note-4" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Xiaomi Redmi Note 4</Link>
+                                <Link href="/sell-old-mobile-phone/used-iphone-6" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple iPhone 6</Link>
+                              </div>
+                            </div>
+                          </div>) : gadgetActiveSub === 'laptop' ? (<div className="grid grid-cols-2 gap-6">
+                            <div>
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                                Top Laptop Brands
+                              </div>
+                              <div className="space-y-1 text-xs font-medium text-gray-700">
+                                <Link href="/sell-old-laptop/sell-apple" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Apple</Link>
+                                <Link href="/sell-old-laptop/sell-hp-compaq" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">HP</Link>
+                                <Link href="/sell-old-laptop/sell-samsung" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Samsung</Link>
+                                <Link href="/sell-old-laptop/sell-lenovo" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Lenovo</Link>
+                                <Link href="/sell-old-laptop/sell-dell" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Dell</Link>
+                                <Link href="/sell-old-laptop/sell-honor" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Honor</Link>
+                                <Link href="/sell-old-laptop?brand=1" className="block px-2 py-1 text-xs font-bold text-[#13b59b] hover:underline pt-1">More Laptop Brands →</Link>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                                Top Selling Models
+                              </div>
+                              <div className="space-y-1 text-xs font-medium text-gray-700">
+                                <Link href="/sell-old-laptop/used-pavilion-series" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Pavilion Series</Link>
+                                <Link href="/sell-old-laptop/used-vostro-series" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Vostro Series</Link>
+                                <Link href="/sell-old-laptop/used-inspiron-series" className="block px-2 py-1 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">Inspiron Series</Link>
+                              </div>
+                            </div>
+                          </div>) : gadgetActiveSub === 'smartwatch' ? (<div>
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                              Sell Old Smartwatch
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700">
+                              <Link href="/sell-old-smart-watch/sell-apple" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Apple</Link>
+                              <Link href="/sell-old-smart-watch/sell-xiaomi" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Xiaomi</Link>
+                              <Link href="/sell-old-smart-watch/sell-samsung" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Samsung</Link>
+                              <Link href="/sell-old-smart-watch/sell-oneplus" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">OnePlus</Link>
+                            </div>
+                            <div className="mt-4">
+                              <Link href="/sell-old-smart-watch" className="text-xs font-bold text-[#13b59b] hover:underline">More Smartwatch Brands →</Link>
+                            </div>
+                          </div>) : gadgetActiveSub === 'tablet' ? (<div>
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                              Sell Old Tablet
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700">
+                              <Link href="/sell-old-tablet/sell-apple" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Apple</Link>
+                              <Link href="/sell-old-tablet/sell-lenovo" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Lenovo</Link>
+                              <Link href="/sell-old-tablet/sell-samsung" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Samsung</Link>
+                              <Link href="/sell-old-tablet/sell-honor" className="p-2.5 rounded-lg border border-gray-100 hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Honor</Link>
+                            </div>
+                            <div className="mt-4">
+                              <Link href="/sell-old-tablet" className="text-xs font-bold text-[#13b59b] hover:underline">More Tablet Brands →</Link>
+                            </div>
+                          </div>) : (<div>
+                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                              Sell Your {gadgetActiveSub === 'ac' ? 'Air Conditioner' : gadgetActiveSub.toUpperCase()}
+                            </div>
+                            <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                              Get best price quote, free doorstep inspection, and instant cash payment on Sellbar.
+                            </p>
+                            <Link href={gadgetActiveSub === 'speaker'
+                    ? '/sell-old-smart-speaker'
+                    : gadgetActiveSub === 'tv'
+                        ? '/sell-old-television'
+                        : gadgetActiveSub === 'dslr'
+                            ? '/sell-old-dslr-camera'
+                            : gadgetActiveSub === 'earbuds'
+                                ? '/sell-old-earbuds'
+                                : gadgetActiveSub === 'imac'
+                                    ? '/sell-old-imac'
+                                    : gadgetActiveSub === 'gaming'
+                                        ? '/sell-old-gaming-consoles'
+                                        : '/sell-old-air-conditioner'} className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#13b59b] text-white rounded-xl text-xs font-bold hover:bg-[#0fa088] transition">
+                              Get Valuation Now <ArrowRight className="w-3.5 h-3.5"/>
+                            </Link>
+                          </div>)}
+                      </div>
+                    </div>
+                  </div>)}
+              </div>
+
+              {/* ITEM 4: Buy Refurbished Devices ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('buy-refurbished')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'buy-refurbished' ? null : 'buy-refurbished');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'buy-refurbished'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>Buy Refurbished Devices</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'buy-refurbished' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for Buy Refurbished Devices matching Image 4 */}
+                {activeDropdown === 'buy-refurbished' && (<div className="absolute left-0 top-full pt-2 z-50 w-64">
+                    <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-4 text-xs font-medium text-gray-700 space-y-1">
+                      <Link href="/buy-refurbished-mobile-phones" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Refurbished Phones</Link>
+                      <Link href="/buy-refurbished-laptops" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Refurbished Laptops</Link>
+                      <Link href="/buy-refurbished-smart-watches" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Refurbished Smart Watches</Link>
+                      <Link href="/buy-refurbished-tablets" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Refurbished Tablets</Link>
+                      <Link href="/buy-refurbished-gaming-consoles" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Refurbished Gaming Consoles</Link>
+                      <Link href="/buy-refurbished-dslr-cameras" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Refurbished Cameras</Link>
+                      <Link href="/buy-openbox-audio-devices" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Audio Devices</Link>
+                      <Link href="/buy-refurbished-amazon-devices" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Amazon Devices</Link>
+
+                      <div className="pt-2 mt-2 border-t border-gray-100 font-bold text-gray-900 px-2.5">
+                        Top Brands
+                      </div>
+                      <Link href="/buy-refurbished-mobile-phones?brand=apple" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Apple</Link>
+                      <Link href="/buy-refurbished-mobile-phones?brand=xiaomi" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Xiaomi</Link>
+                      <Link href="/buy-refurbished-mobile-phones?brand=samsung" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Samsung</Link>
+                      <Link href="/buy-refurbished-mobile-phones?brand=oneplus" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Oneplus</Link>
+                      <Link href="/buy-refurbished-mobile-phones?brand=google" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Google</Link>
+                      <Link href="/buy-refurbished-mobile-phones?brand=oppo" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Oppo</Link>
+                      <Link href="/buy-refurbished-mobile-phones?brand=vivo" className="block px-2.5 py-1.5 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">Vivo</Link>
+                      <Link href="/buy-refurbished" className="block px-2.5 py-1.5 rounded-lg text-[#13b59b] font-bold hover:underline">All Brands</Link>
+                    </div>
+                  </div>)}
+              </div>
+
+              {/* ITEM 5: Find New Gadget ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('find-new')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'find-new' ? null : 'find-new');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'find-new'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>Find New Gadget</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'find-new' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for Find New Gadget matching Image 5 */}
+                {activeDropdown === 'find-new' && (<div className="absolute left-0 top-full pt-2 z-50 w-64">
+                    <div className="bg-white border border-gray-200 rounded-2xl shadow-2xl p-4 text-xs font-semibold text-gray-800 space-y-1">
+                      <Link href="/find-new-phone" className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <span>Find New Phone</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-400"/>
+                      </Link>
+                      <Link href="/find-new-laptop" className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <span>Find New Laptop</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-400"/>
+                      </Link>
+                      <Link href="/find-new-smartwatch" className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <span>Find New Smartwatch</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-400"/>
+                      </Link>
+                      <Link href="/find-new-tablet" className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <span>Find New Tablet</span>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-400"/>
+                      </Link>
+
+                      <div className="pt-2 mt-2 border-t border-gray-100 font-bold text-gray-900 px-3 text-xs">
+                        Explore
+                      </div>
+                      <Link href="/category/videos" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        Videos
+                      </Link>
+                      <Link href="/news" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        News
+                      </Link>
+                      <Link href="/smartphone-reviews" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        Reviews
+                      </Link>
+                      <Link href="/articles" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        Articles
+                      </Link>
+                      <Link href="/questions" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        QnA
+                      </Link>
+                      <Link href="/tips-and-tricks" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        Tips and Tricks
+                      </Link>
+                      <Link href="/tech-news" className="block px-3 py-1.5 rounded-lg text-gray-600 font-medium hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        Tech News
+                      </Link>
+                    </div>
+                  </div>)}
+              </div>
+
+              {/* ITEM 6: Buy Laptop ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('buy-laptop')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'buy-laptop' ? null : 'buy-laptop');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'buy-laptop'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>Buy Laptop</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'buy-laptop' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for Buy Laptop: Top Brands + Best Selling Models */}
+                {activeDropdown === 'buy-laptop' && (<div className="absolute left-0 top-full pt-2 z-50 w-[560px]">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-2xl p-5 grid grid-cols-2 gap-6">
+                      <div>
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                          Top Brands
+                        </div>
+                        <div className="space-y-1 text-xs font-medium text-gray-700">
+                          {['Apple MacBook', 'Dell Laptops', 'Lenovo ThinkPad', 'HP Laptops', 'Acer Laptops', 'Asus ZenBook'].map((b, i) => (<Link key={i} href="/buy-refurbished" className="block px-2.5 py-1.5 rounded-md hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                                {b}
+                              </Link>))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                          Best Selling Certified Models
+                        </div>
+                        <div className="space-y-1 text-xs font-medium text-gray-700">
+                          {[
+                'Apple MacBook Air Mid 2017 Refurbished',
+                'Apple MacBook Air Early 2015 Refurbished',
+                'Apple MacBook Air 2020 M1 Refurbished',
+                'Lenovo ThinkPad T490 16GB',
+                'Dell Latitude 7490 Core i7',
+            ].map((model, i) => (<Link key={i} href="/buy-refurbished" className="block px-2.5 py-1.5 rounded-md hover:bg-[#f0faf8] hover:text-[#13b59b] transition leading-snug">
+                              {model}
+                            </Link>))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>)}
+              </div>
+
+              {/* ITEM 7: Sellbar Store ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('store')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'store' ? null : 'store');
+        }} className={`flex items-center gap-1 font-semibold transition pb-1 border-b-2 cursor-pointer ${activeDropdown === 'store'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>Sellbar Store</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'store' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for Sellbar Store */}
+                {activeDropdown === 'store' && (<div className="absolute left-0 top-full pt-2 z-50 w-[460px]">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-2xl p-4">
+                      <div className="p-2 border-b border-gray-100 font-bold text-gray-900 flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <Store className="w-4 h-4 text-[#13b59b]"/>
+                          <span>Find Stores by City</span>
+                        </div>
+                        <span className="text-[11px] text-gray-400">200+ pan-India</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-1.5 pt-3 text-xs font-medium text-gray-700">
+                        {[
+                'Delhi',
+                'Gurgaon',
+                'Noida',
+                'Bengaluru',
+                'Chennai',
+                'Pune',
+                'Agra',
+                'Patna',
+                'Ghaziabad',
+                'Meerut',
+                'Mohali',
+                'Thane',
+            ].map((city, idx) => (<Link key={idx} href="/about-us" className="px-2.5 py-1.5 hover:bg-[#f0faf8] hover:text-[#13b59b] rounded-md transition">
+                            {city}
+                          </Link>))}
+                      </div>
+                      <div className="mt-3 pt-2.5 border-t border-gray-100">
+                        <Link href="/about-us" className="text-xs font-bold text-[#13b59b] hover:underline flex items-center justify-between">
+                          <span>Explore All 200+ Experience Stores</span>
+                          <ArrowRight className="w-3 h-3"/>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>)}
+              </div>
+
+              {/* ITEM 8: More ∨ */}
+              <div className="relative" onMouseEnter={() => handleDropdownEnter('more')} onMouseLeave={handleDropdownLeave}>
+                <button type="button" onClick={(e) => {
+            e.preventDefault();
+            setActiveDropdown(activeDropdown === 'more' ? null : 'more');
+        }} className={`flex items-center gap-1 font-semibold transition cursor-pointer pb-1 border-b-2 ${activeDropdown === 'more'
+            ? 'text-[#13b59b] border-[#13b59b]'
+            : 'text-gray-800 hover:text-[#13b59b] border-transparent'}`}>
+                  <span>More</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'more' ? 'rotate-180 text-[#13b59b]' : 'text-gray-500'}`}/>
+                </button>
+
+                {/* Dropdown for More matching Cashify exact list */}
+                {activeDropdown === 'more' && (<div className="absolute right-0 top-full pt-2 z-50 w-64">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-2xl p-2.5 text-xs font-medium text-gray-700 space-y-0.5">
+                      <Link href="/offers" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <Tag className="w-3.5 h-3.5 text-[#13b59b]"/>
+                        <span>New Offers</span>
+                      </Link>
+                      <Link href="/partner-with-us" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500"/>
+                        <span>Partner with Us</span>
+                      </Link>
+                      <Link href="/contact" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <MapPin className="w-3.5 h-3.5 text-rose-500"/>
+                        <span>Contact Us</span>
+                      </Link>
+                      <Link href="/warranty-policy" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-500"/>
+                        <span>Warranty Policy</span>
+                      </Link>
+                      <Link href="/about-us" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <Building2 className="w-3.5 h-3.5 text-indigo-500"/>
+                        <span>About Us</span>
+                      </Link>
+                      <Link href="/career" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <UserIcon className="w-3.5 h-3.5 text-blue-500"/>
+                        <span>Careers</span>
+                      </Link>
+                      <Link href="/articles" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <Compass className="w-3.5 h-3.5 text-cyan-500"/>
+                        <span>Articles &amp; TechByte</span>
+                      </Link>
+                      <Link href="/corporate-information" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <Building2 className="w-3.5 h-3.5 text-gray-500"/>
+                        <span>Corporate Information</span>
+                      </Link>
+                      <Link href="/supersale" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <Sparkles className="w-3.5 h-3.5 text-[#13b59b]"/>
+                        <span>Become Supersale Partner</span>
+                      </Link>
+                      <Link href="/press-releases" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <RotateCcw className="w-3.5 h-3.5 text-purple-500"/>
+                        <span>Press Releases</span>
+                      </Link>
+                      <Link href="/terms-conditions" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#f0faf8] hover:text-[#13b59b] transition">
+                        <ShieldCheck className="w-3.5 h-3.5 text-gray-400"/>
+                        <span>Terms &amp; Conditions</span>
+                      </Link>
+                    </div>
+                  </div>)}
               </div>
             </nav>
 
             {/* Mobile horizontal scrollable pill bar */}
             <div className="lg:hidden flex items-center gap-2 py-2 overflow-x-auto no-scrollbar text-xs font-semibold text-gray-700">
-              <Link
-                href="/sell"
-                className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white"
-              >
+              <Link href="/sell" className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white">
                 All
               </Link>
-              <Link
-                href="/sell-old-mobile-phone"
-                className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white"
-              >
+              <Link href="/sell-old-mobile-phone" className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white">
                 Sell Phone
               </Link>
-              <Link
-                href="/sell-old-laptop"
-                className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white"
-              >
-                Sell Laptop
+              <Link href="/sell" className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white">
+                Sell Gadgets
               </Link>
-              <Link
-                href="/buy-refurbished"
-                className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white"
-              >
+              <Link href="/buy-refurbished" className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white">
                 Buy Refurbished
               </Link>
-              <Link
-                href="/buy-refurbished-laptops"
-                className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white"
-              >
+              <Link href="/buy-refurbished-laptops" className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white">
                 Buy Laptop
               </Link>
-              <Link
-                href="/repair"
-                className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white"
-              >
+              <Link href="/repair" className="px-3 py-1 bg-gray-100 rounded-full shrink-0 hover:bg-[#13b59b] hover:text-white">
                 Repair
               </Link>
             </div>
@@ -1520,6 +1555,7 @@ export default function Navbar() {
         </div>
 
         {/* ========================================================= */}
+                {/* ========================================================= */}
         {/* MOBILE NAVIGATION DRAWER                                   */}
         {/* ========================================================= */}
         {mobileMenuOpen && (
