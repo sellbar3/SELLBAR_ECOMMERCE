@@ -5,6 +5,7 @@ const Cart = require("../../models/Cart");
 const Order = require("../../models/Order");
 const Product = require("../../models/Product");
 const Vendor = require("../../models/Vendor");
+const { isServiceablePincode } = require("../../utils/serviceability");
 
 // POST /api/orders
 // Supports Cash on Delivery (COD) and Razorpay online payment.
@@ -87,6 +88,14 @@ const placeOrder = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Please provide a valid postal code.",
+      });
+    }
+
+    const cleanPin = address.postalCode.replace(/\D/g, "");
+    if (!isServiceablePincode(cleanPin)) {
+      return res.status(400).json({
+        success: false,
+        message: `Delivery is currently available exclusively in West Champaran, Bihar. PIN code ${cleanPin || address.postalCode} is outside our serviceable area.`,
       });
     }
 

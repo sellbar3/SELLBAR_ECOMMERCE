@@ -5,7 +5,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "SELLBAR API routes are working"
+    message: "SELLBAR API routes are working",
   });
 });
 
@@ -20,10 +20,7 @@ router.use("/vendor/orders", require("./vendorOrder.routes"));
 router.use("/payments", require("./payment.routes"));
 router.use("/categories", require("./category.routes"));
 router.use("/reviews", require("./review.routes"));
-
-
-
-
-
+router.use("/shipping", require("./shipping.routes"));
+router.use("/serviceability", require("./shipping.routes"));
 
 module.exports = router;

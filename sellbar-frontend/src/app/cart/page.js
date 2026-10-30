@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Truck, Lock, MapPin } from "lucide-react";
 import { getSession } from "../../lib/auth";
 import {
   getLocalCart,
@@ -234,6 +234,17 @@ export default function CartPage() {
                   <span>Total Payable</span>
                   <span className="text-[#2bbda3] text-lg">₹{total.toLocaleString("en-IN")}</span>
                 </div>
+              </div>
+
+              {/* Delivery Zone Notice */}
+              <div className="p-3 bg-teal-50/70 rounded-xl border border-teal-200/80 text-[11px] text-teal-800 space-y-1">
+                <div className="font-bold flex items-center gap-1.5 text-teal-900">
+                  <MapPin className="w-3.5 h-3.5 text-[#2bbda3]" />
+                  <span>Exclusive Delivery in West Champaran, Bihar</span>
+                </div>
+                <p className="text-teal-700/90">
+                  Free 24 - 48 Hours doorstep delivery across all 18 blocks (Bettiah, Bagaha, Narkatiaganj &amp; more).
+                </p>
               </div>
 
               {/* Checkout Button */}

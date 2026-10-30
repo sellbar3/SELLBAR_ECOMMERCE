@@ -26,7 +26,7 @@ export default function ProductDetailClient({ product, related }) {
     const [autoRotate3D, setAutoRotate3D] = useState(true);
     const [added, setAdded] = useState(false);
     // Pincode speed checker
-    const [pincode, setPincode] = useState('560001');
+    const [pincode, setPincode] = useState('845438');
     const [deliveryInfo, setDeliveryInfo] = useState(null);
     useEffect(() => {
         if (pincode.length === 6) {
@@ -324,17 +324,32 @@ export default function ProductDetailClient({ product, related }) {
               </button>
             </div>
 
-            {deliveryInfo && (<div className="text-xs space-y-1 text-slate-300 pt-1">
-                <div className="text-emerald-400 font-bold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5"/>
-                  <span>
-                    Serviceable in {deliveryInfo.city} ({deliveryInfo.state})
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  Estimated Delivery: <strong>{deliveryInfo.deliveryDays} Business Days</strong> via BlueDart Express Air Cargo.
-                </p>
-              </div>)}
+            {deliveryInfo && (
+              <div className="text-xs space-y-1 pt-1">
+                {deliveryInfo.isServiceable ? (
+                  <>
+                    <div className="text-emerald-400 font-bold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400"/>
+                      <span>
+                        Serviceable in {deliveryInfo.city}, West Champaran ({deliveryInfo.state})
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400">
+                      Estimated Delivery: <strong>24 - 48 Hours</strong> with Free Doorstep Verification & COD.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-rose-400 font-bold flex items-center gap-1.5">
+                      <span>Delivery Not Available for PIN {pincode}</span>
+                    </div>
+                    <p className="text-[11px] text-rose-300/80">
+                      Sellbar currently delivers exclusively to West Champaran (Bihar).
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Specifications Table */}

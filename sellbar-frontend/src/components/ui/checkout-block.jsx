@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  lookupPincode,
+  isServiceablePincode,
+  POPULAR_CITIES,
+  WEST_CHAMPARAN_BLOCKS,
+} from '@/lib/pincodes';
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,9 +62,9 @@ export default function Checkout({ initialItems }) {
     email: "",
     phone: "",
     address: "",
-    city: "",
-    state: "DL",
-    zipCode: "",
+    city: "Bettiah",
+    state: "BR",
+    zipCode: "845438",
     country: "IN",
   });
   const [paymentMethod, setPaymentMethod] = useState({
@@ -71,6 +78,11 @@ export default function Checkout({ initialItems }) {
   const [sameAsShipping, setSameAsShipping] = useState(true);
   const [savePaymentMethod, setSavePaymentMethod] = useState(false);
   const [appliedPromo, setAppliedPromo] = useState("SAVE10");
+  const [pincodeStatus, setPincodeStatus] = useState({
+    checked: true,
+    valid: true,
+    message: "Serviceable in Bettiah, West Champaran (24-48 Hours Delivery)",
+  });
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
 
@@ -190,10 +202,54 @@ export default function Checkout({ initialItems }) {
   };
 
   const handleAddressChange = (field, value) => {
+    setShippingAddress((prev) => {
+      const updated = { ...prev, [field]: value };
+      if (field === "zipCode") {
+        const clean = value.replace(/\D/g, "");
+        updated.zipCode = clean;
+        if (clean.length === 6) {
+          const info = lookupPincode(clean);
+          if (info.isServiceable) {
+            updated.city = info.city;
+            updated.state = "BR";
+            setPincodeStatus({
+              checked: true,
+              valid: true,
+              message: `Serviceable in ${info.city}, West Champaran (${info.deliveryDays} Express Delivery)`,
+            });
+          } else {
+            setPincodeStatus({
+              checked: true,
+              valid: false,
+              message: `PIN ${clean} is outside West Champaran, Bihar. Delivery not available.`,
+            });
+          }
+        } else if (clean.length > 0) {
+          setPincodeStatus({
+            checked: true,
+            valid: false,
+            message: "Please enter a 6-digit PIN code.",
+          });
+        } else {
+          setPincodeStatus({ checked: false, valid: false, message: "" });
+        }
+      }
+      return updated;
+    });
+  };
+
+  const handleSelectWestChamparanTown = (town, pin) => {
     setShippingAddress((prev) => ({
       ...prev,
-      [field]: value,
+      city: town,
+      state: "BR",
+      zipCode: pin,
     }));
+    setPincodeStatus({
+      checked: true,
+      valid: true,
+      message: `Serviceable in ${town}, West Champaran (24-48 Hours Express Delivery)`,
+    });
   };
 
   const handlePaymentChange = (field, value) => {
@@ -205,7 +261,8 @@ export default function Checkout({ initialItems }) {
 
   const validateStep = (step) => {
     switch (step) {
-      case 1:
+      case 1: {
+        const isPinValid = isServiceablePincode(shippingAddress.zipCode);
         return !!(
           shippingAddress.firstName &&
           shippingAddress.lastName &&
@@ -213,8 +270,9 @@ export default function Checkout({ initialItems }) {
           shippingAddress.address &&
           shippingAddress.city &&
           shippingAddress.state &&
-          shippingAddress.zipCode
+          isPinValid
         );
+      }
       case 2:
         if (selectedPaymentType === "card") {
           return !!(
@@ -570,54 +628,106 @@ export default function Checkout({ initialItems }) {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      size="lg"
-                      placeholder="e.g. New Delhi"
-                      value={shippingAddress.city}
-                      onChange={(e) =>
-                        handleAddressChange("city", e.target.value)
-                      }
-                    />
+                <div>
+                  {/* West Champaran Quick Selector */}
+                  <div className="mb-3 p-3 bg-teal-50/70 border border-teal-200/80 rounded-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold text-teal-900 flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#2bbda3]" />
+                        Quick Select West Champaran Town / Block:
+                      </span>
+                      <span className="text-[10px] bg-white text-teal-700 px-2 py-0.5 rounded font-bold border border-teal-200">
+                        18 Blocks Covered
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                      {POPULAR_CITIES.map((c, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => handleSelectWestChamparanTown(c.name, c.pincode)}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
+                            shippingAddress.zipCode === c.pincode
+                              ? "bg-[#2bbda3] text-white shadow-xs"
+                              : "bg-white text-gray-700 border border-gray-200 hover:border-[#2bbda3]"
+                          }`}
+                        >
+                          {c.name} ({c.pincode})
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="state">State / Region *</Label>
-                    <Select
-                      value={shippingAddress.state}
-                      onValueChange={(value) =>
-                        handleAddressChange("state", value)
-                      }
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="city">City / Block *</Label>
+                      <Input
+                        id="city"
+                        size="lg"
+                        placeholder="e.g. Bettiah, Bagaha"
+                        value={shippingAddress.city}
+                        onChange={(e) =>
+                          handleAddressChange("city", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="state">State *</Label>
+                      <Select
+                        value={shippingAddress.state}
+                        onValueChange={(value) =>
+                          handleAddressChange("state", value)
+                        }
+                      >
+                        <SelectTrigger className="text-sm" size={"lg"}>
+                          <SelectValue placeholder="Select state" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="BR">Bihar (Active Service Zone)</SelectItem>
+                          <SelectItem value="DL" disabled>Delhi NCR (Not Serviceable)</SelectItem>
+                          <SelectItem value="MH" disabled>Maharashtra (Not Serviceable)</SelectItem>
+                          <SelectItem value="KA" disabled>Karnataka (Not Serviceable)</SelectItem>
+                          <SelectItem value="UP" disabled>Uttar Pradesh (Not Serviceable)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="zipCode">PIN Code *</Label>
+                      <Input
+                        id="zipCode"
+                        size="lg"
+                        maxLength={6}
+                        placeholder="e.g. 845438, 845101"
+                        value={shippingAddress.zipCode}
+                        onChange={(e) =>
+                          handleAddressChange("zipCode", e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Real-time Serviceability Status Banner */}
+                  {pincodeStatus.checked && (
+                    <div
+                      className={`mt-3 p-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border ${
+                        pincodeStatus.valid
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                          : "bg-rose-50 text-rose-700 border-rose-200"
+                      }`}
                     >
-                      <SelectTrigger className="text-sm" size={"lg"}>
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="DL">Delhi NCR</SelectItem>
-                        <SelectItem value="MH">Maharashtra</SelectItem>
-                        <SelectItem value="KA">Karnataka</SelectItem>
-                        <SelectItem value="TN">Tamil Nadu</SelectItem>
-                        <SelectItem value="UP">Uttar Pradesh</SelectItem>
-                        <SelectItem value="HR">Haryana</SelectItem>
-                        <SelectItem value="WB">West Bengal</SelectItem>
-                        <SelectItem value="GJ">Gujarat</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="zipCode">PIN Code *</Label>
-                    <Input
-                      id="zipCode"
-                      size="lg"
-                      placeholder="110020"
-                      value={shippingAddress.zipCode}
-                      onChange={(e) =>
-                        handleAddressChange("zipCode", e.target.value)
-                      }
-                    />
-                  </div>
+                      {pincodeStatus.valid ? (
+                        <>
+                          <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span>{pincodeStatus.message}</span>
+                        </>
+                      ) : (
+                        <>
+                          <X className="w-4 h-4 text-rose-600 shrink-0" />
+                          <span>{pincodeStatus.message}</span>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Shipping Methods */}

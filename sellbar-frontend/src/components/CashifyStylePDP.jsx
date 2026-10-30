@@ -80,13 +80,21 @@ export default function CashifyStylePDP({ product, related }) {
     // Cart animation toast
     const [addedToast, setAddedToast] = useState(false);
     // Pincode speed checker
-    const [pincode, setPincode] = useState('122001');
+    const [pincode, setPincode] = useState('845438');
     const [pincodeChecked, setPincodeChecked] = useState(true);
     const [deliveryData, setDeliveryData] = useState(null);
     useEffect(() => {
         if (pincode.length === 6) {
             setDeliveryData(lookupPincode(pincode));
         }
+        const onLocationChange = (e) => {
+            if (e.detail?.pincode) {
+                setPincode(e.detail.pincode);
+                setPincodeChecked(true);
+            }
+        };
+        window.addEventListener('sellbar-location-changed', onLocationChange);
+        return () => window.removeEventListener('sellbar-location-changed', onLocationChange);
     }, [pincode]);
     // Pricing calculations based on variant choices
     const conditionDelta = condition === 'Superb' ? 0 : condition === 'Good' ? -3500 : -7000;
@@ -578,15 +586,35 @@ export default function CashifyStylePDP({ product, related }) {
                   </button>
                 </div>
 
-                {pincodeChecked && deliveryData && (<div className="mt-2.5 text-xs text-gray-700 bg-white border border-gray-200 rounded-lg p-3 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-emerald-600">
-                      <Check className="w-3.5 h-3.5"/>
-                      <span>Free Express Delivery to {deliveryData.city} ({deliveryData.pincode})</span>
-                    </div>
-                    <div className="text-gray-500">
-                      Expected delivery within <strong>24 - 48 Hours</strong>. Cash on Delivery (COD) available with doorstep verification.
-                    </div>
-                  </div>)}
+                {pincodeChecked && deliveryData && (
+                  <div className={`mt-2.5 text-xs rounded-lg p-3 space-y-1 ${
+                    deliveryData.isServiceable
+                      ? 'bg-emerald-50/60 border border-emerald-200 text-gray-700'
+                      : 'bg-rose-50 border border-rose-200 text-rose-800'
+                  }`}>
+                    {deliveryData.isServiceable ? (
+                      <>
+                        <div className="flex items-center gap-1.5 font-bold text-emerald-700">
+                          <Check className="w-3.5 h-3.5 text-emerald-600"/>
+                          <span>Free Express Delivery to {deliveryData.city} ({deliveryData.pincode}), West Champaran</span>
+                        </div>
+                        <div className="text-gray-600">
+                          Expected delivery within <strong>24 - 48 Hours</strong>. Cash on Delivery (COD) available with doorstep verification.
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-1.5 font-bold text-rose-700">
+                          <X className="w-3.5 h-3.5 text-rose-600"/>
+                          <span>Delivery Not Available for PIN {deliveryData.pincode || pincode}</span>
+                        </div>
+                        <div className="text-xs text-rose-600">
+                          Sellbar currently delivers exclusively to <strong>West Champaran (Bihar)</strong>. Delivery is not available for this PIN code.
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Quick Add to Cart Button */}
@@ -984,7 +1012,7 @@ export default function CashifyStylePDP({ product, related }) {
             },
             {
                 q: 'Can I pay via Cash on Delivery or No-Cost EMI?',
-                a: 'Yes! Sellbar supports Cash on Delivery (COD) across 19,000+ Indian pincodes as well as flexible No-Cost EMI options via Bajaj Finserv, Snapmint, Instacred, and all major credit/debit cards.'
+                a: 'Yes! Sellbar supports Cash on Delivery (COD) across all 18 blocks & 19 verified PIN codes of West Champaran, Bihar, as well as flexible online payment and No-Cost EMI options.'
             }
         ].map((faq, idx) => {
             const isOpen = openFaq === idx;

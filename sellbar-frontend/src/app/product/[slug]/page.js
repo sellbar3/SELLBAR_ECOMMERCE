@@ -1,5 +1,7 @@
 "use client";
 
+import { lookupPincode, isServiceablePincode } from '@/lib/pincodes';
+
 import React, { Suspense, useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -69,7 +71,7 @@ function ProductDetailContent() {
   const [shareToast, setShareToast] = useState(false);
 
   // Pincode & Delivery State
-  const [pincode, setPincode] = useState("");
+  const [pincode, setPincode] = useState("845438");
   const [deliveryStatus, setDeliveryStatus] = useState(null);
 
   // Active Tab Below Fold
@@ -78,6 +80,34 @@ function ProductDetailContent() {
 
   // Customer photo modal
   const [selectedReviewPhoto, setSelectedReviewPhoto] = useState(null);
+
+  // Sync location & initial delivery check
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('sellbar-selected-location');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.pincode && isServiceablePincode(parsed.pincode)) {
+          setPincode(parsed.pincode);
+          const info = lookupPincode(parsed.pincode);
+          setDeliveryStatus({
+            valid: true,
+            msg: `Fast Express Delivery Available in ${info.city}, West Champaran (PIN: ${parsed.pincode}).`,
+            estimate: "Estimated Doorstep Delivery: 24 - 48 Hours with Free COD.",
+          });
+          return;
+        }
+      }
+    } catch {
+      // ignore
+    }
+    const defInfo = lookupPincode("845438");
+    setDeliveryStatus({
+      valid: true,
+      msg: `Fast Express Delivery Available in ${defInfo.city}, West Champaran (PIN: 845438).`,
+      estimate: "Estimated Doorstep Delivery: 24 - 48 Hours with Free COD.",
+    });
+  }, []);
 
   // Load product data from backend API
   useEffect(() => {
@@ -205,21 +235,29 @@ function ProductDetailContent() {
 
   // Pincode delivery checker
   function handleCheckPincode(e) {
-    e.preventDefault();
-    const clean = pincode.trim();
-    if (!/^\d{6}$/.test(clean)) {
+    if (e && e.preventDefault) e.preventDefault();
+    const clean = String(pincode || "").trim().replace(/\D/g, "");
+    if (clean.length !== 6) {
       setDeliveryStatus({
         valid: false,
-        msg: "Please enter a valid 6-digit Indian PIN code.",
+        msg: "Please enter a valid 6-digit PIN code.",
       });
       return;
     }
-    // Simulation based on pincode
-    setDeliveryStatus({
-      valid: true,
-      msg: `Fast Express Delivery Available for PIN ${clean}. Dispatched within 24 hours.`,
-      estimate: "Estimated Doorstep Delivery: 2-3 Business Days",
-    });
+    const info = lookupPincode(clean);
+    if (info.isServiceable) {
+      setDeliveryStatus({
+        valid: true,
+        msg: `Fast Express Delivery Available in ${info.city}, West Champaran (PIN: ${clean}).`,
+        estimate: "Estimated Doorstep Delivery: 24 - 48 Hours with Free COD.",
+      });
+    } else {
+      setDeliveryStatus({
+        valid: false,
+        msg: `Delivery Not Available for PIN ${clean}. Sellbar currently delivers exclusively to West Champaran, Bihar.`,
+        estimate: "Outside serviceable area (18 blocks of West Champaran supported).",
+      });
+    }
   }
 
   // Cart operations
