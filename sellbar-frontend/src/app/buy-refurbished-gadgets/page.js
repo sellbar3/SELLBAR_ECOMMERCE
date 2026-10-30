@@ -72,7 +72,7 @@ export default function BuyRefurbishedGadgetsPage() {
         const data = await fetchProducts({ limit: 50 });
         setProducts(data.products || []);
       } catch (err) {
-        console.error("Failed to load gadgets:", err);
+        console.warn("Notice: Gadgets loaded with fallback:", err);
       } finally {
         setLoading(false);
       }

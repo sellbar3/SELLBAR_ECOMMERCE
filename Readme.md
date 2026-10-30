@@ -192,9 +192,4 @@ npm run build:frontend
 
 ---
 
-## 📄 License
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 © 2026 **Sellbar**. Created by [Maajanki Web Tech](https://maajankiwebtech.com). All rights reserved.

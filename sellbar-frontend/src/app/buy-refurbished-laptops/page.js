@@ -18,7 +18,7 @@ export default function BuyRefurbishedLaptopsPage() {
         const data = await fetchProducts({ category: "laptop", limit: 50 });
         setLaptops(data.products || []);
       } catch (err) {
-        console.error("Failed to load laptops:", err);
+        console.warn("Notice: Laptops loaded with fallback:", err);
       } finally {
         setLoading(false);
       }

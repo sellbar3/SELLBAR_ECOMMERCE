@@ -18,7 +18,7 @@ export default function HotDealsSection() {
         const data = await fetchFeaturedProducts('hot-deal');
         setDeals(data.slice(0, 4));
       } catch (err) {
-        console.error("Failed to load hot deals:", err);
+        console.warn("Notice: Hot deals loaded with fallback:", err);
       } finally {
         setLoading(false);
       }

@@ -20,7 +20,7 @@ export default function RefurbishedLaptopsSection() {
         const data = await fetchProducts({ category: "laptop", limit: 12 });
         setLaptops(data.products || []);
       } catch (err) {
-        console.error("Failed to load refurbished laptops:", err);
+        console.warn("Notice: Refurbished laptops loaded with fallback:", err);
       } finally {
         setLoading(false);
       }

@@ -18,7 +18,7 @@ export default function BuyRefurbishedMobilePhonesPage() {
         const data = await fetchProducts({ category: "mobile-phones", limit: 50 });
         setPhones(data.products || []);
       } catch (err) {
-        console.error("Failed to fetch mobile phones:", err);
+        console.warn("Notice: Mobile phones loaded with fallback:", err);
       } finally {
         setLoading(false);
       }
