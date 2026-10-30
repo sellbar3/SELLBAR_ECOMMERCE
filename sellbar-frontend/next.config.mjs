@@ -17,6 +17,25 @@ const nextConfig = {
       },
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/about",
+        destination: "/about-us",
+        permanent: true,
+      },
+      {
+        source: "/career",
+        destination: "/careers",
+        permanent: true,
+      },
+      {
+        source: "/blog",
+        destination: "/articles",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
