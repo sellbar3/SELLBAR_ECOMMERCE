@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import PanelShell from "../../../components/PanelShell";
 import {
@@ -268,7 +268,7 @@ const MODULES = {
   },
 };
 
-export default function AdminModulePage() {
+function AdminModuleContent() {
   const params = useParams();
   const moduleName = Array.isArray(params.module)
     ? params.module[0]
@@ -639,4 +639,12 @@ export default function AdminModulePage() {
       </div>
     </PanelShell>
   );
+}
+
+export default function AdminModulePage() {
+  return (
+    <Suspense fallback={<p className="pn-loading">Loading...</p>}>
+      <AdminModuleContent />
+    </Suspense>
+ );
 }

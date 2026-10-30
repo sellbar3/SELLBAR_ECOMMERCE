@@ -1,0 +1,11 @@
+<svg width="120" height="28" viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left Teal Circular Logo Checkmark -->
+  <circle cx="14" cy="14" r="11" stroke="#42c8b7" stroke-width="2.2" fill="white"/>
+  <circle cx="14" cy="14" r="7" stroke="#42c8b7" stroke-width="1.8" fill="none"/>
+  <path d="M11 14.2L13.2 16.5L17.5 12" stroke="#42c8b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Right Black Pill Badge -->
+  <rect x="28" y="4" width="88" height="20" rx="10" fill="#111827"/>
+  <text x="72" y="14" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="7.5" font-weight="900" letter-spacing="0.8" text-anchor="middle">SELLBAR</text>
+  <text x="72" y="21" fill="#42c8b7" font-family="system-ui, -apple-system, sans-serif" font-size="6" font-weight="800" letter-spacing="1" text-anchor="middle">ASSURED</text>
+</svg>

@@ -1,1019 +1,368 @@
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
-
-import { getCart, addCartItem, updateCartItem } from "../lib/cart";
-import { SESSION_KEY } from "../lib/auth";
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import OurServices from "@/components/OurServices";
-import { SellDeviceSection, ShowcaseSections } from "@/components/ShowcaseSections";
-import { HomeMoreSections } from "@/components/HomeSections";
-import HotDealsSection from "@/components/HotDealsSection";
-
-const API = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
-).replace(/\/+$/, "");
-
-const categoryIcons = {
-  Mobiles: "📱",
-  Laptops: "💻",
-  Smartwatches: "⌚",
-  Headphones: "🎧",
-  Tablets: "📲",
-  Accessories: "🔌",
-  Footwear: "👟",
-  Fashion: "👕",
-  Electronics: "🔌",
-};
-
-const categoryIcon = (name) => categoryIcons[name] || "🛍️";
-
-const fallbackColors = ["#e0edff", "#eee7ff", "#dff5e8", "#fce7d9", "#fef3c7", "#fce7f3"];
-
-const slides = [
-  {
-    title: "Welcome to SELLBAR",
-    sub: "Discover products from trusted sellers",
-    cta: "Shop Products",
-    cat: "All",
-    emoji: "🛍️",
-    bg: "linear-gradient(120deg,#2874f0,#6a5af9)",
-  },
-  {
-    title: "Great Finds. Great Prices.",
-    sub: "Explore the latest products and offers",
-    cta: "Explore Products",
-    cat: "All",
-    emoji: "✨",
-    bg: "linear-gradient(120deg,#e8590c,#f59f00)",
-  },
-  {
-    title: "Your Next Favorite Is Here",
-    sub: "Browse products available on SELLBAR",
-    cta: "Browse Now",
-    cat: "All",
-    emoji: "🛒",
-    bg: "linear-gradient(120deg,#0b7a75,#38b26e)",
-  },
-];
-
-const sorts = [
-  { key: "relevance", label: "Relevance" },
-  { key: "low", label: "Price: Low to High" },
-  { key: "high", label: "Price: High to Low" },
-  { key: "rating", label: "Rating" },
-];
-
-const money = (n) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(Number(n) || 0);
-
-const off = (product) => {
-  const oldPrice = Number(product.oldPrice) || 0;
-  const price = Number(product.price) || 0;
-  if (oldPrice <= price || oldPrice <= 0) return 0;
-  return Math.round(((oldPrice - price) / oldPrice) * 100);
-};
-
-const isExpired = (token) => {
-  try {
-    const payload = JSON.parse(
-      atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
-    );
-    return payload.exp ? payload.exp * 1000 < Date.now() : false;
-  } catch {
-    return true;
-  }
-};
-
-async function post(path, body) {
-  const response = await fetch(`${API}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  const result = await response.json().catch(() => ({}));
-
-  if (!response.ok || !result.success) {
-    throw new Error(result.message || "Something went wrong");
-  }
-
-  return result.data;
-}
-
-export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-
-  const [productsLoading, setProductsLoading] = useState(true);
-  const [productsError, setProductsError] = useState("");
-
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [sort, setSort] = useState("relevance");
-  const [minRating, setMinRating] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(0);
-
-  const [cart, setCart] = useState({});
-  const [cartOpen, setCartOpen] = useState(false);
-  const [wishlist, setWishlist] = useState([]);
-
-  const [slide, setSlide] = useState(0);
-  const [user, setUser] = useState(null);
-
-  const [authOpen, setAuthOpen] = useState(false);
-  const [authMode, setAuthMode] = useState("login");
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-
-  const [authError, setAuthError] = useState("");
-  const [authLoading, setAuthLoading] = useState(false);
-  const [pendingId, setPendingId] = useState(null);
-
-  // Load products and categories from backend
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadStoreData() {
-      setProductsLoading(true);
-      setProductsError("");
-
-      try {
-        const [productsResponse, categoriesResponse] = await Promise.all([
-          fetch(`${API}/public/products?limit=100`, { cache: "no-store" }),
-          fetch(`${API}/public/categories`, { cache: "no-store" }),
-        ]);
-
-        const productsJson = await productsResponse.json();
-        const categoriesJson = await categoriesResponse.json();
-
-        if (!productsResponse.ok || !productsJson.success) {
-          throw new Error(productsJson.message || "Products could not be loaded.");
-        }
-
-        if (!categoriesResponse.ok || !categoriesJson.success) {
-          throw new Error(categoriesJson.message || "Categories could not be loaded.");
-        }
-
-        const apiProducts = (productsJson.data?.products || []).map(
-          (product, index) => {
-            const price = Number(product.price) || 0;
-            const oldPrice = Number(product.compareAtPrice) || price;
-
-            const categoryName =
-              typeof product.category === "object"
-                ? product.category?.name || "Other"
-                : product.category || "Other";
-
-            return {
-              id: product._id,
-              name: product.name || "Unnamed product",
-              category: categoryName,
-              price,
-              oldPrice,
-              rating: Number(product.averageRating) || 0,
-              reviews: Number(product.totalReviews) || 0,
-              emoji: categoryIcon(categoryName),
-              color: fallbackColors[index % fallbackColors.length],
-              specs: product.description || product.brand || "Available on SELLBAR",
-              image: product.images?.find((item) => item?.url)?.url || "",
-              stock: Math.max(0, Number(product.stock) || 0),
-            };
-          }
-        );
-
-        if (!cancelled) {
-          setProducts(apiProducts);
-          setCategories(categoriesJson.data?.categories || []);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          setProductsError(
-            error instanceof TypeError
-              ? "Backend se connect nahi ho pa raha. Backend aur API URL check karein."
-              : error.message || "Store data load nahi ho saka."
-          );
-        }
-      } finally {
-        if (!cancelled) setProductsLoading(false);
-      }
-    }
-
-    loadStoreData();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Restore login session
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
-
-      if (saved?.token && !isExpired(saved.token)) {
-        setUser(saved);
-      } else {
-        localStorage.removeItem(SESSION_KEY);
-      }
-    } catch {
-      // Ignore invalid local session data
-    }
-  }, []);
-
-  // Automatic hero slider
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSlide((current) => (current + 1) % slides.length);
-    }, 4500);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  // Backend cart helpers
-  const buildCartMap = (data) => {
-    const next = {};
-    for (const item of data?.items || []) {
-      const id = item.product?.id || item.product?._id || item.productId;
-      if (id) next[id] = Number(item.quantity) || 1;
-    }
-    return next;
-  };
-
-  const syncCart = async (token) => {
-    const data = await getCart(token);
-    setCart(buildCartMap(data));
-  };
-
-  // Load the cart from backend whenever the user logs in
-  useEffect(() => {
-    if (!user?.token || isExpired(user.token)) return;
-
-    let cancelled = false;
-
-    getCart(user.token)
-      .then((data) => {
-        if (!cancelled) setCart(buildCartMap(data));
-      })
-      .catch((error) => {
-        if (!cancelled) console.error("Cart loading error:", error.message);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [user?.token]);
-
-  // Search, category, price and rating filters
-  const filtered = useMemo(() => {
-    const query = search.trim().toLowerCase();
-
-    const list = products.filter((product) => {
-      const matchesCategory = category === "All" || product.category === category;
-
-      const matchesSearch =
-        product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query) ||
-        product.specs.toLowerCase().includes(query);
-
-      const matchesRating =
-        minRating === 0 || (product.rating > 0 && product.rating >= minRating);
-
-      const matchesPrice = maxPrice === 0 || product.price <= maxPrice;
-
-      return matchesCategory && matchesSearch && matchesRating && matchesPrice;
-    });
-
-    if (sort === "low") list.sort((a, b) => a.price - b.price);
-    if (sort === "high") list.sort((a, b) => b.price - a.price);
-    if (sort === "rating") list.sort((a, b) => b.rating - a.rating);
-
-    return list;
-  }, [products, search, category, sort, minRating, maxPrice]);
-
-  // Products with the biggest discount
-  const deals = useMemo(
-    () => [...products].sort((a, b) => off(b) - off(a)).slice(0, 8),
-    [products]
-  );
-
-  const cartItems = products.filter((product) => cart[product.id]);
-
-  const cartCount = cartItems.reduce((total, product) => total + cart[product.id], 0);
-
-  const cartTotal = cartItems.reduce(
-    (total, product) => total + product.price * cart[product.id],
-    0
-  );
-
-  const cartSaved = cartItems.reduce(
-    (total, product) =>
-      total + Math.max(0, product.oldPrice - product.price) * cart[product.id],
-    0
-  );
-
-  const toggleWish = (id) => {
-    setWishlist((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
-    );
-  };
-
-  const openAuth = (mode, id = null) => {
-    setPendingId(id);
-    setAuthMode(mode);
-    setAuthError("");
-    setAuthOpen(true);
-  };
-
-  const closeAuth = () => {
-    setAuthOpen(false);
-    setPendingId(null);
-    setAuthError("");
-  };
-
-  const logout = () => {
-    try {
-      localStorage.removeItem(SESSION_KEY);
-    } catch {}
-
-    setUser(null);
-    setCart({});
-    setCartOpen(false);
-  };
-
-  // Cart actions (backend)
-  const addItem = async (id, token = user?.token) => {
-    if (!token || isExpired(token)) {
-      openAuth("login", id);
-      return;
-    }
-
-    const product = products.find((item) => item.id === id);
-    if (!product || product.stock <= 0) return;
-
-    if ((cart[id] || 0) >= product.stock) {
-      alert("Itna stock available nahi hai.");
-      return;
-    }
-
-    try {
-      await addCartItem(id, 1, token);
-      await syncCart(token);
-    } catch (error) {
-      alert(error.message || "Cart mein product add nahi hua.");
-    }
-  };
-
-  const changeQty = async (id, delta) => {
-    if (!user?.token || isExpired(user.token)) {
-      openAuth("login");
-      return;
-    }
-
-    const product = products.find((item) => item.id === id);
-    if (!product) return;
-
-    const nextQty = (cart[id] || 0) + delta;
-
-    if (nextQty > product.stock) {
-      alert("Itna stock available nahi hai.");
-      return;
-    }
-
-    try {
-      await updateCartItem(id, Math.max(0, nextQty), user.token);
-      await syncCart(user.token);
-    } catch (error) {
-      alert(error.message || "Cart update nahi hua.");
-    }
-  };
-
-  const addToCart = async (id) => {
-    if (!user || isExpired(user.token)) {
-      if (user) logout();
-      openAuth("login", id);
-      return;
-    }
-
-    await addItem(id, user.token);
-  };
-
-  // Login and customer registration
-  const submitAuth = async (event) => {
-    event.preventDefault();
-    setAuthError("");
-
-    const { name, email, password } = form;
-
-    if (!email.trim() || !password || (authMode === "register" && !name.trim())) {
-      setAuthError("Please fill in all fields.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setAuthError("Password must be at least 6 characters.");
-      return;
-    }
-
-    setAuthLoading(true);
-    let registered = false;
-
-    try {
-      if (authMode === "register") {
-        await post("/auth/register/customer", {
-          name: name.trim(),
-          email: email.trim(),
-          password,
-        });
-
-        registered = true;
-      }
-
-      const data = await post("/auth/login", {
-        email: email.trim(),
-        password,
-        role: "customer",
-      });
-
-      const session = { token: data.token, ...data.user };
-
-      try {
-        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      } catch {}
-
-      setUser(session);
-      setAuthOpen(false);
-      setForm({ name: "", email: "", password: "" });
-
-      if (pendingId) {
-        await addItem(pendingId, session.token);
-      }
-
-      setPendingId(null);
-    } catch (error) {
-      if (registered) setAuthMode("login");
-
-      setAuthError(
-        error instanceof TypeError
-          ? "Cannot reach the server. Check that the backend is running."
-          : registered
-            ? "Account created, but login failed. Please log in."
-            : error.message
-      );
-    } finally {
-      setAuthLoading(false);
-    }
-  };
-
-  const scrollToProducts = () =>
-    document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
-
-  const goTo = (cat) => {
-    setCategory(cat);
-    setSearch("");
-    scrollToProducts();
-  };
-
-  const handleNavbarSearch = (term) => {
-    setSearch(term);
-    setCategory("All");
-    scrollToProducts();
-  };
-
-  const resetFilters = () => {
-    setCategory("All");
-    setSearch("");
-    setMinRating(0);
-    setMaxPrice(0);
-    setSort("relevance");
-  };
-
-  // Product card
-  const renderCard = (product) => (
-    <article className="card" key={product.id}>
-      <div className="card-img" style={{ background: product.color }}>
-        <button
-          className={`heart ${wishlist.includes(product.id) ? "on" : ""}`}
-          aria-label={`Save ${product.name}`}
-          aria-pressed={wishlist.includes(product.id)}
-          onClick={() => toggleWish(product.id)}
-        >
-          {wishlist.includes(product.id) ? "♥" : "♡"}
-        </button>
-
-        {product.image ? (
-          <img
-            className="product-image"
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-          />
-        ) : (
-          <span className="card-emoji">{product.emoji}</span>
-        )}
-      </div>
-
-      <div className="card-body">
-        <h3>{product.name}</h3>
-        <p className="specs">{product.specs}</p>
-
-        <div className="rating-row">
-          {product.rating > 0 ? (
-            <>
-              <span className="rating-pill">{product.rating.toFixed(1)} ★</span>
-              <span className="reviews">
-                ({product.reviews.toLocaleString("en-IN")})
+import React from 'react';
+import Link from 'next/link';
+import { Smartphone, Zap, ShieldCheck, Truck, CheckCircle2, Star, Store, Clock, Check, X, CreditCard, Headphones, Wrench, } from 'lucide-react';
+import HeroCarousel from '@/components/HeroCarousel';
+import OurServicesSection from '@/components/OurServicesSection';
+import HotDealsSection from '@/components/HotDealsSection';
+import RefurbishedPhonesSection from '@/components/RefurbishedPhonesSection';
+import RefurbishedLaptopsSection from '@/components/RefurbishedLaptopsSection';
+import ExclusiveStoresSection from '@/components/ExclusiveStoresSection';
+import CashifyGuidesSection from '@/components/CashifyGuidesSection';
+import TrendingArticlesSection from '@/components/TrendingArticlesSection';
+import SeoEditorialSection from '@/components/SeoEditorialSection';
+import SellYourOldDeviceSection from '@/components/SellYourOldDeviceSection';
+import BrandPartnersSlider from '@/components/BrandPartnersSlider';
+import HomeFaq from '@/components/HomeFaq';
+export default function HomePage() {
+  // Customer Reviews
+  const reviews = [
+    {
+      name: 'Aman Verma',
+      city: 'Gurgaon, Sector 49',
+      rating: 5,
+      date: '2 days ago',
+      title: 'Got cash in 20 minutes right at my doorstep!',
+      review: 'Sold my iPhone 13. The technician arrived on time with an ID card, ran the quick 32-point diagnostics in front of me, and transferred ₹34,500 to my UPI account instantly.',
+      device: 'Sold Apple iPhone 13 (128GB)',
+    },
+    {
+      name: 'Priya Sundaram',
+      city: 'Bengaluru, Indiranagar',
+      rating: 5,
+      date: '1 week ago',
+      title: 'Refurbished MacBook Air looks 100% brand new',
+      review: 'Was skeptical about buying refurbished electronics online, but Sellbar exceeded expectations. Battery health was 98% and condition is flawless. 12 months warranty gave me peace of mind.',
+      device: 'Bought MacBook Air M2 (Space Grey)',
+    },
+    {
+      name: 'Rohit Kulkarni',
+      city: 'Mumbai, Andheri West',
+      rating: 5,
+      date: '3 days ago',
+      title: 'Screen replaced in 30 mins at my office',
+      review: 'Dropped my OnePlus 11 and shattered the glass. Booked doorstep repair and the engineer fixed it in the office cafeteria with OEM parts and gave a 6-month warranty card.',
+      device: 'Repaired OnePlus 11 Display',
+    },
+  ];
+  return (<div className="space-y-10 sm:space-y-12 pb-16 font-sans">
+
+    {/* 1. HERO SLIDER CAROUSEL (6 Real Cashify Promotional Banners) */}
+    <HeroCarousel />
+
+    {/* 2. OUR SERVICES (Exact 16 Inspected Mint Cards in 2 Rows) */}
+    <OurServicesSection />
+
+    {/* 3. SELL YOUR OLD DEVICE NOW (Exact Match to Screenshot) */}
+    <SellYourOldDeviceSection />
+
+    {/* 4. HOT DEALS (Cashify Promotional Banners) */}
+    <HotDealsSection />
+
+    {/* 5. BUY REFURBISHED PHONES (Exact Certified Phones with Assured Badge & Filters) */}
+    <RefurbishedPhonesSection />
+
+    {/* 6. REFURBISHED LAPTOPS (MacBooks, ThinkPads, Dell Latitudes) */}
+    <RefurbishedLaptopsSection />
+
+    {/* 7. DOORSTEP MOBILE & LAPTOP REPAIR SERVICES (Cashify 30-Min Live Fix) */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-linear-to-r from-[#0d2a26] via-[#103a35] to-[#124942] rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#13b59b]/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          <div className="lg:col-span-7 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-300 border border-white/20 text-xs font-bold">
+              <Clock className="w-3.5 h-3.5" /> 30-Minute Doorstep Fix
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight">
+              Phone Screen or Battery Broken? <br />
+              <span className="text-[#2bbb9e]">We Repair At Your Doorstep</span>
+            </h2>
+            <p className="text-sm text-gray-200/90 max-w-xl leading-relaxed">
+              Trained technician visits your home or office with OEM parts and fixes your device right in front of your eyes. Comes with 6 months warranty and free diagnostics.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-5 pt-2 text-xs font-bold text-gray-200">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#2bbb9e]" /> 6 Months Repair Warranty
               </span>
-            </>
-          ) : (
-            <span className="reviews">No reviews yet</span>
-          )}
-        </div>
-
-        <div className="price-row">
-          <strong>{money(product.price)}</strong>
-
-          {product.oldPrice > product.price && (
-            <>
-              <del>{money(product.oldPrice)}</del>
-              <span className="off">{off(product)}% off</span>
-            </>
-          )}
-        </div>
-
-        <p className="free">
-          {product.stock > 0 ? "In stock" : "Currently unavailable"}
-        </p>
-
-        <button
-          className="btn-cart"
-          onClick={() => addToCart(product.id)}
-          disabled={product.stock <= 0}
-        >
-          {product.stock > 0 ? "Add to cart" : "Out of stock"}
-        </button>
-      </div>
-    </article>
-  );
-
-  return (
-    <main>
-      {/* 1. Navbar */}
-      <Navbar
-        user={user}
-        cartCount={cartCount}
-        onOpenCart={() => setCartOpen(true)}
-        onOpenAuth={openAuth}
-        onLogout={logout}
-        onSearch={handleNavbarSearch}
-      />
-
-      {/* 2. Hero banner */}
-      <section className="hero" aria-label="Offers">
-        {slides.map((item, index) => (
-          <div
-            key={item.title}
-            className={`slide ${index === slide ? "show" : ""}`}
-            style={{ background: item.bg }}
-            aria-hidden={index !== slide}
-          >
-            <div className="slide-copy">
-              <h1>{item.title}</h1>
-              <p>{item.sub}</p>
-              <button className="btn-white" onClick={() => goTo(item.cat)}>
-                {item.cta}
-              </button>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#2bbb9e]" /> Live Repair In Front Of You
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#2bbb9e]" /> Pay After Full Satisfaction
+              </span>
             </div>
 
-            <div className="slide-emoji">{item.emoji}</div>
-          </div>
-        ))}
-
-        <div className="dots">
-          {slides.map((item, index) => (
-            <button
-              key={item.title}
-              className={index === slide ? "dot on" : "dot"}
-              aria-label={`Show offer ${index + 1}`}
-              onClick={() => setSlide(index)}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* 3. Trust strip */}
-      <div className="trust">
-        <span>🚚 Delivery options</span>
-        <span>💵 Convenient payments</span>
-        <span>↩️ Returns subject to policy</span>
-        <span>🔒 Secure shopping</span>
-      </div>
-
-      {/* 4-6. Services, Sell device, Promo banners */}
-      <OurServices />
-      <SellDeviceSection />
-      <HotDealsSection />
-
-      {/* 7. Top discounts (from API) */}
-      <section className="block" id="deals">
-        <div className="block-head">
-          <h2>Top Discounts</h2>
-          <span className="timer">✨ Biggest savings first</span>
-        </div>
-
-        {productsLoading ? (
-          <p>Loading offers...</p>
-        ) : deals.length > 0 ? (
-          <div className="deal-row">
-            {deals.map((product) => (
-              <button
-                key={product.id}
-                className="deal"
-                onClick={() => addToCart(product.id)}
-                aria-label={`Add ${product.name} to cart`}
-              >
-                <span className="deal-img" style={{ background: product.color }}>
-                  {product.image ? (
-                    <img src={product.image} alt="" loading="lazy" />
-                  ) : (
-                    product.emoji
-                  )}
-                </span>
-
-                <span className="deal-name">{product.name}</span>
-                <span className="deal-off">
-                  {off(product) > 0 ? `${off(product)}% off` : "Available now"}
-                </span>
-                <span className="deal-price">{money(product.price)}</span>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <p>Offers abhi available nahi hain.</p>
-        )}
-      </section>
-
-      {/* 8. Product listing */}
-      <section className="shop" id="products">
-        <aside className="filters">
-          <h3>Filters</h3>
-
-          <div className="f-group">
-            <h4>Category</h4>
-
-            {["All", ...categories.map((item) => item.name)].map((name) => (
-              <label key={name}>
-                <input
-                  type="radio"
-                  name="cat"
-                  checked={category === name}
-                  onChange={() => setCategory(name)}
-                />{" "}
-                {name}
-              </label>
-            ))}
+            <div className="pt-3">
+              <Link href="/repair" className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#2bbb9e] hover:bg-[#23a58c] active:scale-[0.98] text-slate-950 font-black rounded-xl text-sm shadow-xl transition">
+                <Wrench className="w-4 h-4" />
+                <span>Book Doorstep Repair Now</span>
+              </Link>
+            </div>
           </div>
 
-          <div className="f-group">
-            <h4>Price</h4>
-
+          {/* Repair Services Quick Grid */}
+          <div className="lg:col-span-5 grid grid-cols-2 gap-3">
             {[
-              [0, "Any price"],
-              [5000, "Under ₹5,000"],
-              [20000, "Under ₹20,000"],
-              [50000, "Under ₹50,000"],
-            ].map(([value, label]) => (
-              <label key={value}>
-                <input
-                  type="radio"
-                  name="price"
-                  checked={maxPrice === value}
-                  onChange={() => setMaxPrice(value)}
-                />{" "}
-                {label}
-              </label>
-            ))}
+              { title: 'Screen Glass Fix', cost: 'From ₹1,499', icon: Smartphone },
+              { title: 'Battery Replacement', cost: 'From ₹999', icon: Zap },
+              { title: 'Charging Port Fix', cost: 'From ₹599', icon: Zap },
+              { title: 'Mic & Speaker', cost: 'From ₹699', icon: Headphones },
+            ].map((item, idx) => {
+              const Icon = item.icon || Wrench;
+              return (<div key={idx} className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 hover:border-[#2bbb9e]/50 transition">
+                <Icon className="w-6 h-6 text-[#2bbb9e] mb-2" />
+                <div className="text-xs font-bold text-white">{item.title}</div>
+                <div className="text-[11px] text-emerald-300 font-semibold mt-0.5">{item.cost}</div>
+              </div>);
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* 8. OUR EXCLUSIVE STORES (200+ Experience Centres, Gurgaon Airia Mall, Ambience Mall, etc.) */}
+    <ExclusiveStoresSection />
+
+    {/* 8B. BRAND PARTNERS & ECOSYSTEM SLIDER (Left to right continuous marquee) */}
+    <BrandPartnersSlider />
+
+    {/* 9. BETTER FOR POCKET & BE SMART SELL SMART (Cashify's 8 Guide Cards) */}
+    <CashifyGuidesSection />
+
+    {/* 10. HOW TO SELL IN 3 STEPS */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-gray-200 shadow-xs">
+        <div className="text-center max-w-xl mx-auto mb-10 space-y-1">
+          <span className="text-xs font-bold text-[#13b59b] uppercase tracking-wider">
+            Quick &amp; Hassle-Free
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            How To Sell Your Old Phone in 3 Steps
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          <div className="flex flex-col items-center text-center p-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#edf7f5] text-[#13b59b] flex items-center justify-center font-black text-2xl mb-4 border border-[#d8ece7] shadow-xs">
+              1
+            </div>
+            <h3 className="text-base font-bold text-gray-900 mb-1.5">Check Live Valuation</h3>
+            <p className="text-xs text-gray-600 leading-relaxed max-w-xs">
+              Select your phone or gadget model and answer simple questions to get an algorithmic fair quote in 60 seconds.
+            </p>
           </div>
 
-          <div className="f-group">
-            <h4>Customer Ratings</h4>
-
-            {[
-              [0, "All ratings"],
-              [4, "4★ & above"],
-              [4.5, "4.5★ & above"],
-            ].map(([value, label]) => (
-              <label key={value}>
-                <input
-                  type="radio"
-                  name="rate"
-                  checked={minRating === value}
-                  onChange={() => setMinRating(value)}
-                />{" "}
-                {label}
-              </label>
-            ))}
+          <div className="flex flex-col items-center text-center p-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#edf7f5] text-[#13b59b] flex items-center justify-center font-black text-2xl mb-4 border border-[#d8ece7] shadow-xs">
+              2
+            </div>
+            <h3 className="text-base font-bold text-gray-900 mb-1.5">Schedule Free Doorstep Pickup</h3>
+            <p className="text-xs text-gray-600 leading-relaxed max-w-xs">
+              Choose your convenient pickup date and time slot. Our background-verified agent visits your home or office.
+            </p>
           </div>
 
-          <button className="btn-link" onClick={resetFilters}>
-            Clear all
-          </button>
-        </aside>
-
-        <div className="results">
-          <div className="sortbar">
-            <div>
-              <h2>{category === "All" ? "All Products" : category}</h2>
-              <small>{filtered.length} items</small>
+          <div className="flex flex-col items-center text-center p-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#edf7f5] text-[#13b59b] flex items-center justify-center font-black text-2xl mb-4 border border-[#d8ece7] shadow-xs">
+              3
             </div>
-
-            <div className="sort-opts">
-              <span>Sort by</span>
-
-              {sorts.map((item) => (
-                <button
-                  key={item.key}
-                  className={sort === item.key ? "on" : ""}
-                  onClick={() => setSort(item.key)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+            <h3 className="text-base font-bold text-gray-900 mb-1.5">Get Instant UPI / Bank Payment</h3>
+            <p className="text-xs text-gray-600 leading-relaxed max-w-xs">
+              Technician performs a fast 3-minute check and instantly transfers 100% money before device handover.
+            </p>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <div className="chips">
-            {["All", ...categories.map((item) => item.name)].map((name) => (
-              <button
-                key={name}
-                className={category === name ? "chip on" : "chip"}
-                onClick={() => setCategory(name)}
-              >
-                {name}
-              </button>
-            ))}
+    {/* 11. WHY 40 LAKH+ CUSTOMERS CHOOSE US (4 Trust Pillars) */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center max-w-2xl mx-auto mb-8 space-y-1">
+        <span className="text-xs font-bold text-[#13b59b] uppercase tracking-wider">
+          Re-Commerce You Can Trust
+        </span>
+        <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+          Why 40 Lakh+ Customers Choose Us
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-xs hover:shadow-md transition">
+          <div className="w-12 h-12 rounded-xl bg-[#13b59b]/15 text-[#13b59b] flex items-center justify-center mb-4">
+            <Zap className="w-6 h-6" />
           </div>
-
-          {productsLoading ? (
-            <div className="empty">
-              <span>⏳</span>
-              <h3>Loading products...</h3>
-              <p>SELLBAR store se products laaye ja rahe hain.</p>
-            </div>
-          ) : productsError ? (
-            <div className="empty">
-              <span>⚠️</span>
-              <h3>Products load nahi ho paaye</h3>
-              <p>{productsError}</p>
-              <button className="btn-cart" onClick={() => window.location.reload()}>
-                Try again
-              </button>
-            </div>
-          ) : filtered.length > 0 ? (
-            <div className="grid">{filtered.map(renderCard)}</div>
-          ) : (
-            <div className="empty">
-              <span>🔎</span>
-              <h3>
-                {products.length
-                  ? "No products match your filters"
-                  : "No products available yet"}
-              </h3>
-              <p>
-                {products.length
-                  ? "Search ya filters badal kar dekhein."
-                  : "Approved sellers ke active products yahan dikhai denge."}
-              </p>
-              <button className="btn-cart" onClick={resetFilters}>
-                Clear filters
-              </button>
-            </div>
-          )}
-
-          <p className="demo-note">
-            Products and categories are loaded from the SELLBAR API.
+          <h3 className="text-base font-bold text-gray-900 mb-1">Instant Price Quote</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Objective AI pricing engine ensures highest possible value for your device based on live market demand.
           </p>
         </div>
-      </section>
 
-      {/* 9-10. More sections */}
-      <ShowcaseSections />
-      <HomeMoreSections />
+        <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-xs hover:shadow-md transition">
+          <div className="w-12 h-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
+            <Truck className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-gray-900 mb-1">Free Doorstep Pickup</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            No need to travel to crowded markets. Our verified technician arrives at your home at your scheduled time.
+          </p>
+        </div>
 
-      {/* 11. Seller section */}
-      <section className="sell" id="account">
+        <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-xs hover:shadow-md transition">
+          <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
+            <CreditCard className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-gray-900 mb-1">Instant Spot Payment</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Receive 100% upfront cash transfer to your UPI or Bank account right on handover. Zero wait time.
+          </p>
+        </div>
+
+        <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-xs hover:shadow-md transition">
+          <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center mb-4">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-gray-900 mb-1">100% Certified Data Wipe</h3>
+          <p className="text-xs text-gray-600 leading-relaxed">
+            Military-standard NIST 800-88 data sanitization ensures zero recovery of your personal photos or documents.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* 12. COMPARISON TABLE */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center max-w-2xl mx-auto mb-8 space-y-1">
+        <span className="text-xs font-bold text-[#13b59b] uppercase tracking-wider">
+          Transparent Comparison
+        </span>
+        <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+          Selling On Sellbar vs Other Channels
+        </h2>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-xs">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr className="border-b border-gray-200 bg-gray-50 text-gray-700 font-bold">
+                <th className="p-4 sm:p-5">Feature</th>
+                <th className="p-4 sm:p-5 text-[#13b59b] bg-[#edf7f5]">Sellbar.in</th>
+                <th className="p-4 sm:p-5 text-gray-500">Online Classifieds</th>
+                <th className="p-4 sm:p-5 text-gray-500">Offline Local Stores</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 text-gray-700">
+              <tr>
+                <td className="p-4 sm:p-5 font-bold text-gray-900">Valuation Transparency</td>
+                <td className="p-4 sm:p-5 text-[#13b59b] font-bold bg-[#edf7f5]/40 flex items-center gap-1.5">
+                  <Check className="w-4 h-4" /> Algorithmic Fair Quote
+                </td>
+                <td className="p-4 sm:p-5 text-gray-500">Unrealistic lowballs</td>
+                <td className="p-4 sm:p-5 text-gray-500">Arbitrary subjective cuts</td>
+              </tr>
+              <tr>
+                <td className="p-4 sm:p-5 font-bold text-gray-900">Doorstep Convenience</td>
+                <td className="p-4 sm:p-5 text-[#13b59b] font-bold bg-[#edf7f5]/40 flex items-center gap-1.5">
+                  <Check className="w-4 h-4" /> Free Doorstep Pickup
+                </td>
+                <td className="p-4 sm:p-5 text-gray-500">Meet strangers in public</td>
+                <td className="p-4 sm:p-5 text-gray-500">Travel to crowded market</td>
+              </tr>
+              <tr>
+                <td className="p-4 sm:p-5 font-bold text-gray-900">Payment Speed &amp; Security</td>
+                <td className="p-4 sm:p-5 text-[#13b59b] font-bold bg-[#edf7f5]/40 flex items-center gap-1.5">
+                  <Check className="w-4 h-4" /> Instant Spot UPI / IMPS
+                </td>
+                <td className="p-4 sm:p-5 text-gray-500">Fake cheque / UPI fraud risks</td>
+                <td className="p-4 sm:p-5 text-gray-500">Cash haggling</td>
+              </tr>
+              <tr>
+                <td className="p-4 sm:p-5 font-bold text-gray-900">Data Sanitization Guarantee</td>
+                <td className="p-4 sm:p-5 text-[#13b59b] font-bold bg-[#edf7f5]/40 flex items-center gap-1.5">
+                  <Check className="w-4 h-4" /> NIST 800-88 Certified
+                </td>
+                <td className="p-4 sm:p-5 text-rose-500 flex items-center gap-1 font-medium">
+                  <X className="w-4 h-4" /> High privacy risk
+                </td>
+                <td className="p-4 sm:p-5 text-rose-500 flex items-center gap-1 font-medium">
+                  <X className="w-4 h-4" /> No guarantee
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    {/* 13. TRENDING ARTICLES & RECENT NEWS */}
+    <TrendingArticlesSection />
+
+    {/* 15. REAL CUSTOMER REVIEWS */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <div>
-          <h2>Sell on SELLBAR</h2>
-          <p>
-            Apne products ko SELLBAR par list karein aur customers tak
-            pahunchayein.
+          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 uppercase tracking-wider mb-1">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <span>4.8 / 5 Rated by 40 Lakh+ Customers</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            Real Experiences From Real Users
+          </h2>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {reviews.map((r, idx) => (<div key={idx} className="p-6 rounded-3xl bg-white border border-gray-200 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-1 text-amber-400">
+              {[...Array(r.rating)].map((_, i) => (<Star key={i} className="w-4 h-4 fill-amber-400" />))}
+            </div>
+            <h3 className="text-sm font-bold text-gray-900">{r.title}</h3>
+            <p className="text-xs text-gray-600 leading-relaxed">{r.review}</p>
+          </div>
+
+          <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <div className="text-xs font-bold text-gray-900">{r.name}</div>
+              <div className="text-[10px] text-gray-400">{r.city}</div>
+            </div>
+            <div className="text-[10px] font-semibold text-[#13b59b] bg-[#edf7f5] px-2 py-0.5 rounded-full">
+              Verified Transaction
+            </div>
+          </div>
+        </div>))}
+      </div>
+    </section>
+
+    {/* 16. FREQUENTLY ASKED QUESTIONS (3 Cashify Category Tabs) */}
+    <HomeFaq />
+
+    {/* 17. SEO EDITORIAL GUIDE SECTION (Expandable Cashify Guide) */}
+    <SeoEditorialSection />
+
+    {/* 18. DOWNLOAD APP & STORE HUBS BANNER */}
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#edf7f5] border border-[#d8ece7] rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
+        <div className="space-y-2 text-center md:text-left">
+          <span className="text-xs font-bold text-[#13b59b] uppercase tracking-wider">
+            200+ Hubs Across India
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+            Prefer In-Person Evaluation? Visit A Sellbar Store
+          </h2>
+          <p className="text-xs sm:text-sm text-gray-600 max-w-xl">
+            Walk into any of our flagship experience hubs in Gurgaon, Delhi NCR, Bengaluru, Mumbai, or Pune for instant cash, free screen inspection, and hands-on refurbished demos.
           </p>
         </div>
 
-        <a href="#products" className="btn-white">
-          Explore Products
-        </a>
-      </section>
+        <Link href="/about" className="px-6 py-3.5 bg-[#2bbb9e] hover:bg-[#23a58c] active:scale-[0.98] text-white font-bold rounded-xl text-sm shadow-sm transition shrink-0 flex items-center gap-2">
+          <Store className="w-4 h-4" />
+          <span>Find Nearest Store</span>
+        </Link>
+      </div>
+    </section>
 
-      {/* 12. Footer */}
-      <Footer
-        categories={categories}
-        setCategory={setCategory}
-        onResetFilters={resetFilters}
-      />
-
-      {/* Login / Register modal */}
-      {authOpen && (
-        <div className="modal-wrap" onClick={closeAuth}>
-          <div
-            className="modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Login"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="modal-side">
-              <h2>
-                {authMode === "login" ? "Login" : "Looks like you're new here!"}
-              </h2>
-
-              <p>
-                {authMode === "login"
-                  ? "Get access to your cart, orders and wishlist."
-                  : "Sign up with your email to get started."}
-              </p>
-
-              <span className="modal-emoji">🛍️</span>
-            </div>
-
-            <form className="modal-form" onSubmit={submitAuth}>
-              <button
-                type="button"
-                className="modal-close"
-                onClick={closeAuth}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-
-              {pendingId && (
-                <p className="modal-note">
-                  Please login to add items to your cart.
-                </p>
-              )}
-
-              {authMode === "register" && (
-                <input
-                  placeholder="Full name"
-                  autoComplete="name"
-                  value={form.name}
-                  onChange={(event) =>
-                    setForm({ ...form, name: event.target.value })
-                  }
-                />
-              )}
-
-              <input
-                type="email"
-                placeholder="Email"
-                autoComplete="email"
-                value={form.email}
-                onChange={(event) =>
-                  setForm({ ...form, email: event.target.value })
-                }
-              />
-
-              <input
-                type="password"
-                placeholder="Password (min 6 characters)"
-                autoComplete={
-                  authMode === "login" ? "current-password" : "new-password"
-                }
-                value={form.password}
-                onChange={(event) =>
-                  setForm({ ...form, password: event.target.value })
-                }
-              />
-
-              {authError && (
-                <p className="modal-error" role="alert">
-                  {authError}
-                </p>
-              )}
-
-              <button className="btn-order" type="submit" disabled={authLoading}>
-                {authLoading
-                  ? "Please wait..."
-                  : authMode === "login"
-                    ? "Login"
-                    : "Create account"}
-              </button>
-
-              <button
-                type="button"
-                className="btn-link"
-                onClick={() => {
-                  setAuthMode(authMode === "login" ? "register" : "login");
-                  setAuthError("");
-                }}
-              >
-                {authMode === "login"
-                  ? "New to SELLBAR? Create an account"
-                  : "Existing user? Log in"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Cart drawer */}
-      {cartOpen && <div className="overlay" onClick={() => setCartOpen(false)} />}
-
-      <aside className={`drawer ${cartOpen ? "open" : ""}`} aria-hidden={!cartOpen}>
-        <div className="drawer-head">
-          <h3>My Cart ({cartCount})</h3>
-          <button onClick={() => setCartOpen(false)} aria-label="Close cart">
-            ✕
-          </button>
-        </div>
-
-        <div className="drawer-body">
-          {cartItems.length === 0 && (
-            <div className="empty">
-              <span>🛒</span>
-              <h3>Your cart is empty</h3>
-              <p>Add items to see them here.</p>
-            </div>
-          )}
-
-          {cartItems.map((product) => (
-            <div className="line" key={product.id}>
-              <span className="line-img" style={{ background: product.color }}>
-                {product.image ? (
-                  <img src={product.image} alt="" loading="lazy" />
-                ) : (
-                  product.emoji
-                )}
-              </span>
-
-              <div className="line-info">
-                <strong>{product.name}</strong>
-
-                <span>
-                  {money(product.price)}{" "}
-                  {product.oldPrice > product.price && (
-                    <del>{money(product.oldPrice)}</del>
-                  )}
-                </span>
-
-                <div className="qty">
-                  <button
-                    onClick={() => changeQty(product.id, -1)}
-                    aria-label="Decrease"
-                  >
-                    −
-                  </button>
-
-                  <b>{cart[product.id]}</b>
-
-                  <button
-                    onClick={() => changeQty(product.id, 1)}
-                    aria-label="Increase"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {cartItems.length > 0 && (
-          <div className="drawer-foot">
-            <p className="saved">You save {money(cartSaved)} on this order</p>
-
-            <div className="total">
-              <span>Total</span>
-              <strong>{money(cartTotal)}</strong>
-            </div>
-
-            <button
-              className="btn-order"
-              onClick={() => {
-                setCartOpen(false);
-                window.location.href = "/checkout";
-              }}
-            >
-              Proceed to Checkout
-            </button>
-          </div>
-        )}
-      </aside>
-    </main>
-  );
+  </div>);
 }
