@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff, X } from "lucide-react";
 
@@ -11,8 +11,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default: "border-border",
-        destructive:
-          "border-destructive focus-visible:ring-destructive",
+        destructive: "border-destructive focus-visible:ring-destructive",
         ghost:
           "border-transparent bg-accent focus-visible:bg-input focus-visible:border-border",
       },
@@ -27,20 +26,10 @@ const inputVariants = cva(
       variant: "default",
       size: "default",
     },
-  },
+  }
 );
 
-export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
-    VariantProps<typeof inputVariants> {
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  error?: boolean;
-  clearable?: boolean;
-  onClear?: () => void;
-}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const Input = React.forwardRef(
   (
     {
       className,
@@ -55,28 +44,26 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       value,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [internalValue, setInternalValue] = React.useState(
-      props.defaultValue || "",
+      props.defaultValue || ""
     );
-    
-    // Create internal ref if no ref is provided
-    const internalRef = React.useRef<HTMLInputElement>(null);
+
+    const internalRef = React.useRef(null);
     const inputRef = ref || internalRef;
 
     const inputVariant = error ? "destructive" : variant;
     const isPassword = type === "password";
     const actualType = isPassword && showPassword ? "text" : type;
 
-    // Determine if this is a controlled component
     const isControlled = value !== undefined;
     const inputValue = isControlled ? value : internalValue;
     const showClearButton =
       clearable && inputValue && String(inputValue).length > 0;
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e) => {
       if (!isControlled) {
         setInternalValue(e.target.value);
       }
@@ -84,41 +71,31 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     const handleClear = () => {
-      // Get reference to the input element
-      const inputElement = typeof inputRef === 'function' ? null : inputRef?.current;
-      
+      const inputElement = typeof inputRef === "function" ? null : inputRef?.current;
+
       if (inputElement) {
-        // Set the input's value directly
         inputElement.value = "";
-        
-        // Create a proper synthetic event
-        const event = new Event('input', { bubbles: true });
-        Object.defineProperty(event, 'target', {
+        const event = new Event("input", { bubbles: true });
+        Object.defineProperty(event, "target", {
           writable: false,
-          value: inputElement
+          value: inputElement,
         });
-        
-        // Dispatch the event to trigger onChange handlers
         inputElement.dispatchEvent(event);
       }
 
-      // Update internal state for uncontrolled components
       if (!isControlled) {
         setInternalValue("");
       }
-      
-      // Call the onClear callback
+
       onClear?.();
-      
-      // Create synthetic React event for onChange
+
       if (props.onChange) {
         const syntheticEvent = {
           target: { value: "" },
           currentTarget: { value: "" },
           preventDefault: () => {},
           stopPropagation: () => {},
-        } as React.ChangeEvent<HTMLInputElement>;
-        
+        };
         props.onChange(syntheticEvent);
       }
     };
@@ -153,14 +130,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {/* Right side icons container */}
         {(rightIcon || isPassword || showClearButton) && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
-            {/* Custom right icon */}
             {rightIcon && (
               <div className="text-muted-foreground [&_svg]:size-4 [&_svg]:shrink-0">
                 {rightIcon}
               </div>
             )}
 
-            {/* Clear button */}
             {showClearButton && (
               <button
                 type="button"
@@ -172,7 +147,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               </button>
             )}
 
-            {/* Password visibility toggle */}
             {isPassword && (
               <button
                 type="button"
@@ -187,7 +161,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  },
+  }
 );
 
 Input.displayName = "Input";

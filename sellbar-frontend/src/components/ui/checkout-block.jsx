@@ -44,49 +44,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  quantity: number;
-  discount?: number;
-}
-
-interface CheckoutSummary {
-  subtotal: number;
-  discount: number;
-  shipping: number;
-  tax: number;
-  total: number;
-}
-
-interface ShippingAddress {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-interface PaymentMethod {
-  cardNumber: string;
-  expiryMonth: string;
-  expiryYear: string;
-  cvv: string;
-  nameOnCard: string;
-}
-
-export default function Checkout({ initialItems }: { initialItems?: OrderItem[] }) {
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+export default function Checkout({ initialItems }) {
+  const [orderItems, setOrderItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [shippingAddress, setShippingAddress] = useState({
     firstName: "",
     lastName: "",
     email: "",
@@ -97,22 +59,21 @@ export default function Checkout({ initialItems }: { initialItems?: OrderItem[] 
     zipCode: "",
     country: "IN",
   });
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>({
+  const [paymentMethod, setPaymentMethod] = useState({
     cardNumber: "",
     expiryMonth: "",
     expiryYear: "",
     cvv: "",
     nameOnCard: "",
   });
-  const [selectedPaymentType, setSelectedPaymentType] =
-    useState<string>("card");
-  const [sameAsShipping, setSameAsShipping] = useState<boolean>(true);
-  const [savePaymentMethod, setSavePaymentMethod] = useState<boolean>(false);
-  const [appliedPromo, setAppliedPromo] = useState<string>("SAVE10");
-  const [agreeToTerms, setAgreeToTerms] = useState<boolean>(false);
-  const [orderPlaced, setOrderPlaced] = useState<boolean>(false);
+  const [selectedPaymentType, setSelectedPaymentType] = useState("card");
+  const [sameAsShipping, setSameAsShipping] = useState(true);
+  const [savePaymentMethod, setSavePaymentMethod] = useState(false);
+  const [appliedPromo, setAppliedPromo] = useState("SAVE10");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
-  const sampleOrderItems: OrderItem[] = [
+  const sampleOrderItems = [
     {
       id: "1",
       name: "Sellbar Certified Apple iPhone 14 (128GB)",
@@ -177,7 +138,7 @@ export default function Checkout({ initialItems }: { initialItems?: OrderItem[] 
     loadCheckout();
   }, [initialItems]);
 
-  const calculateSummary = (): CheckoutSummary => {
+  const calculateSummary = () => {
     const subtotal = orderItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
@@ -196,21 +157,21 @@ export default function Checkout({ initialItems }: { initialItems?: OrderItem[] 
     };
   };
 
-  const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
+  const handleAddressChange = (field, value) => {
     setShippingAddress((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handlePaymentChange = (field: keyof PaymentMethod, value: string) => {
+  const handlePaymentChange = (field, value) => {
     setPaymentMethod((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const validateStep = (step: number): boolean => {
+  const validateStep = (step) => {
     switch (step) {
       case 1:
         return !!(

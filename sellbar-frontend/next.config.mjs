@@ -16,6 +16,9 @@ const nextConfig = {
         as: "*.css",
       },
     },
+    ignoreIssue: [
+      { path: /node_modules/ },
+    ],
   },
   async redirects() {
     return [

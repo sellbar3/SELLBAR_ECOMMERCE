@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const skeletonVariants = cva(
@@ -30,28 +30,7 @@ const skeletonVariants = cva(
   },
 );
 
-export interface SkeletonProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof skeletonVariants> {
-  /**
-   * Custom width for the skeleton
-   */
-  width?: string | number;
-  /**
-   * Custom height for the skeleton
-   */
-  height?: string | number;
-  /**
-   * Animation speed in seconds
-   */
-  duration?: number;
-  /**
-   * Whether to show shimmer effect
-   */
-  shimmer?: boolean;
-}
-
-const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
+const Skeleton = React.forwardRef(
   (
     {
       className,
@@ -92,10 +71,7 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
 Skeleton.displayName = "Skeleton";
 
 // Pre-built skeleton components for common use cases
-const SkeletonText = React.forwardRef<
-  HTMLDivElement,
-  Omit<SkeletonProps, "variant">
->(({ className, ...props }, ref) => (
+const SkeletonText = React.forwardRef(({ className, ...props }, ref) => (
   <Skeleton
     ref={ref}
     variant="text"
@@ -105,10 +81,7 @@ const SkeletonText = React.forwardRef<
 ));
 SkeletonText.displayName = "SkeletonText";
 
-const SkeletonAvatar = React.forwardRef<
-  HTMLDivElement,
-  Omit<SkeletonProps, "variant">
->(({ className, size = "default", ...props }, ref) => {
+const SkeletonAvatar = React.forwardRef(({ className, size = "default", ...props }, ref) => {
   const avatarSizeMap = {
     sm: "w-8 h-8",
     default: "w-10 h-10",
@@ -116,8 +89,7 @@ const SkeletonAvatar = React.forwardRef<
     xl: "w-16 h-16",
     "2xl": "w-20 h-20",
   };
-  const avatarSize =
-    avatarSizeMap[size as keyof typeof avatarSizeMap] || "w-10 h-10";
+  const avatarSize = avatarSizeMap[size] || "w-10 h-10";
 
   return (
     <Skeleton
@@ -130,18 +102,15 @@ const SkeletonAvatar = React.forwardRef<
 });
 SkeletonAvatar.displayName = "SkeletonAvatar";
 
-const SkeletonButton = React.forwardRef<
-  HTMLDivElement,
-  Omit<SkeletonProps, "variant">
->(({ className, size = "default", ...props }, ref) => {
-  const buttonHeight: Record<string, string> = {
+const SkeletonButton = React.forwardRef(({ className, size = "default", ...props }, ref) => {
+  const buttonHeight = {
     sm: "h-8",
     default: "h-10",
     lg: "h-11",
     xl: "h-12",
     "2xl": "h-14",
   };
-  const selectedHeight = buttonHeight[size as string] || "h-10";
+  const selectedHeight = buttonHeight[size] || "h-10";
 
   return (
     <Skeleton
@@ -153,14 +122,7 @@ const SkeletonButton = React.forwardRef<
 });
 SkeletonButton.displayName = "SkeletonButton";
 
-const SkeletonCard = React.forwardRef<
-  HTMLDivElement,
-  Omit<SkeletonProps, "variant"> & {
-    showImage?: boolean;
-    showHeader?: boolean;
-    showFooter?: boolean;
-  }
->(
+const SkeletonCard = React.forwardRef(
   (
     {
       className,
