@@ -2,88 +2,1099 @@
 
 import { useCallback, useEffect, useState } from "react";
 import PanelShell from "../../../components/PanelShell";
-import { money, panelRequest, pickList } from "../../../lib/panel";
+import { money } from "../../../lib/panel";
+import { getCloudinaryUrl } from "../../../lib/cloudinary";
 
 function AdminProductsList({ session }) {
-  const [rows, setRows] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [search, setSearch] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
-  const load = useCallback(async () => {
+  // Filters
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  // Modals state
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    brand: "",
+    category: "",
+    price: "",
+    compareAtPrice: "",
+    stock: "10",
+    imageUrl: "",
+    condition: "Flawless",
+    warranty: "12 Months Doorstep Warranty",
+    status: "active",
+    badge: "Lowest Price",
+    featuredType: "regular",
+    isFeatured: false,
+    description: "",
+  });
+
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const d = await panelRequest("/products?limit=100", { token: session?.token });
-      setRows(pickList(d, "products"));
+      setError("");
+
+      const res = await fetch("/api/admin/products?limit=200", {
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
+        },
+        cache: "no-store",
+      });
+
+      const json = await res.json();
+      if (json.success && json.data) {
+        setProducts(json.data.products || []);
+        if (json.data.categories) {
+          setCategories(json.data.categories);
+        }
+      } else {
+        throw new Error(json.message || "Failed to load products");
+      }
     } catch (e) {
-      setError(e.message || "Failed to load products.");
+      setError(e.message || "Could not connect to product database.");
     } finally {
       setLoading(false);
     }
   }, [session?.token]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    loadProducts();
+  }, [loadProducts]);
 
-  const filtered = rows.filter((p) =>
-    (p.name || "").toLowerCase().includes(search.toLowerCase())
+  // Handle Create Product
+  const handleCreateProduct = async (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.price) {
+      setError("Product name and price are required");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setError("");
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to add product");
+      }
+
+      setSuccessMsg(`"${formData.name}" added successfully to database!`);
+      setTimeout(() => setSuccessMsg(""), 4000);
+      setIsAddModalOpen(false);
+      // Reset form
+      setFormData({
+        name: "",
+        brand: "",
+        category: "",
+        price: "",
+        compareAtPrice: "",
+        stock: "10",
+        imageUrl: "",
+        condition: "Flawless",
+        warranty: "12 Months Doorstep Warranty",
+        status: "active",
+        badge: "Lowest Price",
+        featuredType: "regular",
+        isFeatured: false,
+        description: "",
+      });
+      loadProducts();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Handle Update Product
+  const handleUpdateProduct = async (e) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+
+    try {
+      setSubmitting(true);
+      setError("");
+      const res = await fetch("/api/admin/products", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editingProduct._id,
+          name: editingProduct.name,
+          brand: editingProduct.brand,
+          category: typeof editingProduct.category === "object" ? editingProduct.category?._id : editingProduct.category,
+          price: editingProduct.price,
+          compareAtPrice: editingProduct.compareAtPrice,
+          stock: editingProduct.stock,
+          status: editingProduct.status,
+          condition: editingProduct.condition,
+          warranty: editingProduct.warranty,
+          badge: editingProduct.badge,
+          imageUrl: editingProduct.images?.[0]?.url || editingProduct.imageUrl,
+          description: editingProduct.description,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to update product");
+      }
+
+      setSuccessMsg(`"${editingProduct.name}" updated successfully!`);
+      setTimeout(() => setSuccessMsg(""), 4000);
+      setEditingProduct(null);
+      loadProducts();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Handle Quick Status Toggle
+  const handleToggleStatus = async (product) => {
+    const nextStatus = product.status === "active" ? "draft" : "active";
+    try {
+      const res = await fetch("/api/admin/products", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: product._id, status: nextStatus }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setProducts((prev) =>
+          prev.map((p) => (p._id === product._id ? { ...p, status: nextStatus } : p))
+        );
+      }
+    } catch (err) {
+      setError("Failed to change status: " + err.message);
+    }
+  };
+
+  // Handle Delete Product
+  const handleDeleteProduct = async (product) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to permanently delete "${product.name}" from database?`
+    );
+    if (!confirmDelete) return;
+
+    try {
+      setError("");
+      const res = await fetch(`/api/admin/products?id=${product._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to delete product");
+      }
+      setSuccessMsg(`"${product.name}" deleted from database.`);
+      setTimeout(() => setSuccessMsg(""), 4000);
+      setProducts((prev) => prev.filter((p) => p._id !== product._id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Filtered list
+  const filtered = products.filter((p) => {
+    const matchesSearch =
+      !search ||
+      p.name?.toLowerCase().includes(search.toLowerCase()) ||
+      p.brand?.toLowerCase().includes(search.toLowerCase()) ||
+      p.sku?.toLowerCase().includes(search.toLowerCase());
+
+    const catSlug = (typeof p.category === "object" ? p.category?.slug : p.category) || "";
+    const matchesCat =
+      categoryFilter === "all" ||
+      catSlug === categoryFilter ||
+      p.category?._id === categoryFilter;
+
+    const matchesStatus = statusFilter === "all" || p.status === statusFilter;
+
+    return matchesSearch && matchesCat && matchesStatus;
+  });
+
+  // Calculate quick stats
+  const totalCount = products.length;
+  const activeCount = products.filter((p) => p.status === "active").length;
+  const lowStockCount = products.filter((p) => Number(p.stock) <= 3).length;
+  const totalValue = products.reduce(
+    (sum, p) => sum + (Number(p.price) || 0) * (Number(p.stock) || 0),
+    0
   );
 
   return (
     <div className="pn-box">
-      <div className="pn-row" style={{ justifyContent: "space-between", marginBottom: 12 }}>
-        <h2 style={{ margin: 0 }}>Products ({filtered.length})</h2>
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ padding: "6px 12px", borderRadius: 6, border: "1px solid #ccc" }}
-        />
+      {/* Top Banner / Notification */}
+      {successMsg && (
+        <div
+          style={{
+            background: "#dcfce7",
+            color: "#15803d",
+            padding: "10px 16px",
+            borderRadius: 8,
+            marginBottom: 16,
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>✓ {successMsg}</span>
+          <button
+            onClick={() => setSuccessMsg("")}
+            style={{ background: "none", border: "none", cursor: "pointer", fontWeight: "bold" }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {error && (
+        <div
+          style={{
+            background: "#fee2e2",
+            color: "#b91c1c",
+            padding: "10px 16px",
+            borderRadius: 8,
+            marginBottom: 16,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>⚠️ {error}</span>
+          <button
+            onClick={() => setError("")}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Stats Cards */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 12,
+          marginBottom: 20,
+        }}
+      >
+        <div
+          style={{
+            background: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            borderRadius: 10,
+            padding: "12px 16px",
+          }}
+        >
+          <div style={{ fontSize: 12, color: "#64748b", fontWeight: "600" }}>Total Products</div>
+          <div style={{ fontSize: 24, fontWeight: "800", color: "#0f172a" }}>{totalCount}</div>
+        </div>
+
+        <div
+          style={{
+            background: "#f0fdf4",
+            border: "1px solid #bbf7d0",
+            borderRadius: 10,
+            padding: "12px 16px",
+          }}
+        >
+          <div style={{ fontSize: 12, color: "#166534", fontWeight: "600" }}>Active on Website</div>
+          <div style={{ fontSize: 24, fontWeight: "800", color: "#15803d" }}>{activeCount}</div>
+        </div>
+
+        <div
+          style={{
+            background: "#fffbeb",
+            border: "1px solid #fef3c7",
+            borderRadius: 10,
+            padding: "12px 16px",
+          }}
+        >
+          <div style={{ fontSize: 12, color: "#b45309", fontWeight: "600" }}>Low / Out of Stock</div>
+          <div style={{ fontSize: 24, fontWeight: "800", color: "#d97706" }}>{lowStockCount}</div>
+        </div>
+
+        <div
+          style={{
+            background: "#f0f9ff",
+            border: "1px solid #e0f2fe",
+            borderRadius: 10,
+            padding: "12px 16px",
+          }}
+        >
+          <div style={{ fontSize: 12, color: "#0369a1", fontWeight: "600" }}>Inventory Worth</div>
+          <div style={{ fontSize: 20, fontWeight: "800", color: "#0284c7" }}>
+            {money(totalValue)}
+          </div>
+        </div>
       </div>
 
-      {error && <p className="pn-err">{error}</p>}
+      {/* Header and Controls */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: "800" }}>
+            Products ({filtered.length})
+          </h2>
+          <span
+            style={{
+              fontSize: 12,
+              background: "#e2e8f0",
+              color: "#334155",
+              padding: "2px 8px",
+              borderRadius: 12,
+              fontWeight: 600,
+            }}
+          >
+            Live DB Connected
+          </span>
+        </div>
 
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          style={{
+            background: "#13b59b",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            padding: "8px 16px",
+            fontWeight: "700",
+            fontSize: 13,
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <span>➕</span> Add New Product
+        </button>
+      </div>
+
+      {/* Search and Filters Bar */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 10,
+          marginBottom: 16,
+          background: "#fafafa",
+          padding: 12,
+          borderRadius: 8,
+          border: "1px solid #eee",
+        }}
+      >
+        <input
+          type="text"
+          placeholder="Search by title, brand, or SKU..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{
+            flex: "1 1 200px",
+            padding: "8px 12px",
+            borderRadius: 6,
+            border: "1px solid #ccc",
+            fontSize: 13,
+          }}
+        />
+
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          style={{
+            padding: "8px 12px",
+            borderRadius: 6,
+            border: "1px solid #ccc",
+            fontSize: 13,
+            background: "#fff",
+          }}
+        >
+          <option value="all">All Categories</option>
+          <option value="mobile-phones">Mobile Phones</option>
+          <option value="laptop">Laptops</option>
+          <option value="smart-watches">Smart Watches</option>
+          <option value="tablets">Tablets</option>
+          <option value="gaming-consoles">Gaming Consoles</option>
+          <option value="cameras">Cameras</option>
+          <option value="electronics">Audio &amp; Electronics</option>
+        </select>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          style={{
+            padding: "8px 12px",
+            borderRadius: 6,
+            border: "1px solid #ccc",
+            fontSize: 13,
+            background: "#fff",
+          }}
+        >
+          <option value="all">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="draft">Draft</option>
+          <option value="archived">Archived</option>
+        </select>
+
+        <button
+          type="button"
+          onClick={loadProducts}
+          title="Refresh from MongoDB"
+          style={{
+            padding: "8px 14px",
+            borderRadius: 6,
+            border: "1px solid #cbd5e1",
+            background: "#fff",
+            cursor: "pointer",
+            fontSize: 13,
+            fontWeight: "600",
+          }}
+        >
+          🔄 Refresh
+        </button>
+      </div>
+
+      {/* Main Table */}
       {loading ? (
-        <p>Loading products...</p>
+        <div style={{ padding: "40px 0", textAlign: "center", color: "#64748b" }}>
+          <p style={{ fontSize: 16, fontWeight: "600" }}>Loading products from MongoDB Atlas...</p>
+        </div>
       ) : filtered.length === 0 ? (
-        <p>No products found.</p>
+        <div style={{ padding: "40px 0", textAlign: "center", color: "#64748b" }}>
+          <p style={{ fontSize: 16, fontWeight: "600" }}>No products match your search or filters.</p>
+          <button
+            onClick={() => {
+              setSearch("");
+              setCategoryFilter("all");
+              setStatusFilter("all");
+            }}
+            style={{
+              marginTop: 8,
+              padding: "6px 12px",
+              background: "#13b59b",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((p) => (
-              <tr key={p._id || p.id}>
-                <td>
-                  {p.images?.[0]?.url || p.images?.[0] ? (
-                    <img
-                      className="th"
-                      src={typeof p.images[0] === "string" ? p.images[0] : p.images[0].url}
-                      alt=""
-                    />
-                  ) : (
-                    "🛍️"
-                  )}
-                </td>
-                <td>{p.name || p.title}</td>
-                <td>{money(p.price || p.sellbarPrice || 0)}</td>
-                <td>{p.stock ?? p.stockCount ?? "—"}</td>
-                <td>
-                  <span className="pn-badge">{p.status || (p.isActive ? "active" : "inactive")}</span>
-                </td>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: "#f8fafc", textAlign: "left", borderBottom: "2px solid #e2e8f0" }}>
+                <th style={{ padding: "10px 12px", width: 50 }}>Image</th>
+                <th style={{ padding: "10px 12px" }}>Product Name</th>
+                <th style={{ padding: "10px 12px" }}>Category</th>
+                <th style={{ padding: "10px 12px" }}>Brand</th>
+                <th style={{ padding: "10px 12px" }}>Selling Price</th>
+                <th style={{ padding: "10px 12px" }}>Stock</th>
+                <th style={{ padding: "10px 12px" }}>Status</th>
+                <th style={{ padding: "10px 12px", textAlign: "right" }}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filtered.map((p) => {
+                const img =
+                  p.images?.[0]?.url ||
+                  p.imageUrl ||
+                  getCloudinaryUrl("/products/iphone-14.webp");
+                const catName =
+                  typeof p.category === "object"
+                    ? p.category?.name || p.category?.slug
+                    : p.category || "General";
+
+                return (
+                  <tr
+                    key={p._id || p.id}
+                    style={{ borderBottom: "1px solid #f1f5f9" }}
+                  >
+                    <td style={{ padding: "8px 12px" }}>
+                      <img
+                        src={img}
+                        alt=""
+                        style={{
+                          width: 44,
+                          height: 44,
+                          objectFit: "contain",
+                          borderRadius: 6,
+                          background: "#f8fafc",
+                          border: "1px solid #e2e8f0",
+                          padding: 2,
+                        }}
+                      />
+                    </td>
+                    <td style={{ padding: "8px 12px", fontWeight: "600", color: "#1e293b", maxWidth: 260 }}>
+                      <div title={p.name} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {p.name}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#64748b", fontWeight: "normal" }}>
+                        {p.condition || "Refurbished"} • {p.badge || "Assured"}
+                      </div>
+                    </td>
+                    <td style={{ padding: "8px 12px", color: "#475569" }}>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          padding: "2px 8px",
+                          borderRadius: 12,
+                          background: "#e0f2fe",
+                          color: "#0369a1",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {catName}
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 12px", color: "#475569", fontWeight: "500" }}>
+                      {p.brand || "—"}
+                    </td>
+                    <td style={{ padding: "8px 12px", fontWeight: "700", color: "#0f172a" }}>
+                      {money(p.price || 0)}
+                      {p.compareAtPrice && (
+                        <div style={{ fontSize: 11, color: "#94a3b8", textDecoration: "line-through", fontWeight: "normal" }}>
+                          {money(p.compareAtPrice)}
+                        </div>
+                      )}
+                    </td>
+                    <td style={{ padding: "8px 12px" }}>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: "700",
+                          color: Number(p.stock) <= 3 ? "#dc2626" : "#16a34a",
+                        }}
+                      >
+                        {p.stock ?? "0"} in stock
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 12px" }}>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(p)}
+                        title="Click to toggle status"
+                        style={{
+                          fontSize: 11,
+                          fontWeight: "700",
+                          padding: "3px 10px",
+                          borderRadius: 12,
+                          border: "none",
+                          cursor: "pointer",
+                          background: p.status === "active" ? "#dcfce7" : "#f1f5f9",
+                          color: p.status === "active" ? "#166534" : "#475569",
+                        }}
+                      >
+                        {p.status === "active" ? "● Active" : "○ " + (p.status || "Draft")}
+                      </button>
+                    </td>
+                    <td style={{ padding: "8px 12px", textAlign: "right" }}>
+                      <div style={{ display: "inline-flex", gap: 6 }}>
+                        <button
+                          type="button"
+                          onClick={() => setEditingProduct({ ...p })}
+                          style={{
+                            padding: "4px 8px",
+                            borderRadius: 4,
+                            border: "1px solid #cbd5e1",
+                            background: "#fff",
+                            cursor: "pointer",
+                            fontSize: 12,
+                            fontWeight: "600",
+                            color: "#0f172a",
+                          }}
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteProduct(p)}
+                          style={{
+                            padding: "4px 8px",
+                            borderRadius: 4,
+                            border: "1px solid #fecaca",
+                            background: "#fff",
+                            cursor: "pointer",
+                            fontSize: 12,
+                            fontWeight: "600",
+                            color: "#dc2626",
+                          }}
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* ADD PRODUCT MODAL                                       */}
+      {/* ======================================================== */}
+      {isAddModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 12,
+              maxWidth: 620,
+              width: "100%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              padding: 24,
+              boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: "800" }}>➕ Add New Product</h3>
+              <button
+                type="button"
+                onClick={() => setIsAddModalOpen(false)}
+                style={{ background: "none", border: "none", fontSize: 18, cursor: "pointer" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateProduct}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Product Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Apple iPhone 15 Pro (128GB) - Refurbished"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Category *
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6, background: "#fff" }}
+                  >
+                    <option value="">Select Category</option>
+                    <option value="mobile-phones">Mobile Phones</option>
+                    <option value="laptop">Laptops</option>
+                    <option value="smart-watches">Smart Watches</option>
+                    <option value="tablets">Tablets</option>
+                    <option value="gaming-consoles">Gaming Consoles</option>
+                    <option value="cameras">Cameras</option>
+                    <option value="electronics">Audio &amp; Electronics</option>
+                    {categories.map((c) => (
+                      <option key={c._id} value={c._id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Brand
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Apple, Samsung, Dell"
+                    value={formData.brand}
+                    onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Selling Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    placeholder="e.g. 34999"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Original / Compare Price (₹)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 69999"
+                    value={formData.compareAtPrice}
+                    onChange={(e) => setFormData({ ...formData, compareAtPrice: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Stock Quantity
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Status
+                  </label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6, background: "#fff" }}
+                  >
+                    <option value="active">Active (Visible)</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Product Image URL
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://res.cloudinary.com/... or /products/sample.webp"
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Condition Badge
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.condition}
+                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Warranty
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.warranty}
+                    onChange={(e) => setFormData({ ...formData, warranty: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Description
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Brief description of product features, specifications, and certified inspection details..."
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setIsAddModalOpen(false)}
+                  style={{
+                    padding: "8px 16px",
+                    background: "#f1f5f9",
+                    border: "none",
+                    borderRadius: 6,
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    padding: "8px 20px",
+                    background: "#13b59b",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 6,
+                    fontWeight: "700",
+                    cursor: "pointer",
+                  }}
+                >
+                  {submitting ? "Saving to Database..." : "Save Product"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* EDIT PRODUCT MODAL                                      */}
+      {/* ======================================================== */}
+      {editingProduct && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 12,
+              maxWidth: 620,
+              width: "100%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              padding: 24,
+              boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: "800" }}>✏️ Edit Product</h3>
+              <button
+                type="button"
+                onClick={() => setEditingProduct(null)}
+                style={{ background: "none", border: "none", fontSize: 18, cursor: "pointer" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateProduct}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Product Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProduct.name || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Brand
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.brand || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, brand: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Status
+                  </label>
+                  <select
+                    value={editingProduct.status || "active"}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, status: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6, background: "#fff" }}
+                  >
+                    <option value="active">Active (Visible)</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Selling Price (₹) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    value={editingProduct.price || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Original Price (₹)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editingProduct.compareAtPrice || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, compareAtPrice: Number(e.target.value) })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Stock Quantity
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editingProduct.stock ?? ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, stock: Number(e.target.value) })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Badge
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.badge || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, badge: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Image URL
+                  </label>
+                  <input
+                    type="text"
+                    value={editingProduct.images?.[0]?.url || editingProduct.imageUrl || ""}
+                    onChange={(e) =>
+                      setEditingProduct({
+                        ...editingProduct,
+                        images: [{ url: e.target.value, publicId: "", alt: editingProduct.name }],
+                      })
+                    }
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                    Description
+                  </label>
+                  <textarea
+                    rows="3"
+                    value={editingProduct.description || ""}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                    style={{ width: "100%", padding: "8px 12px", border: "1px solid #ccc", borderRadius: 6 }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingProduct(null)}
+                  style={{
+                    padding: "8px 16px",
+                    background: "#f1f5f9",
+                    border: "none",
+                    borderRadius: 6,
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    padding: "8px 20px",
+                    background: "#13b59b",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 6,
+                    fontWeight: "700",
+                    cursor: "pointer",
+                  }}
+                >
+                  {submitting ? "Updating..." : "Update Product"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

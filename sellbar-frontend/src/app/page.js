@@ -6,6 +6,7 @@ import OurServicesSection from '@/components/OurServicesSection';
 import HotDealsSection from '@/components/HotDealsSection';
 import RefurbishedPhonesSection from '@/components/RefurbishedPhonesSection';
 import RefurbishedLaptopsSection from '@/components/RefurbishedLaptopsSection';
+import TrendingGadgetsSection from '@/components/TrendingGadgetsSection';
 import ExclusiveStoresSection from '@/components/ExclusiveStoresSection';
 import CashifyGuidesSection from '@/components/CashifyGuidesSection';
 import TrendingArticlesSection from '@/components/TrendingArticlesSection';
@@ -63,6 +64,9 @@ export default function HomePage() {
 
     {/* 6. REFURBISHED LAPTOPS (MacBooks, ThinkPads, Dell Latitudes) */}
     <RefurbishedLaptopsSection />
+
+    {/* 6B. TRENDING GADGETS (Smartwatches, Tablets, Consoles & Cameras) */}
+    <TrendingGadgetsSection />
 
     {/* 7. DOORSTEP MOBILE & LAPTOP REPAIR SERVICES (Cashify 30-Min Live Fix) */}
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

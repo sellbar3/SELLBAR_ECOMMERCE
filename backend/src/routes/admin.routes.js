@@ -18,10 +18,16 @@ router.patch(
   "/users/:id/status",
   adminController.updateUserStatus
 );
-// Add this route alongside your existing admin routes
+
 router.patch(
   "/vendors/:id/approval",
   adminController.updateVendorApproval
 );
+
+// Admin Product Management
+router.get("/products", adminController.getProducts);
+router.post("/products", adminController.createProduct);
+router.patch("/products/:id", adminController.updateProduct);
+router.delete("/products/:id", adminController.deleteProduct);
 
 module.exports = router;
