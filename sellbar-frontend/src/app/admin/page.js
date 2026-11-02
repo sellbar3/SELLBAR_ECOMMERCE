@@ -36,6 +36,7 @@ import dayjs from "dayjs";
 import { money, getPanelSession, savePanelSession } from "../../lib/panel";
 
 export default function AdminDashboardPage() {
+  const [mounted, setMounted] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -44,6 +45,7 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState("charts"); // 'charts' | 'stocks' | 'tree'
 
   useEffect(() => {
+    setMounted(true);
     if (!selectedDate) {
       setSelectedDate(dayjs());
     }
@@ -272,7 +274,7 @@ export default function AdminDashboardPage() {
   return (
     <PanelShell role="admin" title="Executive Dashboard">
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="flex flex-col gap-6">
+        <div suppressHydrationWarning className="flex flex-col gap-6">
           {/* TOP BAR: Header & Interactive MUI Date Pickers */}
           <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
             <div>
@@ -466,17 +468,23 @@ export default function AdminDashboardPage() {
                     </Link>
                   </div>
 
-                  <div className="w-full h-72 flex justify-center items-center">
-                    <BarChart
-                      dataset={salesTrends}
-                      xAxis={[{ scaleType: "band", dataKey: "day" }]}
-                      series={[
-                        { dataKey: "sales", label: "Sales (₹)", color: "#DC2564" },
-                        { dataKey: "profit", label: "Net Profit (₹)", color: "#10B981" },
-                      ]}
-                      height={280}
-                      borderRadius={6}
-                    />
+                  <div suppressHydrationWarning className="w-full h-72 flex justify-center items-center">
+                    {mounted ? (
+                      <BarChart
+                        dataset={salesTrends}
+                        xAxis={[{ scaleType: "band", dataKey: "day" }]}
+                        series={[
+                          { dataKey: "sales", label: "Sales (₹)", color: "#DC2564" },
+                          { dataKey: "profit", label: "Net Profit (₹)", color: "#10B981" },
+                        ]}
+                        height={280}
+                        borderRadius={6}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                        Loading sales chart...
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -491,24 +499,30 @@ export default function AdminDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="w-full h-64 flex justify-center items-center">
-                    <PieChart
-                      series={[
-                        {
-                          data: categoryDistribution.map((c) => ({
-                            id: c.id,
-                            value: c.value,
-                            label: c.name,
-                            color: c.color,
-                          })),
-                          innerRadius: 45,
-                          outerRadius: 85,
-                          paddingAngle: 3,
-                          cornerRadius: 5,
-                        },
-                      ]}
-                      height={240}
-                    />
+                  <div suppressHydrationWarning className="w-full h-64 flex justify-center items-center">
+                    {mounted ? (
+                      <PieChart
+                        series={[
+                          {
+                            data: categoryDistribution.map((c) => ({
+                              id: c.id,
+                              value: c.value,
+                              label: c.name,
+                              color: c.color,
+                            })),
+                            innerRadius: 45,
+                            outerRadius: 85,
+                            paddingAngle: 3,
+                            cornerRadius: 5,
+                          },
+                        ]}
+                        height={240}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                        Loading category chart...
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -535,16 +549,22 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="w-full h-72 flex justify-center items-center">
-                    <LineChart
-                      dataset={monthlyRevenue}
-                      xAxis={[{ scaleType: "point", dataKey: "month" }]}
-                      series={[
-                        { dataKey: "revenue", label: "Gross Revenue (₹)", color: "#2563EB" },
-                        { dataKey: "profit", label: "Net Profit (₹)", color: "#10B981" },
-                      ]}
-                      height={280}
-                    />
+                  <div suppressHydrationWarning className="w-full h-72 flex justify-center items-center">
+                    {mounted ? (
+                      <LineChart
+                        dataset={monthlyRevenue}
+                        xAxis={[{ scaleType: "point", dataKey: "month" }]}
+                        series={[
+                          { dataKey: "revenue", label: "Gross Revenue (₹)", color: "#2563EB" },
+                          { dataKey: "profit", label: "Net Profit (₹)", color: "#10B981" },
+                        ]}
+                        height={280}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                        Loading trajectory chart...
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -559,19 +579,25 @@ export default function AdminDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="w-full h-64 flex justify-center items-center">
-                    <PieChart
-                      series={[
-                        {
-                          data: stockHealth,
-                          innerRadius: 40,
-                          outerRadius: 80,
-                          paddingAngle: 4,
-                          cornerRadius: 6,
-                        },
-                      ]}
-                      height={240}
-                    />
+                  <div suppressHydrationWarning className="w-full h-64 flex justify-center items-center">
+                    {mounted ? (
+                      <PieChart
+                        series={[
+                          {
+                            data: stockHealth,
+                            innerRadius: 40,
+                            outerRadius: 80,
+                            paddingAngle: 4,
+                            cornerRadius: 6,
+                          },
+                        ]}
+                        height={240}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                        Loading health chart...
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
@@ -608,30 +634,36 @@ export default function AdminDashboardPage() {
                 </Link>
               </div>
 
-              <div style={{ height: 420, width: "100%" }}>
-                <DataGrid
-                  rows={topSelling}
-                  columns={stockGridColumns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { pageSize: 5, page: 0 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10, 25]}
-                  disableRowSelectionOnClick
-                  sx={{
-                    border: "none",
-                    "& .MuiDataGrid-cell": {
-                      fontSize: "12px",
-                      borderColor: "#f1f5f9",
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: "#f8fafc",
-                      fontSize: "12px",
-                      fontWeight: "bold",
-                    },
-                  }}
-                />
+              <div suppressHydrationWarning style={{ height: 420, width: "100%" }}>
+                {mounted ? (
+                  <DataGrid
+                    rows={topSelling}
+                    columns={stockGridColumns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { pageSize: 5, page: 0 },
+                      },
+                    }}
+                    pageSizeOptions={[5, 10, 25]}
+                    disableRowSelectionOnClick
+                    sx={{
+                      border: "none",
+                      "& .MuiDataGrid-cell": {
+                        fontSize: "12px",
+                        borderColor: "#f1f5f9",
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: "#f8fafc",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                    Loading stock data grid...
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -656,30 +688,36 @@ export default function AdminDashboardPage() {
                 </Link>
               </div>
 
-              <div style={{ height: 400, width: "100%" }}>
-                <DataGrid
-                  rows={recentOrders}
-                  columns={orderGridColumns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { pageSize: 5, page: 0 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                  disableRowSelectionOnClick
-                  sx={{
-                    border: "none",
-                    "& .MuiDataGrid-cell": {
-                      fontSize: "12px",
-                      borderColor: "#f1f5f9",
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: "#f8fafc",
-                      fontSize: "12px",
-                      fontWeight: "bold",
-                    },
-                  }}
-                />
+              <div suppressHydrationWarning style={{ height: 400, width: "100%" }}>
+                {mounted ? (
+                  <DataGrid
+                    rows={recentOrders}
+                    columns={orderGridColumns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { pageSize: 5, page: 0 },
+                      },
+                    }}
+                    pageSizeOptions={[5, 10]}
+                    disableRowSelectionOnClick
+                    sx={{
+                      border: "none",
+                      "& .MuiDataGrid-cell": {
+                        fontSize: "12px",
+                        borderColor: "#f1f5f9",
+                      },
+                      "& .MuiDataGrid-columnHeaders": {
+                        backgroundColor: "#f8fafc",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                    Loading orders data grid...
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -696,46 +734,52 @@ export default function AdminDashboardPage() {
                 </p>
               </div>
 
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 max-w-xl">
-                <SimpleTreeView>
-                  <TreeItem itemId="tree-phones" label="📱 Refurbished Smartphones (142 Units)">
-                    <TreeItem itemId="phone-apple" label="🍏 Apple iPhones (68 Units)">
-                      <TreeItem itemId="apple-ip15" label="iPhone 15 Pro Max — 14 in stock (₹1,19,999)" />
-                      <TreeItem itemId="apple-ip14" label="iPhone 14 (128GB) — 24 in stock (₹54,999)" />
-                      <TreeItem itemId="apple-ip13" label="iPhone 13 — 30 in stock (₹42,999)" />
+              <div suppressHydrationWarning className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 max-w-xl">
+                {mounted ? (
+                  <SimpleTreeView>
+                    <TreeItem itemId="tree-phones" label="📱 Refurbished Smartphones (142 Units)">
+                      <TreeItem itemId="phone-apple" label="🍏 Apple iPhones (68 Units)">
+                        <TreeItem itemId="apple-ip15" label="iPhone 15 Pro Max — 14 in stock (₹1,19,999)" />
+                        <TreeItem itemId="apple-ip14" label="iPhone 14 (128GB) — 24 in stock (₹54,999)" />
+                        <TreeItem itemId="apple-ip13" label="iPhone 13 — 30 in stock (₹42,999)" />
+                      </TreeItem>
+                      <TreeItem itemId="phone-samsung" label="📱 Samsung Galaxy (48 Units)">
+                        <TreeItem itemId="sam-s24" label="Galaxy S24 Ultra — 3 in stock (Low Stock)" />
+                        <TreeItem itemId="sam-s23" label="Galaxy S23 5G — 25 in stock (₹49,999)" />
+                        <TreeItem itemId="sam-zflip" label="Galaxy Z Flip 5 — 20 in stock (₹64,999)" />
+                      </TreeItem>
+                      <TreeItem itemId="phone-oneplus" label="🔴 OnePlus Flagships (26 Units)">
+                        <TreeItem itemId="op-12" label="OnePlus 12 5G — 2 in stock (Low Stock)" />
+                        <TreeItem itemId="op-11" label="OnePlus 11R — 24 in stock (₹29,999)" />
+                      </TreeItem>
                     </TreeItem>
-                    <TreeItem itemId="phone-samsung" label="📱 Samsung Galaxy (48 Units)">
-                      <TreeItem itemId="sam-s24" label="Galaxy S24 Ultra — 3 in stock (Low Stock)" />
-                      <TreeItem itemId="sam-s23" label="Galaxy S23 5G — 25 in stock (₹49,999)" />
-                      <TreeItem itemId="sam-zflip" label="Galaxy Z Flip 5 — 20 in stock (₹64,999)" />
-                    </TreeItem>
-                    <TreeItem itemId="phone-oneplus" label="🔴 OnePlus Flagships (26 Units)">
-                      <TreeItem itemId="op-12" label="OnePlus 12 5G — 2 in stock (Low Stock)" />
-                      <TreeItem itemId="op-11" label="OnePlus 11R — 24 in stock (₹29,999)" />
-                    </TreeItem>
-                  </TreeItem>
 
-                  <TreeItem itemId="tree-laptops" label="💻 Laptops &amp; MacBooks (54 Units)">
-                    <TreeItem itemId="lap-apple" label="🍏 Apple MacBooks (28 Units)">
-                      <TreeItem itemId="mb-air-m2" label="MacBook Air M2 (256GB) — 8 in stock" />
-                      <TreeItem itemId="mb-pro-m3" label="MacBook Pro 14 M3 — 20 in stock" />
+                    <TreeItem itemId="tree-laptops" label="💻 Laptops & MacBooks (54 Units)">
+                      <TreeItem itemId="lap-apple" label="🍏 Apple MacBooks (28 Units)">
+                        <TreeItem itemId="mb-air-m2" label="MacBook Air M2 (256GB) — 8 in stock" />
+                        <TreeItem itemId="mb-pro-m3" label="MacBook Pro 14 M3 — 20 in stock" />
+                      </TreeItem>
+                      <TreeItem itemId="lap-windows" label="🖥️ Windows Business Series (26 Units)">
+                        <TreeItem itemId="lap-hp" label="HP EliteBook Series — 14 in stock" />
+                        <TreeItem itemId="lap-thinkpad" label="Lenovo ThinkPad T480 — 12 in stock" />
+                      </TreeItem>
                     </TreeItem>
-                    <TreeItem itemId="lap-windows" label="🖥️ Windows Business Series (26 Units)">
-                      <TreeItem itemId="lap-hp" label="HP EliteBook Series — 14 in stock" />
-                      <TreeItem itemId="lap-thinkpad" label="Lenovo ThinkPad T480 — 12 in stock" />
+
+                    <TreeItem itemId="tree-wearables" label="⌚ Smartwatches & Wearables (36 Units)">
+                      <TreeItem itemId="watch-apple" label="Apple Watch Series 9 — 19 in stock" />
+                      <TreeItem itemId="watch-galaxy" label="Galaxy Watch 6 Classic — 17 in stock" />
                     </TreeItem>
-                  </TreeItem>
 
-                  <TreeItem itemId="tree-wearables" label="⌚ Smartwatches &amp; Wearables (36 Units)">
-                    <TreeItem itemId="watch-apple" label="Apple Watch Series 9 — 19 in stock" />
-                    <TreeItem itemId="watch-galaxy" label="Galaxy Watch 6 Classic — 17 in stock" />
-                  </TreeItem>
-
-                  <TreeItem itemId="tree-tablets" label="📱 Tablets &amp; iPads (16 Units)">
-                    <TreeItem itemId="tab-ipad" label="Apple iPad Air 5th Gen — 10 in stock" />
-                    <TreeItem itemId="tab-sam" label="Galaxy Tab S9 FE — 6 in stock" />
-                  </TreeItem>
-                </SimpleTreeView>
+                    <TreeItem itemId="tree-tablets" label="📱 Tablets & iPads (16 Units)">
+                      <TreeItem itemId="tab-ipad" label="Apple iPad Air 5th Gen — 10 in stock" />
+                      <TreeItem itemId="tab-sam" label="Galaxy Tab S9 FE — 6 in stock" />
+                    </TreeItem>
+                  </SimpleTreeView>
+                ) : (
+                  <div className="w-full h-48 flex items-center justify-center text-slate-400 text-xs animate-pulse">
+                    Loading hierarchy tree...
+                  </div>
+                )}
               </div>
             </div>
           )}

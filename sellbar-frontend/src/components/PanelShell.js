@@ -173,7 +173,7 @@ export default function PanelShell({ role, title, children }) {
           />
 
           {/* Main Module Content */}
-          <main style={{ flex: 1, padding: "20px 24px 48px", maxWidth: 1600, width: "100%", margin: "0 auto" }}>
+          <main suppressHydrationWarning style={{ flex: 1, padding: "20px 24px 48px", maxWidth: 1600, width: "100%", margin: "0 auto" }}>
             {typeof children === "function" ? children(session) : children}
           </main>
         </div>

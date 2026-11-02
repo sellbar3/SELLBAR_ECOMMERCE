@@ -26,12 +26,14 @@ import dayjs from "dayjs";
 import { money, panelRequest } from "../../lib/panel";
 
 export default function VendorDashboardPage() {
+  const [mounted, setMounted] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
+    setMounted(true);
     if (!selectedDate) setSelectedDate(dayjs());
   }, [selectedDate]);
 
@@ -266,16 +268,22 @@ export default function VendorDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="w-full h-72 flex justify-center items-center">
-                    <BarChart
-                      dataset={vendorSalesTrends}
-                      xAxis={[{ scaleType: "band", dataKey: "day" }]}
-                      series={[
-                        { dataKey: "sales", label: "Gross Sales (₹)", color: "#DC2564" },
-                      ]}
-                      height={280}
-                      borderRadius={6}
-                    />
+                  <div suppressHydrationWarning className="w-full h-72 flex justify-center items-center">
+                    {mounted ? (
+                      <BarChart
+                        dataset={vendorSalesTrends}
+                        xAxis={[{ scaleType: "band", dataKey: "day" }]}
+                        series={[
+                          { dataKey: "sales", label: "Gross Sales (₹)", color: "#DC2564" },
+                        ]}
+                        height={280}
+                        borderRadius={6}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                        Loading sales chart...
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -289,19 +297,25 @@ export default function VendorDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="w-full h-64 flex justify-center items-center">
-                    <PieChart
-                      series={[
-                        {
-                          data: vendorStatusBreakdown,
-                          innerRadius: 40,
-                          outerRadius: 80,
-                          paddingAngle: 4,
-                          cornerRadius: 6,
-                        },
-                      ]}
-                      height={240}
-                    />
+                  <div suppressHydrationWarning className="w-full h-64 flex justify-center items-center">
+                    {mounted ? (
+                      <PieChart
+                        series={[
+                          {
+                            data: vendorStatusBreakdown,
+                            innerRadius: 40,
+                            outerRadius: 80,
+                            paddingAngle: 4,
+                            cornerRadius: 6,
+                          },
+                        ]}
+                        height={240}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                        Loading status chart...
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -332,30 +346,36 @@ export default function VendorDashboardPage() {
                   </Link>
                 </div>
 
-                <div style={{ height: 350, width: "100%" }}>
-                  <DataGrid
-                    rows={vendorProducts}
-                    columns={productColumns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { pageSize: 5, page: 0 },
-                      },
-                    }}
-                    pageSizeOptions={[5, 10]}
-                    disableRowSelectionOnClick
-                    sx={{
-                      border: "none",
-                      "& .MuiDataGrid-cell": {
-                        fontSize: "12px",
-                        borderColor: "#f1f5f9",
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: "#f8fafc",
-                        fontSize: "12px",
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
+                <div suppressHydrationWarning style={{ height: 350, width: "100%" }}>
+                  {mounted ? (
+                    <DataGrid
+                      rows={vendorProducts}
+                      columns={productColumns}
+                      initialState={{
+                        pagination: {
+                          paginationModel: { pageSize: 5, page: 0 },
+                        },
+                      }}
+                      pageSizeOptions={[5, 10]}
+                      disableRowSelectionOnClick
+                      sx={{
+                        border: "none",
+                        "& .MuiDataGrid-cell": {
+                          fontSize: "12px",
+                          borderColor: "#f1f5f9",
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                          backgroundColor: "#f8fafc",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-slate-50 animate-pulse rounded-xl flex items-center justify-center text-slate-400 text-xs">
+                      Loading vendor inventory grid...
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
