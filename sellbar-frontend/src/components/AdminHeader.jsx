@@ -169,6 +169,7 @@ export default function AdminHeader({
 
       {/* Center: Global Search */}
       <form
+        suppressHydrationWarning
         onSubmit={handleGlobalSearch}
         style={{
           display: "flex",
@@ -185,6 +186,7 @@ export default function AdminHeader({
       >
         <Search size={15} style={{ color: "#94a3b8", marginRight: 8, flexShrink: 0 }} />
         <input
+          suppressHydrationWarning
           type="text"
           placeholder="Global search products, orders, customers..."
           value={globalSearch}

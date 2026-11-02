@@ -544,6 +544,7 @@ export default function Navbar() {
                     <Search className="w-4 h-4 stroke-[2.2]" />
                   </div>
                   <input
+                    suppressHydrationWarning
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -1993,6 +1994,7 @@ export default function Navbar() {
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <input
+                    suppressHydrationWarning
                     type="text"
                     value={pincodeInput}
                     onChange={(e) => {

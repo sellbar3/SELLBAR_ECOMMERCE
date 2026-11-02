@@ -287,8 +287,9 @@ export default function AdminSidebar({
 
       {/* Quick Menu Filter Search (Expanded Mode Only) */}
       {!isCollapsed && (
-        <div style={{ padding: "12px 14px", borderBottom: "1px solid #1e293b" }}>
+        <div suppressHydrationWarning style={{ padding: "12px 14px", borderBottom: "1px solid #1e293b" }}>
           <div
+            suppressHydrationWarning
             style={{
               position: "relative",
               display: "flex",
@@ -300,6 +301,7 @@ export default function AdminSidebar({
           >
             <Search size={14} style={{ color: "#64748b", marginRight: 8, flexShrink: 0 }} />
             <input
+              suppressHydrationWarning
               type="text"
               placeholder="Search 20 modules..."
               value={filterQuery}
