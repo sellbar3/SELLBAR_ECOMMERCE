@@ -96,7 +96,7 @@ export default function RootLayout({ children, }) {
         </head>
         <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-[#f8fafc] text-gray-900 flex flex-col selection:bg-[#13b59b] selection:text-white`}>
             <Navbar />
-            <main className="flex-1 flex flex-col">{children}</main>
+            <main className="flex-1 flex flex-col" suppressHydrationWarning>{children}</main>
             <Footer />
         </body>
     </html>);
