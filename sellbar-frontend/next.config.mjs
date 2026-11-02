@@ -62,10 +62,6 @@ const nextConfig = {
         destination: `${backendUrl}/vendor/:path*`,
       },
       {
-        source: "/api/admin/:path*",
-        destination: `${backendUrl}/admin/:path*`,
-      },
-      {
         source: "/api/payments/:path*",
         destination: `${backendUrl}/payments/:path*`,
       },
