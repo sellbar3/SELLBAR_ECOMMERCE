@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   Search,
   MapPin,
@@ -268,6 +268,12 @@ function catLabel(cat) {
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Do not render storefront navbar within Admin or Vendor enterprise portals
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/vendor')) {
+    return null;
+  }
 
   // Navigation states
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

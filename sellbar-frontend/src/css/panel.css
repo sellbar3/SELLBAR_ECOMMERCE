@@ -1,3 +1,9 @@
+/* Portal Shell Safeguards */
+body:has([data-portal-shell="true"]) nav.sb-navbar,
+body:has([data-portal-shell="true"]) footer {
+  display: none !important;
+}
+
 .pn {
   display: flex;
   min-height: 100vh;
@@ -210,7 +216,13 @@
   border-radius: 4px;
 }
 @media (max-width: 800px) {
-  .pn {
+  /* Portal Shell Safeguards */
+body:has([data-portal-shell="true"]) nav.sb-navbar,
+body:has([data-portal-shell="true"]) footer {
+  display: none !important;
+}
+
+.pn {
     flex-direction: column;
   }
   .pn-side {

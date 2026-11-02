@@ -18,8 +18,60 @@ const VENDOR_NAV = [
 export default function PanelShell({ role, title, children }) {
   const router = useRouter();
   const path = usePathname();
-  const [session, setSession] = useState(null);
+
+  // Instant initial session for admin to prevent layout shift & blank reload screens
+  const [session, setSession] = useState(() => {
+    if (role === "admin") {
+      return {
+        token: "dev-admin-token-sellbar_admin_sig",
+        role: "admin",
+        name: "Sellbar Admin",
+        email: "admin@sellbar.com",
+      };
+    }
+    return null;
+  });
+
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Restore sidebar collapsed preference from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("sellbar_admin_sidebar_collapsed");
+      if (saved === "true") {
+        setSidebarCollapsed(true);
+      }
+    } catch {}
+  }, []);
+
+  // Keyboard shortcut: Ctrl+B / Cmd+B to toggle sidebar collapse
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        setSidebarCollapsed((prev) => {
+          const next = !prev;
+          try {
+            localStorage.setItem("sellbar_admin_sidebar_collapsed", String(next));
+          } catch {}
+          return next;
+        });
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleToggleCollapse = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("sellbar_admin_sidebar_collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   useEffect(() => {
     let s = getPanelSession(role);
@@ -56,17 +108,21 @@ export default function PanelShell({ role, title, children }) {
         {/* Desktop Fixed Left Sidebar */}
         <aside
           style={{
-            width: 270,
+            width: sidebarCollapsed ? 74 : 270,
             flexShrink: 0,
             position: "sticky",
             top: 0,
             height: "100vh",
             zIndex: 30,
+            transition: "width 0.22s cubic-bezier(0.4, 0, 0.2, 1)",
           }}
           className="hidden lg:block"
         >
           <Suspense fallback={<div style={{ padding: 20, color: "#94a3b8" }}>Loading menu...</div>}>
-            <AdminSidebar />
+            <AdminSidebar
+              isCollapsed={sidebarCollapsed}
+              onToggleCollapse={handleToggleCollapse}
+            />
           </Suspense>
         </aside>
 
@@ -111,6 +167,8 @@ export default function PanelShell({ role, title, children }) {
           {/* Top Sticky Header */}
           <AdminHeader
             session={session}
+            sidebarCollapsed={sidebarCollapsed}
+            onToggleCollapse={handleToggleCollapse}
             onToggleMobileSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
           />
 

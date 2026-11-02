@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import AppShellWrapper from '@/components/AppShellWrapper';
 const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
     title: 'Sellbar.in - India\'s Trusted Refurbished Electronics & Resale Marketplace',
@@ -95,9 +94,9 @@ export default function RootLayout({ children, }) {
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </head>
         <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-[#f8fafc] text-gray-900 flex flex-col selection:bg-[#13b59b] selection:text-white`}>
-            <Navbar />
-            <main className="flex-1 flex flex-col" suppressHydrationWarning>{children}</main>
-            <Footer />
+            <AppShellWrapper>
+                {children}
+            </AppShellWrapper>
         </body>
     </html>);
 }

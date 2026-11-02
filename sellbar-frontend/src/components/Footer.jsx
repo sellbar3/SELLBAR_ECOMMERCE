@@ -2,8 +2,15 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Do not render storefront footer within Admin or Vendor enterprise portals
+  if (pathname?.startsWith('/admin') || pathname?.startsWith('/vendor')) {
+    return null;
+  }
   return (
     <footer className="bg-[#f7f8f9] text-[#555555] border-t border-gray-200/80 text-[13px] mt-16 antialiased">
       {/* Main Footer Container */}

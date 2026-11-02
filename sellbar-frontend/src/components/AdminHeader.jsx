@@ -14,10 +14,17 @@ import {
   LogOut,
   Settings,
   ChevronDown,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { clearPanelSession } from "../lib/panel";
 
-export default function AdminHeader({ onToggleMobileSidebar, session }) {
+export default function AdminHeader({
+  onToggleMobileSidebar,
+  session,
+  sidebarCollapsed = false,
+  onToggleCollapse,
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -77,8 +84,9 @@ export default function AdminHeader({ onToggleMobileSidebar, session }) {
         boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.04)",
       }}
     >
-      {/* Left: Mobile Toggle & Breadcrumbs */}
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      {/* Left: Mobile Toggle, Desktop Collapse & Breadcrumbs */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        {/* Mobile Hamburger Drawer Toggle */}
         <button
           type="button"
           onClick={onToggleMobileSidebar}
@@ -97,6 +105,37 @@ export default function AdminHeader({ onToggleMobileSidebar, session }) {
         >
           <Menu size={18} />
         </button>
+
+        {/* Desktop Sidebar Collapse Toggle */}
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            className="hidden lg:flex"
+            title={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+            style={{
+              background: "#f8fafc",
+              border: "1px solid #e2e8f0",
+              borderRadius: 8,
+              padding: "6px 8px",
+              color: "#475569",
+              cursor: "pointer",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#f1f5f9";
+              e.currentTarget.style.color = "#0f172a";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#f8fafc";
+              e.currentTarget.style.color = "#475569";
+            }}
+          >
+            {sidebarCollapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}
+          </button>
+        )}
 
         {/* Breadcrumb Navigation */}
         <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
