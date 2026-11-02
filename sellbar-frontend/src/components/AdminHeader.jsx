@@ -111,29 +111,34 @@ export default function AdminHeader({
           <button
             type="button"
             onClick={onToggleCollapse}
-            className="hidden lg:flex"
+            className="hidden lg:flex items-center gap-1.5"
             title={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
             style={{
-              background: "#f8fafc",
-              border: "1px solid #e2e8f0",
+              background: sidebarCollapsed ? "#DC2564" : "#f1f5f9",
+              border: sidebarCollapsed ? "1px solid #DC2564" : "1px solid #cbd5e1",
               borderRadius: 8,
-              padding: "6px 8px",
-              color: "#475569",
+              padding: "6px 10px",
+              color: sidebarCollapsed ? "#ffffff" : "#334155",
               cursor: "pointer",
-              alignItems: "center",
-              justifyContent: "center",
+              fontSize: 12,
+              fontWeight: 600,
               transition: "all 0.15s ease",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#f1f5f9";
-              e.currentTarget.style.color = "#0f172a";
+              if (!sidebarCollapsed) {
+                e.currentTarget.style.background = "#e2e8f0";
+                e.currentTarget.style.color = "#0f172a";
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#f8fafc";
-              e.currentTarget.style.color = "#475569";
+              if (!sidebarCollapsed) {
+                e.currentTarget.style.background = "#f1f5f9";
+                e.currentTarget.style.color = "#334155";
+              }
             }}
           >
-            {sidebarCollapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}
+            {sidebarCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+            <span>{sidebarCollapsed ? "Expand" : "Collapse"}</span>
           </button>
         )}
 

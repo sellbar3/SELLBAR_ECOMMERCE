@@ -7,12 +7,16 @@ import { usePathname } from 'next/navigation';
 export default function Footer() {
   const pathname = usePathname();
 
-  // Do not render storefront footer within Admin or Vendor enterprise portals
-  if (pathname?.startsWith('/admin') || pathname?.startsWith('/vendor')) {
+  // Bulletproof path detection: Do not render storefront footer within Admin or Vendor enterprise portals
+  const currentPath =
+    pathname ||
+    (typeof window !== 'undefined' ? window.location.pathname : '');
+
+  if (currentPath.startsWith('/admin') || currentPath.startsWith('/vendor')) {
     return null;
   }
   return (
-    <footer className="bg-[#f7f8f9] text-[#555555] border-t border-gray-200/80 text-[13px] mt-16 antialiased">
+    <footer className="storefront-footer bg-[#f7f8f9] text-[#555555] border-t border-gray-200/80 text-[13px] mt-16 antialiased">
       {/* Main Footer Container */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
 

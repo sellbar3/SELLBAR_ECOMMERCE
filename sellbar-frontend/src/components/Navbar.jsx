@@ -270,8 +270,12 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Do not render storefront navbar within Admin or Vendor enterprise portals
-  if (pathname?.startsWith('/admin') || pathname?.startsWith('/vendor')) {
+  // Bulletproof path detection: Do not render storefront navbar within Admin or Vendor enterprise portals
+  const currentPath =
+    pathname ||
+    (typeof window !== 'undefined' ? window.location.pathname : '');
+
+  if (currentPath.startsWith('/admin') || currentPath.startsWith('/vendor')) {
     return null;
   }
 
@@ -505,7 +509,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-xs font-sans">
+      <header className="storefront-header sticky top-0 z-50 bg-white border-b border-gray-200 shadow-xs font-sans">
         {/* ========================================================= */}
         {/* 1. TOP MAIN ROW (Logo, Large Search, Location, Login/Cart) */}
         {/* ========================================================= */}

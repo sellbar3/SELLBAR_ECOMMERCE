@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import AppShellWrapper from '@/components/AppShellWrapper';
@@ -94,9 +95,11 @@ export default function RootLayout({ children, }) {
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </head>
         <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-[#f8fafc] text-gray-900 flex flex-col selection:bg-[#13b59b] selection:text-white`}>
-            <AppShellWrapper>
-                {children}
-            </AppShellWrapper>
+            <Suspense fallback={<main className="flex-1 flex flex-col min-h-screen w-full" suppressHydrationWarning>{children}</main>}>
+                <AppShellWrapper>
+                    {children}
+                </AppShellWrapper>
+            </Suspense>
         </body>
     </html>);
 }

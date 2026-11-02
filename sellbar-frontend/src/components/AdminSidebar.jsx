@@ -97,18 +97,35 @@ export default function AdminSidebar({
 
   const isLinkActive = (itemHref) => {
     const [itemPath, itemQuery] = itemHref.split("?");
-    if (itemPath === "/admin") {
-      return pathname === "/admin" && !itemQuery;
-    }
+    if (pathname !== itemPath) return false;
+
     if (itemQuery) {
       const qParams = new URLSearchParams(itemQuery);
       let allMatch = true;
       qParams.forEach((val, key) => {
-        if (searchParams.get(key) !== val) allMatch = false;
+        if (searchParams?.get(key) !== val) allMatch = false;
       });
-      return pathname === itemPath && allMatch;
+      return allMatch;
     }
-    return pathname === itemPath;
+
+    // Link has no query: active only if current URL doesn't match an active sibling query
+    const hasSearch = searchParams && Array.from(searchParams.keys()).length > 0;
+    if (hasSearch) {
+      const currentMod = ADMIN_SIDEBAR_MODULES.find((m) => m.basePath === itemPath);
+      const hasSpecificSiblingMatch = currentMod?.items?.some((it) => {
+        const [, itQuery] = it.href.split("?");
+        if (!itQuery) return false;
+        const itParams = new URLSearchParams(itQuery);
+        let match = true;
+        itParams.forEach((v, k) => {
+          if (searchParams.get(k) !== v) match = false;
+        });
+        return match;
+      });
+      if (hasSpecificSiblingMatch) return false;
+    }
+
+    return true;
   };
 
   const handleMouseEnterIcon = (modId, e) => {
@@ -157,16 +174,19 @@ export default function AdminSidebar({
       {/* Brand & Collapse Header */}
       <div
         style={{
-          padding: isCollapsed ? "18px 12px" : "18px 18px",
+          padding: isCollapsed ? "14px 8px" : "16px 18px",
           display: "flex",
+          flexDirection: isCollapsed ? "column" : "row",
           alignItems: "center",
           justifyContent: isCollapsed ? "center" : "space-between",
           borderBottom: "1px solid #1e293b",
-          minHeight: 65,
+          minHeight: isCollapsed ? 92 : 65,
+          gap: isCollapsed ? 8 : 0,
         }}
       >
         <Link
           href="/admin"
+          title="Sellbar Admin"
           style={{
             display: "flex",
             alignItems: "center",
@@ -177,15 +197,15 @@ export default function AdminSidebar({
         >
           <div
             style={{
-              width: 34,
-              height: 34,
+              width: 36,
+              height: 36,
               borderRadius: 8,
               background: "#DC2564",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontWeight: 900,
-              fontSize: 17,
+              fontSize: 18,
               color: "#fff",
               boxShadow: "0 0 14px rgba(220, 37, 100, 0.45)",
               flexShrink: 0,
@@ -221,12 +241,14 @@ export default function AdminSidebar({
             onClick={onToggleCollapse}
             title={isCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
             style={{
-              background: "transparent",
-              border: "1px solid rgba(255, 255, 255, 0.08)",
+              width: isCollapsed ? 38 : "auto",
+              height: isCollapsed ? 28 : "auto",
+              background: isCollapsed ? "#1e293b" : "transparent",
+              border: isCollapsed ? "1px solid #334155" : "1px solid rgba(255, 255, 255, 0.1)",
               borderRadius: 6,
-              color: "#94a3b8",
+              color: isCollapsed ? "#cbd5e1" : "#94a3b8",
               cursor: "pointer",
-              padding: 6,
+              padding: isCollapsed ? 0 : 6,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -234,11 +256,11 @@ export default function AdminSidebar({
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "#fff";
-              e.currentTarget.style.background = "#1e293b";
+              e.currentTarget.style.background = isCollapsed ? "#334155" : "#1e293b";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "#94a3b8";
-              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = isCollapsed ? "#cbd5e1" : "#94a3b8";
+              e.currentTarget.style.background = isCollapsed ? "#1e293b" : "transparent";
             }}
           >
             {isCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
@@ -356,7 +378,7 @@ export default function AdminSidebar({
         <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
           {filteredModules.map((mod) => {
             const Icon = mod.icon;
-            // In accordion mode: open if user clicked it OR if search query is active
+            // In accordion mode: strictly ONLY open if user clicked it OR if searching
             const isOpen = filterQuery ? true : openSectionId === mod.id;
             const isParentActive = mod.id === currentActiveModuleId;
 
@@ -382,9 +404,9 @@ export default function AdminSidebar({
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      background: isParentActive ? "rgba(220, 37, 100, 0.18)" : "transparent",
+                      background: isParentActive ? "rgba(220, 37, 100, 0.22)" : "transparent",
                       color: isParentActive ? "#ff4081" : "#94a3b8",
-                      border: isParentActive ? "1px solid rgba(220, 37, 100, 0.35)" : "1px solid transparent",
+                      border: isParentActive ? "1px solid rgba(220, 37, 100, 0.45)" : "1px solid transparent",
                       cursor: "pointer",
                       transition: "all 0.15s ease",
                       position: "relative",
@@ -412,7 +434,7 @@ export default function AdminSidebar({
                           top: "50%",
                           transform: "translateY(-50%)",
                           width: 4,
-                          height: 16,
+                          height: 18,
                           borderRadius: 2,
                           background: "#DC2564",
                         }}
@@ -440,9 +462,9 @@ export default function AdminSidebar({
                     padding: "9px 12px",
                     borderRadius: 8,
                     background: isParentActive
-                      ? "rgba(220, 37, 100, 0.12)"
+                      ? "rgba(220, 37, 100, 0.14)"
                       : isOpen
-                      ? "rgba(255, 255, 255, 0.04)"
+                      ? "rgba(255, 255, 255, 0.05)"
                       : "transparent",
                     color: isParentActive ? "#ff4081" : isOpen ? "#f8fafc" : "#cbd5e1",
                     border: "none",
@@ -520,7 +542,7 @@ export default function AdminSidebar({
                       display: "flex",
                       flexDirection: "column",
                       gap: 2,
-                      borderLeft: "2px solid rgba(220, 37, 100, 0.25)",
+                      borderLeft: "2px solid rgba(220, 37, 100, 0.3)",
                       marginLeft: 20,
                       marginTop: 3,
                     }}
@@ -585,7 +607,7 @@ export default function AdminSidebar({
             border: "1px solid #334155",
             borderRadius: 10,
             padding: "12px",
-            boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.7), 0 0 15px rgba(220, 37, 100, 0.15)",
+            boxShadow: "0 20px 30px -10px rgba(0, 0, 0, 0.7), 0 0 15px rgba(220, 37, 100, 0.2)",
             zIndex: 9999,
             display: "flex",
             flexDirection: "column",

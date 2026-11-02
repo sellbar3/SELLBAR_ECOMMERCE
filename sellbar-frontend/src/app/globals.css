@@ -85,9 +85,11 @@ body {
 }
 
 /* Hide customer store Navbar & Footer on Admin and Vendor Portal pages */
-body:has([data-portal-shell]) header,
-body:has([data-portal-shell]) footer,
-body.portal-shell-active header,
-body.portal-shell-active footer {
+body:has([data-portal-shell]) .storefront-header,
+body:has([data-portal-shell]) .storefront-footer,
+body:has([data-portal-shell]) header.storefront-header,
+body:has([data-portal-shell]) footer.storefront-footer,
+body.portal-shell-active .storefront-header,
+body.portal-shell-active .storefront-footer {
   display: none !important;
 }
