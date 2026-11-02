@@ -4,7 +4,7 @@ import "@/css/panel.css";
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { getPanelSession, clearPanelSession } from "../lib/panel";
+import { getPanelSession, savePanelSession, clearPanelSession } from "../lib/panel";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 
