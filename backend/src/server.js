@@ -27,14 +27,9 @@ async function bootstrapAdmin() {
 
   const normalizedEmail = email.toLowerCase().trim();
 
-  const existingAdmin = await User.exists({
-    email: normalizedEmail,
+  const existingAdmin = await User.findOne({
+    $or: [{ email: normalizedEmail }, { role: "admin" }],
   });
-
-  if (existingAdmin) {
-    logger.info("Admin account already exists");
-    return;
-  }
 
   const rounds = Math.max(
     10,
@@ -43,8 +38,19 @@ async function bootstrapAdmin() {
 
   const hashedPassword = await bcrypt.hash(password, rounds);
 
+  if (existingAdmin) {
+    existingAdmin.name = process.env.ADMIN_NAME || existingAdmin.name || "Sellbar Admin";
+    existingAdmin.email = normalizedEmail;
+    existingAdmin.password = hashedPassword;
+    existingAdmin.role = "admin";
+    existingAdmin.status = "active";
+    await existingAdmin.save();
+    logger.info(`Admin account synchronized with .env: ${existingAdmin.email}`);
+    return;
+  }
+
   const admin = await User.create({
-    name: process.env.ADMIN_NAME || "SELLBAR Admin",
+    name: process.env.ADMIN_NAME || "Sellbar Admin",
     email: normalizedEmail,
     password: hashedPassword,
     role: "admin",
