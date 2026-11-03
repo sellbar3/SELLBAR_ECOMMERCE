@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
 import { Camera } from 'lucide-react';
 import EcommerceCatalogView from '@/components/catalog/EcommerceCatalogView';
+
+export const metadata = {
+  title: 'Buy Refurbished DSLR, Mirrorless Cameras & Lenses',
+  description: 'Certified Sony Alpha, Canon EOS, and Nikon DSLR & mirrorless cameras with verified shutter counts and 12-month warranty on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/buy-refurbished-dslr-cameras' },
+};
 
 export default function BuyRefurbishedDslrCamerasPage() {
   return (

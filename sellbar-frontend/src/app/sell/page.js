@@ -1,6 +1,10 @@
 import SellCategory from "@/components/SellCategory";
 
-export const metadata = { title: "Sell your old phone | SELLBAR" };
+export const metadata = {
+  title: "Sell Old Phone Online for Instant Cash",
+  description: "Get the highest cash valuation for your used phone with free doorstep inspection and instant payment on Sellbar.in.",
+  alternates: { canonical: "https://sellbar.in/sell" },
+};
 
 const brands = ["Apple", "Samsung", "OnePlus", "Xiaomi", "Vivo", "Oppo", "Realme", "Google"];
 

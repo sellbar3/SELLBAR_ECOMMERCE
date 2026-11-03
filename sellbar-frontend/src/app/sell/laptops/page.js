@@ -1,6 +1,10 @@
 import SellCategory from "@/components/SellCategory";
 
-export const metadata = { title: "Sell your old laptop | SELLBAR" };
+export const metadata = {
+  title: "Sell Old Laptop & MacBook for Instant Cash",
+  description: "Sell your used laptop or Apple MacBook online for top value with doorstep testing and instant payment on Sellbar.in.",
+  alternates: { canonical: "https://sellbar.in/sell/laptops" },
+};
 
 const brands = ["Apple", "Dell", "HP", "Lenovo", "Asus"];
 

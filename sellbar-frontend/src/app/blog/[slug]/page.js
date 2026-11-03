@@ -24,11 +24,20 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
-  if (!post) return { title: 'Article Not Found | Sellbar.in' };
+  if (!post) return { title: 'Article Not Found' };
 
   return {
-    title: `${post.title} | Sellbar Blog`,
+    title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `https://sellbar.in/blog/${slug}`,
+    },
+    openGraph: {
+      title: `${post.title} | Sellbar.in`,
+      description: post.excerpt,
+      url: `https://sellbar.in/blog/${slug}`,
+      siteName: 'Sellbar.in',
+    },
   };
 }
 

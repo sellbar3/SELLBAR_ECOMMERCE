@@ -3,8 +3,9 @@ import Link from "next/link";
 import { Building2, ShieldCheck, FileCheck, Mail, MapPin, ExternalLink, FileText, CheckCircle2 } from "lucide-react";
 
 export const metadata = {
-  title: "Corporate Information | Sellbar Technologies India",
-  description: "Official corporate details, registered office address, regional facilities, CIN, and statutory compliance information for Sellbar.",
+  title: "Corporate Information & Statutory Disclosures",
+  description: "Official corporate details, registered office address, CIN, GSTIN, and statutory legal disclosures for Sellbar.in.",
+  alternates: { canonical: "https://sellbar.in/corporate-information" },
 };
 
 export default function CorporateInformationPage() {

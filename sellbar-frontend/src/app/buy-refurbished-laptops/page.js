@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
 import { Laptop } from 'lucide-react';
 import EcommerceCatalogView from '@/components/catalog/EcommerceCatalogView';
+
+export const metadata = {
+  title: 'Buy Refurbished Laptops & Apple MacBooks',
+  description: 'Shop certified refurbished Apple MacBooks, Dell Latitude, Lenovo ThinkPad & HP laptops with 12 months warranty and doorstep delivery on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/buy-refurbished-laptops' },
+};
 
 export default function BuyRefurbishedLaptopsPage() {
   return (

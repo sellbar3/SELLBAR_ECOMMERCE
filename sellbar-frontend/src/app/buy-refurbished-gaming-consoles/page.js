@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
 import { Gamepad2 } from 'lucide-react';
 import EcommerceCatalogView from '@/components/catalog/EcommerceCatalogView';
+
+export const metadata = {
+  title: 'Buy Refurbished PS5, Xbox & Gaming Consoles',
+  description: 'Certified Sony PlayStation 5, Xbox Series X/S, and Nintendo Switch consoles with 12 months warranty and doorstep delivery on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/buy-refurbished-gaming-consoles' },
+};
 
 export default function BuyRefurbishedGamingConsolesPage() {
   return (

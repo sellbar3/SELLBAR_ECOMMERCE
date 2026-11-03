@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
 import { Watch } from 'lucide-react';
 import EcommerceCatalogView from '@/components/catalog/EcommerceCatalogView';
+
+export const metadata = {
+  title: 'Buy Refurbished Apple Watch & Smartwatches',
+  description: 'Certified Apple Watch Ultra, Series 9, Samsung Galaxy Watch and fitness wearables with 12 months warranty on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/buy-refurbished-smart-watches' },
+};
 
 export default function BuyRefurbishedSmartWatchesPage() {
   return (

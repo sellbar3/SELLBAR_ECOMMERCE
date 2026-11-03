@@ -2,8 +2,9 @@ import React from 'react';
 import UniversalDeviceSellView from '@/components/sell/UniversalDeviceSellView';
 
 export const metadata = {
-  title: 'Sell Old TV Online | Instant Doorstep Cash | Sellbar.in',
-  description: 'Sell your used 32, 43, 55, or 65 Smart LED, OLED or QLED TV online with free doorstep dismount and instant payment across Bihar.',
+  title: 'Sell Old Smart LED TV Online for Instant Cash',
+  description: 'Sell your used 32, 43, 55, or 65 Smart LED, OLED or QLED TV online with free doorstep pickup and instant payment on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/sell-old-television' },
 };
 
 export default function SellOldTelevisionPage() {

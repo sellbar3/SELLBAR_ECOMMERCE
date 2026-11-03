@@ -16,8 +16,9 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "About Us | Sellbar.in - India's Trusted Recommerce Platform",
-  description: "Learn about Sellbar's mission, leadership, 32-point inspection lab, and journey toward circular electronics across India.",
+  title: "About Us - India's Trusted Recommerce Platform",
+  description: "Learn about Sellbar's mission, leadership, 32-point inspection lab, and journey toward circular electronics across India on Sellbar.in.",
+  alternates: { canonical: "https://sellbar.in/about-us" },
 };
 
 const TIMELINE = [

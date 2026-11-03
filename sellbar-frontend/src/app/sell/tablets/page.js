@@ -1,6 +1,10 @@
 import SellCategory from "@/components/SellCategory";
 
-export const metadata = { title: "Sell your old tablet | SELLBAR" };
+export const metadata = {
+  title: "Sell Old Tablet & iPad for Instant Cash",
+  description: "Get instant cash valuation for your used Apple iPad, Samsung Tab or Lenovo tablet with doorstep pickup on Sellbar.in.",
+  alternates: { canonical: "https://sellbar.in/sell/tablets" },
+};
 
 const brands = ["Apple", "Samsung", "Lenovo"];
 

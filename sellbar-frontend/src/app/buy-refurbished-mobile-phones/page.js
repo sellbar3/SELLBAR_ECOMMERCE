@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
 import { Smartphone } from 'lucide-react';
 import EcommerceCatalogView from '@/components/catalog/EcommerceCatalogView';
+
+export const metadata = {
+  title: 'Buy Refurbished Mobile Phones & Smartphones',
+  description: 'Shop certified refurbished Apple iPhones, Samsung Galaxy, OnePlus and Pixel 5G phones with 32-point inspection and 12-month warranty on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/buy-refurbished-mobile-phones' },
+};
 
 export default function BuyRefurbishedMobilePhonesPage() {
   return (

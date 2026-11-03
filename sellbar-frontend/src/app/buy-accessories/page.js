@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import EcommerceCatalogView from '@/components/catalog/EcommerceCatalogView';
+
+export const metadata = {
+  title: 'Buy Mobile Accessories, Fast Chargers & Adapters',
+  description: 'Shop genuine Apple 20W adapters, Samsung chargers, MagSafe cases and accessories with fast doorstep delivery on Sellbar.in.',
+  alternates: { canonical: 'https://sellbar.in/buy-accessories' },
+};
 
 export default function BuyAccessoriesPage() {
   return (

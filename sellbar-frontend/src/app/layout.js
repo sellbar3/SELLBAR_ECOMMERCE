@@ -10,7 +10,10 @@ export const viewport = {
     themeColor: '#13b59b',
 };
 export const metadata = {
-    title: 'Sellbar.in - India\'s Trusted Refurbished Electronics & Resale Marketplace',
+    title: {
+        default: "Sellbar.in - India's Trusted Refurbished Electronics & Resale Marketplace",
+        template: '%s | Sellbar.in',
+    },
     description: 'Turn old tech into instant money with free doorstep pickup. Buy certified refurbished smartphones, MacBooks, and laptops with 32-point inspection and 12 months warranty.',
     keywords: [
         'sell old phone',
