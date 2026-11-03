@@ -16,7 +16,7 @@ export default function Footer() {
     return null;
   }
   return (
-    <footer className="storefront-footer bg-[#f7f8f9] text-[#555555] border-t border-gray-200/80 text-[13px] mt-16 antialiased">
+    <footer className="storefront-footer bg-slate-50 text-slate-600 border-t border-slate-200 text-sm mt-16 antialiased">
       {/* Main Footer Container */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
 
@@ -27,7 +27,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-3 lg:col-span-1 flex flex-col space-y-5">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group w-fit">
-              <div className="w-10 h-10 rounded-full bg-[#2bbda3] flex items-center justify-center shadow-xs transition-transform group-hover:scale-105 shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[#13b59b] flex items-center justify-center shadow-xs transition-transform group-hover:scale-105 shrink-0">
                 <svg
                   className="w-5 h-5 text-white stroke-[3.2]"
                   viewBox="0 0 24 24"
@@ -39,14 +39,14 @@ export default function Footer() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span className="text-[25px] font-black tracking-tight text-[#2bbda3]">
+              <span className="text-2xl font-black tracking-tight text-[#13b59b]">
                 SELLBAR
               </span>
             </Link>
 
             {/* Follow Us On */}
             <div className="pt-1">
-              <p className="text-[13px] font-semibold text-[#444444] mb-3.5">
+              <p className="text-sm font-semibold text-slate-700 mb-3.5">
                 Follow us on
               </p>
 
@@ -58,7 +58,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Twitter (opens in a new tab)"
-                  className="w-8 h-8 rounded-full bg-[#54595f] hover:bg-[#2bbda3] text-white flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-slate-600 hover:bg-[#13b59b] text-white flex items-center justify-center transition-colors duration-200"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" />
@@ -71,7 +71,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook (opens in a new tab)"
-                  className="w-8 h-8 rounded-full bg-[#54595f] hover:bg-[#2bbda3] text-white flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-slate-600 hover:bg-[#13b59b] text-white flex items-center justify-center transition-colors duration-200"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
@@ -84,7 +84,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram (opens in a new tab)"
-                  className="w-8 h-8 rounded-full bg-[#54595f] hover:bg-[#2bbda3] text-white flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-slate-600 hover:bg-[#13b59b] text-white flex items-center justify-center transition-colors duration-200"
                 >
                   <svg className="w-3.5 h-3.5 stroke-current stroke-2 fill-none" viewBox="0 0 24 24">
                     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -99,7 +99,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube (opens in a new tab)"
-                  className="w-8 h-8 rounded-full bg-[#54595f] hover:bg-[#2bbda3] text-white flex items-center justify-center transition-colors duration-200"
+                  className="w-8 h-8 rounded-full bg-slate-600 hover:bg-[#13b59b] text-white flex items-center justify-center transition-colors duration-200"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.782C18.254 4 12 4 12 4s-6.254 0-7.814.404a2.506 2.506 0 0 0-1.768 1.782C2 7.76 2 12 2 12s0 4.24.418 5.814a2.506 2.506 0 0 0 1.768 1.782C5.746 20 12 20 12 20s6.254 0 7.814-.404a2.506 2.506 0 0 0 1.768-1.782C22 16.24 22 12 22 12s0-4.24-.418-5.814zM10 15.464V8.536L16 12l-6 3.464z" />
@@ -111,62 +111,62 @@ export default function Footer() {
 
           {/* Column 2: Services */}
           <div>
-            <h4 className="text-[14px] font-semibold text-[#333333] mb-4">
+            <h3 className="text-sm font-bold text-slate-900 mb-4">
               Services
-            </h4>
-            <ul className="space-y-2.5 text-[#555555]">
+            </h3>
+            <ul className="space-y-2.5 text-slate-600">
               <li>
-                <Link href="/sell-old-mobile-phone" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-mobile-phone" className="hover:text-[#13b59b] transition-colors">
                   Sell Phone
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-television" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-television" className="hover:text-[#13b59b] transition-colors">
                   Sell Television
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-smart-watch" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-smart-watch" className="hover:text-[#13b59b] transition-colors">
                   Sell Smart Watch
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-smart-speaker" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-smart-speaker" className="hover:text-[#13b59b] transition-colors">
                   Sell Smart Speakers
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-dslr-camera" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-dslr-camera" className="hover:text-[#13b59b] transition-colors">
                   Sell DSLR Camera
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-earbuds" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-earbuds" className="hover:text-[#13b59b] transition-colors">
                   Sell Earbuds
                 </Link>
               </li>
               <li>
-                <Link href="/repair" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/repair" className="hover:text-[#13b59b] transition-colors">
                   Repair Phone
                 </Link>
               </li>
               <li>
-                <Link href="/buy-refurbished-gadgets" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/buy-refurbished-gadgets" className="hover:text-[#13b59b] transition-colors">
                   Buy Gadgets
                 </Link>
               </li>
               <li>
-                <Link href="/recycle-old-mobile-phone" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/recycle-old-mobile-phone" className="hover:text-[#13b59b] transition-colors">
                   Recycle Phone
                 </Link>
               </li>
               <li>
-                <Link href="/find-new-phone" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/find-new-phone" className="hover:text-[#13b59b] transition-colors">
                   Find New Phone
                 </Link>
               </li>
               <li>
-                <Link href="/partner-with-us" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/partner-with-us" className="hover:text-[#13b59b] transition-colors">
                   Partner With Us
                 </Link>
               </li>
@@ -175,42 +175,42 @@ export default function Footer() {
 
           {/* Column 3: Company */}
           <div>
-            <h4 className="text-[14px] font-semibold text-[#333333] mb-4">
+            <h3 className="text-sm font-bold text-slate-900 mb-4">
               Company
-            </h4>
-            <ul className="space-y-2.5 text-[#555555]">
+            </h3>
+            <ul className="space-y-2.5 text-slate-600">
               <li>
-                <Link href="/about-us" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/about-us" className="hover:text-[#13b59b] transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/careers" className="hover:text-[#13b59b] transition-colors">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link href="/articles" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/articles" className="hover:text-[#13b59b] transition-colors">
                   Articles
                 </Link>
               </li>
               <li>
-                <Link href="/press-releases" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/press-releases" className="hover:text-[#13b59b] transition-colors">
                   Press Releases
                 </Link>
               </li>
               <li>
-                <Link href="/partner-with-us" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/partner-with-us" className="hover:text-[#13b59b] transition-colors">
                   Become Sellbar Partner
                 </Link>
               </li>
               <li>
-                <Link href="/supersale" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/supersale" className="hover:text-[#13b59b] transition-colors">
                   Become Supersale Partner
                 </Link>
               </li>
               <li>
-                <Link href="/corporate-information" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/corporate-information" className="hover:text-[#13b59b] transition-colors">
                   Corporate Information
                 </Link>
               </li>
@@ -219,32 +219,32 @@ export default function Footer() {
 
           {/* Column 4: Sell Device */}
           <div>
-            <h4 className="text-[14px] font-semibold text-[#333333] mb-4">
+            <h3 className="text-sm font-bold text-slate-900 mb-4">
               Sell Device
-            </h4>
-            <ul className="space-y-2.5 text-[#555555]">
+            </h3>
+            <ul className="space-y-2.5 text-slate-600">
               <li>
-                <Link href="/sell-old-mobile-phone" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-mobile-phone" className="hover:text-[#13b59b] transition-colors">
                   Mobile Phone
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-laptop" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-laptop" className="hover:text-[#13b59b] transition-colors">
                   Laptop
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-tablet" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-tablet" className="hover:text-[#13b59b] transition-colors">
                   Tablet
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-imac" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-imac" className="hover:text-[#13b59b] transition-colors">
                   iMac
                 </Link>
               </li>
               <li>
-                <Link href="/sell-old-gaming-consoles" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/sell-old-gaming-consoles" className="hover:text-[#13b59b] transition-colors">
                   Gaming Consoles
                 </Link>
               </li>
@@ -253,32 +253,32 @@ export default function Footer() {
 
           {/* Column 5: Help & Support */}
           <div>
-            <h4 className="text-[14px] font-semibold text-[#333333] mb-4">
+            <h3 className="text-sm font-bold text-slate-900 mb-4">
               Help &amp; Support
-            </h4>
-            <ul className="space-y-2.5 text-[#555555]">
+            </h3>
+            <ul className="space-y-2.5 text-slate-600">
               <li>
-                <Link href="/faq" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/faq" className="hover:text-[#13b59b] transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/contact" className="hover:text-[#13b59b] transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/warranty-policy" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/warranty-policy" className="hover:text-[#13b59b] transition-colors">
                   Warranty Policy
                 </Link>
               </li>
               <li>
-                <Link href="/refund-policy" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/refund-policy" className="hover:text-[#13b59b] transition-colors">
                   Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/shipping-policy" className="hover:text-[#2bbda3] transition-colors">
+                <Link href="/shipping-policy" className="hover:text-[#13b59b] transition-colors">
                   Shipping Policy
                 </Link>
               </li>
@@ -288,42 +288,42 @@ export default function Footer() {
           {/* Column 6: More Info & Chat With Us Badge */}
           <div className="flex flex-col justify-between h-full">
             <div>
-              <h4 className="text-[14px] font-semibold text-[#333333] mb-4">
+              <h3 className="text-sm font-bold text-slate-900 mb-4">
                 More Info
-              </h4>
-              <ul className="space-y-2.5 text-[#555555]">
+              </h3>
+              <ul className="space-y-2.5 text-slate-600">
                 <li>
-                  <Link href="/terms-conditions" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/terms-conditions" className="hover:text-[#13b59b] transition-colors">
                     Terms &amp; Conditions
                   </Link>
                 </li>
                 <li>
-                  <Link href="/privacy-policy" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/privacy-policy" className="hover:text-[#13b59b] transition-colors">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms-of-use" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/terms-of-use" className="hover:text-[#13b59b] transition-colors">
                     Terms of Use
                   </Link>
                 </li>
                 <li>
-                  <Link href="/e-waste-policy" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/e-waste-policy" className="hover:text-[#13b59b] transition-colors">
                     E-Waste Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/cookie-policy" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/cookie-policy" className="hover:text-[#13b59b] transition-colors">
                     Cookie Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="/what-is-refurbished" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/what-is-refurbished" className="hover:text-[#13b59b] transition-colors">
                     What is Refurbished
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about" className="hover:text-[#2bbda3] transition-colors">
+                  <Link href="/about" className="hover:text-[#13b59b] transition-colors">
                     Sellbar Community
                   </Link>
                 </li>
@@ -334,10 +334,10 @@ export default function Footer() {
             <div className="mt-8 pt-2">
               <Link
                 href="/contact"
-                className="flex items-center gap-3.5 bg-[#2bbda3] hover:bg-[#24a991] text-white px-4 py-3 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 group"
+                className="flex items-center gap-3.5 bg-[#13b59b] hover:bg-[#0fa088] text-white px-4 py-3 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 group"
               >
                 {/* Speech Bubble Icon Box */}
-                <div className="w-9 h-9 rounded-lg bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
                   <svg
                     className="w-5 h-5 text-white stroke-[2.2]"
                     viewBox="0 0 24 24"
@@ -352,10 +352,10 @@ export default function Footer() {
 
                 {/* Text */}
                 <div className="text-left">
-                  <div className="text-[14px] font-bold leading-tight">
+                  <div className="text-sm font-bold leading-tight">
                     Chat with Us
                   </div>
-                  <div className="text-[11px] text-white/90 leading-tight mt-0.5 font-normal">
+                  <div className="text-xs text-white/90 leading-tight mt-0.5 font-normal">
                     Got questions? Just ask.
                   </div>
                 </div>
@@ -369,14 +369,14 @@ export default function Footer() {
         {/* ========================================================= */}
         {/* BOTTOM COPYRIGHT - PROPERLY CENTERED ACROSS FULL CONTAINER */}
         {/* ========================================================= */}
-        <div className="border-t border-gray-200 mt-12 pt-6 flex items-center justify-center text-center">
-          <p className="text-xs text-[#666666] m-0 whitespace-nowrap">
-            &copy; 2026 <strong className="font-semibold text-gray-800">Sellbar</strong>. Created By{' '}
+        <div className="border-t border-slate-200 mt-12 pt-6 flex items-center justify-center text-center">
+          <p className="text-xs text-slate-500 m-0 whitespace-nowrap">
+            &copy; 2026 <strong className="font-semibold text-slate-800">Sellbar</strong>. Created By{' '}
             <a
               href="https://maajankiwebtech.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-semibold text-gray-800 hover:text-[#2bbda3] transition-colors"
+              className="font-semibold text-slate-800 hover:text-[#13b59b] transition-colors"
             >
               Maajanki Web Tech
             </a>

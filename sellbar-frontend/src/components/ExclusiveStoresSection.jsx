@@ -103,29 +103,29 @@ export default function ExclusiveStoresSection() {
             <div>
               {/* City Pill & Rating */}
               <div className="flex items-center justify-between gap-2 mb-2.5">
-                <span className="text-[11px] font-bold text-[#13b59b] bg-[#edf7f5] px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="text-xs font-bold text-[#13b59b] bg-[#edf7f5] px-2.5 py-0.5 rounded-full flex items-center gap-1">
                   <MapPin className="w-3 h-3 text-[#13b59b]" />
                   {store.city}
                 </span>
-                <div className="flex items-center gap-1 text-xs font-bold text-gray-700 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-md">
+                <div className="flex items-center gap-1 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-xl">
                   <img src={getCloudinaryUrl('/cashify/store-star.webp')} alt="star" className="w-3.5 h-3.5" />
                   <span>{store.rating}</span>
                 </div>
               </div>
 
               {/* Store Name */}
-              <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#13b59b] transition mb-2 line-clamp-2">
+              <h3 className="text-sm font-bold text-slate-900 group-hover:text-[#13b59b] transition mb-2 line-clamp-2">
                 {store.name}
               </h3>
 
               {/* Address */}
-              <p className="text-xs text-gray-500 leading-relaxed mb-3 line-clamp-3">
+              <p className="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-3">
                 {store.address}
               </p>
 
               {/* Timings */}
-              <div className="flex items-center gap-1.5 text-[11px] text-gray-600 font-medium mb-3">
-                <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+              <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium mb-3">
+                <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                 <span>Timings : {store.timings}</span>
               </div>
             </div>

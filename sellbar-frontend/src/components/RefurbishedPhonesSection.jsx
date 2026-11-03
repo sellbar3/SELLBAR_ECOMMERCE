@@ -101,10 +101,10 @@ export default function RefurbishedPhonesSection() {
             Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="w-48 sm:w-60 shrink-0 bg-white rounded-md border-2 border-gray-100 p-3 animate-pulse space-y-3"
+                className="w-48 sm:w-60 shrink-0 bg-white rounded-2xl border border-slate-200 p-3 animate-pulse space-y-3"
               >
-                <div className="h-5 w-16 bg-gray-100 rounded" />
-                <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto bg-gray-100 rounded-md" />
+                <div className="h-5 w-16 bg-slate-100 rounded-lg" />
+                <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto bg-slate-100 rounded-xl" />
                 <div className="h-4 w-24 bg-gray-100 rounded" />
                 <div className="h-5 w-full bg-gray-100 rounded" />
                 <div className="h-6 w-28 bg-gray-100 rounded" />
@@ -124,13 +124,13 @@ export default function RefurbishedPhonesSection() {
                 <Link
                   key={phone._id}
                   href={`/product/${phone.slug || phone._id}`}
-                  className="w-48 sm:w-60 shrink-0 bg-white rounded-md border-2 border-gray-100 hover:border-gray-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between p-3 relative cursor-pointer"
+                  className="w-48 sm:w-60 shrink-0 bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between p-3 relative cursor-pointer"
                 >
                   <div>
                     {/* Top: Sellbar Assured badge */}
                     <div className="flex items-center justify-between mb-1 min-h-5 px-1">
                       {phone.isFeatured ? (
-                        <span className="inline-flex items-center gap-1 bg-black text-amber-300 text-[10px] font-black italic px-2 py-0.5 rounded-full border border-amber-400/40">
+                        <span className="inline-flex items-center gap-1 bg-black text-amber-300 text-xs font-black italic px-2 py-0.5 rounded-full border border-amber-400/40">
                           ★ Select
                         </span>
                       ) : (
@@ -159,11 +159,11 @@ export default function RefurbishedPhonesSection() {
                     {/* Savings Green Badge */}
                     <div className="mx-2 min-h-7 mb-1 flex items-center">
                       {discountAmount ? (
-                        <div className="text-[11px] font-bold rounded-xs text-[#008f5d] px-1.5 py-0.5 bg-[#e6f7f1] self-start">
+                        <div className="text-xs font-bold rounded-lg text-emerald-700 px-2 py-0.5 bg-emerald-50 self-start">
                           ₹{discountAmount.toLocaleString("en-IN")} OFF
                         </div>
                       ) : (
-                        <div className="text-[11px] font-bold rounded-xs text-[#008f5d] px-1.5 py-0.5 bg-[#e6f7f1] self-start">
+                        <div className="text-xs font-bold rounded-lg text-emerald-700 px-2 py-0.5 bg-emerald-50 self-start">
                           Sellbar Assured
                         </div>
                       )}
@@ -172,7 +172,7 @@ export default function RefurbishedPhonesSection() {
                     {/* Title */}
                     <h3
                       title={phone.name}
-                      className="text-xs sm:text-[13px] font-semibold text-gray-900 line-clamp-2 min-h-7 sm:min-h-10 mx-2 mb-2 leading-snug"
+                      className="text-xs sm:text-sm font-semibold text-slate-900 line-clamp-2 min-h-7 sm:min-h-10 mx-2 mb-2 leading-snug"
                     >
                       {phone.name}
                     </h3>
@@ -180,12 +180,11 @@ export default function RefurbishedPhonesSection() {
                     {/* Lowest Price badge & Rating */}
                     <div className="flex items-center gap-1.5 mx-2 mb-2">
                       <span
-                        className="text-[10px] font-bold text-white px-1.5 py-0.5 rounded-xs"
-                        style={{ backgroundColor: '#1d3d93' }}
+                        className="text-xs font-bold text-white px-2 py-0.5 rounded-lg bg-blue-900"
                       >
                         {phone.badge || "Lowest Price"}
                       </span>
-                      <div className="flex items-center gap-0.5 border border-gray-200 px-1 py-0.5 rounded-xs text-[11px] font-bold text-gray-800">
+                      <div className="flex items-center gap-0.5 border border-slate-200 px-1.5 py-0.5 rounded-lg text-xs font-bold text-slate-800">
                         <span>{phone.rating || 4.8}</span>
                         <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
                       </div>

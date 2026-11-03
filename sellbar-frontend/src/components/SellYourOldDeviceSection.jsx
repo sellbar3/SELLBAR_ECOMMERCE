@@ -84,7 +84,7 @@ export default function SellYourOldDeviceSection() {
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="mt-2 text-xs sm:text-[13px] font-bold text-gray-800 group-hover:text-[#13b59b] transition leading-snug">
+            <span className="mt-2 text-xs sm:text-sm font-semibold text-slate-800 group-hover:text-[#13b59b] transition leading-snug">
               {cat.title}
             </span>
           </Link>

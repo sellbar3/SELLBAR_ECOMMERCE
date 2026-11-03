@@ -106,15 +106,15 @@ export default function CashifyGuidesSection() {
                   loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-xs font-bold px-2 py-0.5 rounded-lg">
                   {guide.category}
                 </span>
               </div>
               <div className="p-4">
-                <h3 className="text-xs sm:text-sm font-bold text-gray-900 group-hover:text-[#13b59b] transition line-clamp-2 leading-snug">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#13b59b] transition line-clamp-2 leading-snug">
                   {guide.title}
                 </h3>
-                <div className="mt-2 text-[11px] font-bold text-[#13b59b] flex items-center gap-1">
+                <div className="mt-2 text-xs font-bold text-[#13b59b] flex items-center gap-1">
                   <span>Read Guide</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>
@@ -160,15 +160,15 @@ export default function CashifyGuidesSection() {
                   loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white text-xs font-bold px-2 py-0.5 rounded-lg">
                   {guide.category}
                 </span>
               </div>
               <div className="p-4">
-                <h3 className="text-xs sm:text-sm font-bold text-gray-900 group-hover:text-[#13b59b] transition line-clamp-2 leading-snug">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#13b59b] transition line-clamp-2 leading-snug">
                   {guide.title}
                 </h3>
-                <div className="mt-2 text-[11px] font-bold text-[#13b59b] flex items-center gap-1">
+                <div className="mt-2 text-xs font-bold text-[#13b59b] flex items-center gap-1">
                   <span>Explore Tips</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>

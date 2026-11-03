@@ -54,14 +54,14 @@ export default function HotDealsSection() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#13b59b] uppercase tracking-wider mb-1">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#13b59b] mb-1">
             <Sparkles className="w-4 h-4 text-[#13b59b]" />
-            <span>LIMITED PERIOD OFFERS</span>
+            <span>Limited Period Offers</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Hot Deals
           </h2>
-          <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Exciting offers for more value</p>
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">Exciting offers for more value</p>
         </div>
         <Link
           href="/buy-refurbished"

@@ -90,7 +90,7 @@ export default function TrendingArticlesSection() {
                   />
                 </div>
                 <div className="space-y-1.5 flex-1">
-                  <div className="flex items-center gap-1 text-[11px] text-gray-400 font-medium">
+                  <div className="flex items-center gap-1 text-xs text-slate-400 font-medium">
                     <Calendar className="w-3 h-3" />
                     <span>{item.date}</span>
                   </div>
@@ -142,7 +142,7 @@ export default function TrendingArticlesSection() {
                   />
                 </div>
                 <div className="space-y-1 flex-1">
-                  <div className="text-[10px] text-gray-400 font-semibold">{news.date}</div>
+                  <div className="text-xs text-slate-400 font-semibold">{news.date}</div>
                   <h3 className="text-xs font-bold text-gray-900 group-hover:text-[#13b59b] transition line-clamp-2 leading-tight">
                     {news.title}
                   </h3>

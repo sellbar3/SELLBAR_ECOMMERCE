@@ -539,7 +539,7 @@ export default function Navbar() {
             {/* SEARCH BAR */}
             <div ref={searchContainerRef} className="flex-1 max-w-2xl relative">
               <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="flex items-center bg-[#f4f6f8] hover:bg-[#eef1f4] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#13b59b]/25 border border-transparent focus-within:border-[#13b59b] rounded-md transition duration-150">
+                <div className="flex items-center bg-[#f4f6f8] hover:bg-[#eef1f4] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#13b59b]/25 border border-transparent focus-within:border-[#13b59b] rounded-xl transition duration-150">
                   <div className="pl-3.5 pr-2 text-gray-400">
                     <Search className="w-4 h-4 stroke-[2.2]" />
                   </div>
@@ -627,14 +627,14 @@ export default function Navbar() {
               {/* Shopping Cart Icon */}
               <Link
                 href="/cart"
-                className="relative p-2 text-gray-700 hover:text-[#13b59b] transition rounded-lg hover:bg-gray-100"
+                className="relative p-2 text-gray-700 hover:text-[#13b59b] transition rounded-xl hover:bg-gray-100"
                 aria-label="View Cart"
               >
                 <ShoppingCart className="w-5 h-5 stroke-2" />
                 {cartCount > 0 && (
                   <span
                     suppressHydrationWarning
-                    className="absolute -top-1 -right-1 bg-[#13b59b] text-white text-[11px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center shadow-xs"
+                    className="absolute -top-1 -right-1 bg-[#13b59b] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-xs"
                   >
                     {cartCount}
                   </span>
@@ -646,7 +646,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-3.5 py-2 rounded-md text-sm font-semibold transition cursor-pointer"
+                    className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-3.5 py-2 rounded-xl text-sm font-semibold transition cursor-pointer"
                   >
                     <div className="w-6 h-6 rounded-full bg-[#13b59b] text-white flex items-center justify-center text-xs font-bold">
                       {currentUser.name
@@ -719,7 +719,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setLoginModalOpen(true)}
-                  className="bg-[#2bbb9e] hover:bg-[#24a88e] active:scale-[0.98] text-white text-sm font-semibold px-5.5 py-2 rounded-md transition shadow-xs inline-flex items-center justify-center cursor-pointer"
+                  className="bg-[#13b59b] hover:bg-[#0fa088] active:scale-[0.98] text-white text-sm font-semibold px-5 py-2 rounded-xl transition shadow-xs inline-flex items-center justify-center cursor-pointer"
                 >
                   Login
                 </button>
@@ -843,7 +843,7 @@ export default function Navbar() {
                           {/* 1. SELL -> PHONE (Exact Image 2 Reference) */}
                           {allActiveSub === 'sell' && allSellNestedSub === 'phone' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Sell
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -877,7 +877,7 @@ export default function Navbar() {
                           {/* 2. SELL -> LAPTOP */}
                           {allActiveSub === 'sell' && allSellNestedSub === 'laptop' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Sell
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -910,7 +910,7 @@ export default function Navbar() {
                           {/* 3. SELL -> SMARTWATCH */}
                           {allActiveSub === 'sell' && allSellNestedSub === 'smartwatch' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Sell
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -940,7 +940,7 @@ export default function Navbar() {
                           {/* 4. SELL -> TABLET */}
                           {allActiveSub === 'sell' && allSellNestedSub === 'tablet' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Sell
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -970,7 +970,7 @@ export default function Navbar() {
                           {/* 5. SELL -> MORE */}
                           {allActiveSub === 'sell' && allSellNestedSub === 'more' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Sell
                               </div>
                               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-medium text-gray-700">
@@ -1000,7 +1000,7 @@ export default function Navbar() {
                           {/* 6. REPAIR */}
                           {allActiveSub === 'repair' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Repair
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -1032,7 +1032,7 @@ export default function Navbar() {
                           {/* 7. SELL GADGETS */}
                           {allActiveSub === 'sell-gadgets' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Sell Gadgets
                               </div>
                               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-medium text-gray-700">
@@ -1064,7 +1064,7 @@ export default function Navbar() {
                           {/* 8. BUY GADGETS */}
                           {allActiveSub === 'buy-gadgets' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Buy Gadgets
                               </div>
                               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-medium text-gray-700">
@@ -1096,7 +1096,7 @@ export default function Navbar() {
                           {/* 9. RECYCLE */}
                           {allActiveSub === 'recycle' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Recycle
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -1125,7 +1125,7 @@ export default function Navbar() {
                           {/* 10. FIND NEW PHONE */}
                           {allActiveSub === 'find-new-phone' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 More in Find New Phone
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -1155,7 +1155,7 @@ export default function Navbar() {
                           {/* 11. SELLBAR STORE */}
                           {allActiveSub === 'stores' && (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 Sellbar Experience Hubs
                               </div>
                               <div className="grid grid-cols-3 gap-2.5 text-xs font-medium text-gray-700">
@@ -1221,7 +1221,7 @@ export default function Navbar() {
                   <div className="absolute left-0 top-full pt-1.5 z-50 w-[580px]">
                     <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 overflow-hidden flex flex-col justify-between min-h-[380px]">
                       <div className="flex-1">
-                        <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                           More in Sell Phone
                         </div>
                         <div className="grid grid-cols-2 gap-8">
@@ -1328,7 +1328,7 @@ export default function Navbar() {
                         <div className="flex-1">
                           {gadgetActiveSub === 'phone' ? (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 Top Phone Brands &amp; Models
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -1359,7 +1359,7 @@ export default function Navbar() {
                             </div>
                           ) : gadgetActiveSub === 'laptop' ? (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 Top Laptop Brands &amp; Models
                               </div>
                               <div className="grid grid-cols-2 gap-8">
@@ -1389,7 +1389,7 @@ export default function Navbar() {
                             </div>
                           ) : (
                             <div>
-                              <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                              <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                                 Instant Quote For {catLabel(gadgetActiveSub)}
                               </div>
                               <p className="text-xs text-gray-600 mb-4">
@@ -1475,7 +1475,7 @@ export default function Navbar() {
                       {/* Right dynamic content */}
                       <div className="flex-1 p-6 flex flex-col justify-between bg-white">
                         <div className="flex-1">
-                          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                             32-Point Quality Inspected Devices
                           </div>
                           <div className="grid grid-cols-2 gap-8">
@@ -1539,7 +1539,7 @@ export default function Navbar() {
                   <div className="absolute left-0 top-full pt-1.5 z-50 w-[580px]">
                     <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 overflow-hidden flex flex-col justify-between min-h-[380px]">
                       <div className="flex-1">
-                        <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                           Smartphone Intelligence &amp; Reviews
                         </div>
                         <div className="grid grid-cols-2 gap-8">
@@ -1601,7 +1601,7 @@ export default function Navbar() {
                   <div className="absolute left-0 top-full pt-1.5 z-50 w-[580px]">
                     <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 overflow-hidden flex flex-col justify-between min-h-[380px]">
                       <div className="flex-1">
-                        <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                           Certified Refurbished Laptops
                         </div>
                         <div className="grid grid-cols-2 gap-8">
@@ -1664,7 +1664,7 @@ export default function Navbar() {
                   <div className="absolute left-0 top-full pt-1.5 z-50 w-[580px]">
                     <div className="bg-white border border-gray-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] p-6 overflow-hidden flex flex-col justify-between min-h-[360px]">
                       <div className="flex-1">
-                        <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
                           Retail Experience Hubs &amp; Drop Points
                         </div>
                         <div className="grid grid-cols-2 gap-3 text-xs font-medium text-gray-700">
@@ -1681,7 +1681,7 @@ export default function Navbar() {
                                 <Store className="w-3.5 h-3.5 text-[#12a38c]" />
                                 <span>{st.name}</span>
                               </div>
-                              <div className="text-[11px] text-gray-500">{st.dist} • {st.time}</div>
+                              <div className="text-xs text-gray-500">{st.dist} • {st.time}</div>
                             </div>
                           ))}
                         </div>
@@ -1987,7 +1987,7 @@ export default function Navbar() {
                   setPincodeError('');
                   setPincodeInput('');
                 }}
-                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-xl hover:bg-gray-100 transition cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1998,7 +1998,7 @@ export default function Navbar() {
                 <Sparkles className="w-3.5 h-3.5 text-[#13b59b]" />
                 18 Blocks • 19 Serviceable PIN Codes
               </span>
-              <span className="text-[11px] bg-white text-[#13b59b] font-bold px-2 py-0.5 rounded-md border border-teal-200">
+              <span className="text-xs bg-white text-[#13b59b] font-bold px-2.5 py-0.5 rounded-xl border border-teal-200">
                 Active Delivery Zone
               </span>
             </div>
@@ -2050,7 +2050,7 @@ export default function Navbar() {
 
             {pincodeInput.trim().length > 0 ? (
               <div>
-                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+                <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                   Matching West Champaran Locations
                 </div>
                 <div className="max-h-56 overflow-y-auto pr-1 space-y-1.5">
@@ -2075,7 +2075,7 @@ export default function Navbar() {
                             <div className="font-bold text-gray-900">
                               {res.name}
                             </div>
-                            <div className="text-[11px] text-gray-500 font-normal">
+                            <div className="text-xs text-gray-500 font-normal">
                               PIN:{' '}
                               <strong className="text-gray-700">
                                 {res.pincode}
@@ -2149,7 +2149,7 @@ export default function Navbar() {
                               <div className="font-bold text-gray-900">
                                 {city.name}
                               </div>
-                              <div className="text-[10px] text-gray-500 font-normal">
+                              <div className="text-xs text-gray-500 font-normal">
                                 {city.pincode}
                               </div>
                             </div>
@@ -2180,7 +2180,7 @@ export default function Navbar() {
                               <div className="font-bold text-gray-900">
                                 {blk.name}
                               </div>
-                              <div className="text-[10px] text-gray-500 font-normal">
+                              <div className="text-xs text-gray-500 font-normal">
                                 {blk.defaultPincode} • {blk.subdivision}
                               </div>
                             </div>

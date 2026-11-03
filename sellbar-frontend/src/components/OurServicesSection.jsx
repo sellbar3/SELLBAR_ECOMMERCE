@@ -141,7 +141,7 @@ export default function OurServicesSection() {
                 />
               </div>
 
-              <span className="mt-2 text-xs sm:text-[13px] font-bold text-gray-800 group-hover:text-[#13b59b] transition-colors leading-snug px-1 text-center line-clamp-2">
+              <span className="mt-2 text-xs sm:text-sm font-semibold text-slate-800 group-hover:text-[#13b59b] transition-colors leading-snug px-1 text-center line-clamp-2">
                 {service.title}
               </span>
             </Link>
