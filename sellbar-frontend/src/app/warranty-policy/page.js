@@ -1,174 +1,263 @@
-import React from "react";
-import Link from "next/link";
-import { Award, CheckCircle2, ShieldCheck, HelpCircle, RefreshCw, AlertCircle, FileText } from "lucide-react";
+"use client";
 
-export const metadata = {
-  title: "Warranty Policy | 6-12 Months Coverage | Sellbar.in",
-  description: "Comprehensive 6 to 12 months warranty terms, claim process, and coverage details on certified refurbished gadgets from Sellbar.",
-};
+import React, { useState } from "react";
+import Link from "next/link";
+import { 
+  Award, 
+  CheckCircle2, 
+  ShieldCheck, 
+  AlertCircle, 
+  FileText, 
+  Printer, 
+  HelpCircle, 
+  PhoneCall, 
+  ChevronRight,
+  ArrowRight,
+  Clock,
+  Wrench,
+  Sparkles
+} from "lucide-react";
 
 export default function WarrantyPolicyPage() {
+  const [activeSection, setActiveSection] = useState("sec-1");
+
+  const TOC = [
+    { id: "sec-1", title: "1. Warranty Periods by Category" },
+    { id: "sec-2", title: "2. Full Coverage Inclusions" },
+    { id: "sec-3", title: "3. Exclusions & Void Conditions" },
+    { id: "sec-4", title: "4. Step-by-Step Claim Flow" },
+    { id: "sec-5", title: "5. Resolution SLA & Pickup" },
+    { id: "sec-6", title: "6. Grievance Redressal" }
+  ];
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <nav className="flex text-sm text-gray-500">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center text-xs font-medium text-slate-500 gap-1.5">
           <Link href="/" className="hover:text-[#2bbda3] transition-colors">Home</Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-900 font-medium">Warranty Policy</span>
+          <span>/</span>
+          <span className="text-slate-900 font-semibold">Warranty Policy</span>
         </nav>
 
-        {/* Header Banner */}
-        <div className="bg-white rounded-2xl p-8 shadow-xs border border-gray-100">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-[#2bbda3]/10 text-[#2bbda3] flex items-center justify-center">
-              <Award className="w-6 h-6" />
+        {/* Page Header */}
+        <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-xs relative overflow-hidden">
+          <div className="max-w-3xl space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200/60 text-[#2bbda3] text-xs font-bold uppercase tracking-wider">
+              <ShieldCheck className="w-3.5 h-3.5" /> Sellbar Assured Protection
             </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Sellbar Assured Warranty Policy</h1>
-              <p className="text-xs sm:text-sm text-gray-500">Comprehensive 6 to 12 Months Hardware &amp; Component Protection</p>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Official Warranty Policy &amp; Repair Guarantee
+            </h1>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Every certified refurbished gadget purchased on Sellbar comes with our comprehensive 6 to 12 months hardware warranty, free doorstep diagnostic pickup, and factory OEM replacement components.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center gap-4 text-xs text-slate-500">
+              <span><strong>Effective Date:</strong> January 1, 2026</span>
+              <span>•</span>
+              <span className="text-emerald-600 font-semibold flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" /> 100% Doorstep Servicing Included
+              </span>
             </div>
-          </div>
-          <p className="text-gray-600 leading-relaxed text-sm">
-            Every certified refurbished device purchased from Sellbar is backed by our dedicated warranty promise, giving you complete peace of mind with original certified replacement parts, free doorstep pickup for servicing, and rapid turnaround.
-          </p>
-          <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-            <span>Effective Date: January 1, 2026</span>
-            <span className="font-semibold text-emerald-600">Status: Active &amp; Valid Across India</span>
           </div>
         </div>
 
-        {/* Table of Contents */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs">
-          <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#2bbda3]" /> Table of Contents
+        {/* Executive Summary Card (Plain English for Buyers) */}
+        <div className="bg-gradient-to-r from-teal-900 via-slate-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-md">
+          <h2 className="text-xs font-bold text-[#2bbda3] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5" /> Plain English Summary for Customers
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600">
-            <a href="#section-1" className="hover:text-[#2bbda3] transition-colors">1. Warranty Periods by Product Category</a>
-            <a href="#section-2" className="hover:text-[#2bbda3] transition-colors">2. What is Covered under Warranty</a>
-            <a href="#section-3" className="hover:text-[#2bbda3] transition-colors">3. What is Excluded (Void Conditions)</a>
-            <a href="#section-4" className="hover:text-[#2bbda3] transition-colors">4. Step-by-Step Claim &amp; Pickup Process</a>
-            <a href="#section-5" className="hover:text-[#2bbda3] transition-colors">5. Turnaround Time &amp; Resolution SLA</a>
-            <a href="#section-6" className="hover:text-[#2bbda3] transition-colors">6. Customer Support &amp; Grievance Redressal</a>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div className="bg-white/10 p-4 rounded-2xl border border-white/10 space-y-1">
+              <strong className="text-white text-sm block">12 Months Protection</strong>
+              <p className="text-slate-300">Grade A+ smartphones, MacBooks, and premium laptops carry a full 1-year hardware warranty.</p>
+            </div>
+            <div className="bg-white/10 p-4 rounded-2xl border border-white/10 space-y-1">
+              <strong className="text-white text-sm block">Doorstep Pickup &amp; Return</strong>
+              <p className="text-slate-300">No need to travel to repair centers. Our courier picks up the faulty unit right from your doorstep.</p>
+            </div>
+            <div className="bg-white/10 p-4 rounded-2xl border border-white/10 space-y-1">
+              <strong className="text-white text-sm block">Free Repair or Replacement</strong>
+              <p className="text-slate-300">If parts cannot be repaired within 7 working days, you receive an equivalent replacement unit.</p>
+            </div>
           </div>
         </div>
 
-        {/* Main Content Sections */}
-        <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-xs border border-gray-100 space-y-8 text-gray-700 leading-relaxed text-sm">
-          {/* Section 1 */}
-          <section id="section-1" className="space-y-3">
-            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#2bbda3]" /> 1. Warranty Periods by Product Category
-            </h2>
-            <p>
-              The warranty period begins on the day the device is delivered to your designated address as confirmed by courier delivery records.
-            </p>
-            <div className="overflow-x-auto mt-2">
-              <table className="w-full text-left text-xs border-collapse border border-gray-200">
-                <thead>
-                  <tr className="bg-gray-50">
-                    <th className="border border-gray-200 p-2.5 font-bold text-gray-900">Category</th>
-                    <th className="border border-gray-200 p-2.5 font-bold text-gray-900">Condition Grade</th>
-                    <th className="border border-gray-200 p-2.5 font-bold text-gray-900">Warranty Coverage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-gray-200 p-2.5 font-medium">Smartphones &amp; iPhones</td>
-                    <td className="border border-gray-200 p-2.5">Flawless (Like New)</td>
-                    <td className="border border-gray-200 p-2.5 font-bold text-[#2bbda3]">12 Months Comprehensive</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2.5 font-medium">Smartphones &amp; iPhones</td>
-                    <td className="border border-gray-200 p-2.5">Good / Fair</td>
-                    <td className="border border-gray-200 p-2.5 font-bold text-[#2bbda3]">6 Months Comprehensive</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2.5 font-medium">MacBooks &amp; Laptops</td>
-                    <td className="border border-gray-200 p-2.5">All Certified Grades</td>
-                    <td className="border border-gray-200 p-2.5 font-bold text-[#2bbda3]">12 Months (Parts &amp; Labor)</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2.5 font-medium">iPads &amp; Android Tablets</td>
-                    <td className="border border-gray-200 p-2.5">All Certified Grades</td>
-                    <td className="border border-gray-200 p-2.5 font-bold text-[#2bbda3]">6 Months</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2.5 font-medium">Smartwatches &amp; Audio</td>
-                    <td className="border border-gray-200 p-2.5">All Certified Grades</td>
-                    <td className="border border-gray-200 p-2.5 font-bold text-[#2bbda3]">6 Months</td>
-                  </tr>
-                  <tr>
-                    <td className="border border-gray-200 p-2.5 font-medium">Gaming Consoles (PS5 / Xbox)</td>
-                    <td className="border border-gray-200 p-2.5">All Certified Grades</td>
-                    <td className="border border-gray-200 p-2.5 font-bold text-[#2bbda3]">6 Months</td>
-                  </tr>
-                </tbody>
-              </table>
+        {/* Two-Column Layout with Sticky Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+          {/* Sticky Left Sidebar */}
+          <aside className="lg:col-span-1 space-y-4 lg:sticky lg:top-24">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs space-y-3">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <FileText className="w-4 h-4 text-[#2bbda3]" /> Document Navigation
+              </h3>
+              <nav className="space-y-1">
+                {TOC.map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    onClick={() => setActiveSection(item.id)}
+                    className={`block px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+                      activeSection === item.id
+                        ? "bg-teal-50 text-[#2bbda3] font-bold"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {item.title}
+                  </a>
+                ))}
+              </nav>
             </div>
-          </section>
 
-          {/* Section 2 */}
-          <section id="section-2" className="space-y-3 pt-4 border-t border-gray-100">
-            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 2. What is Covered under Warranty
-            </h2>
-            <ul className="space-y-2 list-disc pl-5">
-              <li><strong>Display Hardware &amp; Touch Digitizer:</strong> Ghost touch, touch latency, or unprompted display line failure not caused by physical drop or impact.</li>
-              <li><strong>Motherboard &amp; Internal Components:</strong> Processor, internal memory, charging IC, Wi-Fi / Bluetooth chip, and audio DAC.</li>
-              <li><strong>Battery Health Assurance:</strong> Rapid battery drainage or failure to charge under normal daily usage conditions.</li>
-              <li><strong>Cameras &amp; Sensors:</strong> Hardware blur, autofocus mechanism failure, FaceID / fingerprint scanner malfunction.</li>
-              <li><strong>Microphones &amp; Speakers:</strong> Sound distortion, low speaker volume, or non-functional earpiece.</li>
-            </ul>
-          </section>
-
-          {/* Section 3 */}
-          <section id="section-3" className="space-y-3 pt-4 border-t border-gray-100">
-            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-rose-500" /> 3. What is Excluded (Void Conditions)
-            </h2>
-            <div className="bg-rose-50/60 p-4 rounded-xl border border-rose-100 text-xs space-y-1.5 text-gray-700">
-              <p>• <strong>Physical Damage:</strong> Shattered glass, chipped chassis, deep dents from accidental drops or external pressure.</p>
-              <p>• <strong>Liquid / Water Ingress:</strong> Damage caused by immersion in water, moisture, or chemical exposure (Liquid Contact Indicator triggered).</p>
-              <p>• <strong>Unauthorized Repairs:</strong> Opening the device casing, tampering with internal screws, or third-party unauthorized repairs.</p>
-              <p>• <strong>Software Tampering:</strong> Custom ROMs, unofficial jailbreaks, or rooting that causes bootloop or firmware corruption.</p>
-            </div>
-          </section>
-
-          {/* Section 4 */}
-          <section id="section-4" className="space-y-3 pt-4 border-t border-gray-100">
-            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-              <RefreshCw className="w-5 h-5 text-[#2bbda3]" /> 4. Step-by-Step Claim &amp; Pickup Process
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                <span className="font-bold text-[#2bbda3] block mb-1">Step 1: Contact Support</span>
-                Send your Order ID and video proof of the issue to support@sellbar.in or WhatsApp +91-77175-17777.
-              </div>
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                <span className="font-bold text-[#2bbda3] block mb-1">Step 2: Free Pickup</span>
-                We schedule a free reverse pickup from your doorstep across West Champaran or Pan-India express couriers.
-              </div>
-              <div className="p-3 bg-gray-50 rounded-xl border border-gray-200">
-                <span className="font-bold text-[#2bbda3] block mb-1">Step 3: Repair or Replace</span>
-                Certified engineers inspect, repair with genuine parts, or dispatch an equivalent replacement device within 3 to 5 business days.
+            {/* Support Card */}
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-2 text-xs">
+              <h4 className="font-bold text-slate-900">Need Help with a Claim?</h4>
+              <p className="text-slate-500">Our customer care engineers are on standby 6 days a week.</p>
+              <div className="pt-2 space-y-1">
+                <a
+                  href="https://wa.me/917717517777"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center py-2 px-3 rounded-xl bg-[#2bbda3] text-white font-bold text-xs shadow-xs"
+                >
+                  WhatsApp: +91-77175-17777
+                </a>
+                <a
+                  href="mailto:support@sellbar.in"
+                  className="block text-center py-2 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 font-medium text-xs hover:bg-slate-100"
+                >
+                  support@sellbar.in
+                </a>
               </div>
             </div>
-          </section>
+          </aside>
 
-          {/* Section 5 & 6 */}
-          <section id="section-5" className="space-y-2 pt-4 border-t border-gray-100">
-            <h2 className="text-base font-bold text-gray-900">5. Turnaround Time &amp; Resolution SLA</h2>
-            <p className="text-xs text-gray-600">
-              For Bettiah &amp; West Champaran residents, doorstep technician diagnosis is scheduled within 24 to 48 hours. For Pan-India couriers, total diagnostic and repair turnaround is strictly capped at 5 to 7 business days from receipt.
-            </p>
-          </section>
+          {/* Main Content Area */}
+          <main className="lg:col-span-3 space-y-8">
+            {/* Section 1 */}
+            <section id="sec-1" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Award className="w-5 h-5 text-[#2bbda3]" /> 1. Warranty Periods by Product Category
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Warranty coverage begins on the calendar date the shipment is delivered to your designated address as logged by courier records.
+              </p>
 
-          <section id="section-6" className="space-y-2 pt-4 border-t border-gray-100">
-            <h2 className="text-base font-bold text-gray-900">6. Customer Support &amp; Grievance Redressal</h2>
-            <p className="text-xs text-gray-600">
-              If your warranty request has not been addressed within 48 hours, escalate directly to our Senior Operations Lead at <a href="mailto:grievance@sellbar.in" className="text-[#2bbda3] font-semibold underline">grievance@sellbar.in</a>.
-            </p>
-          </section>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 border-b border-slate-200">
+                      <th className="p-3 font-bold text-slate-900">Device Category</th>
+                      <th className="p-3 font-bold text-slate-900">Cosmetic Grade</th>
+                      <th className="p-3 font-bold text-[#2bbda3]">Warranty Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    <tr>
+                      <td className="p-3 font-medium text-slate-800">Apple iPhone &amp; Premium Android</td>
+                      <td className="p-3 text-slate-600">Grade A+ (Flawless)</td>
+                      <td className="p-3 font-bold text-emerald-700">12 Months Comprehensive</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-medium text-slate-800">Apple iPhone &amp; Android Phones</td>
+                      <td className="p-3 text-slate-600">Grade A (Very Good) / Grade B</td>
+                      <td className="p-3 font-bold text-emerald-700">6 Months Comprehensive</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-medium text-slate-800">MacBooks &amp; Business Laptops</td>
+                      <td className="p-3 text-slate-600">All Certified Grades</td>
+                      <td className="p-3 font-bold text-emerald-700">12 Months (Parts &amp; Labor)</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-medium text-slate-800">iPads &amp; Android Tablets</td>
+                      <td className="p-3 text-slate-600">All Certified Grades</td>
+                      <td className="p-3 font-bold text-emerald-700">6 Months Comprehensive</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-medium text-slate-800">Gaming Consoles (PS5 / Xbox Series)</td>
+                      <td className="p-3 text-slate-600">All Certified Grades</td>
+                      <td className="p-3 font-bold text-emerald-700">6 Months Comprehensive</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-medium text-slate-800">Smartwatches &amp; Audio Gear</td>
+                      <td className="p-3 text-slate-600">All Certified Grades</td>
+                      <td className="p-3 font-bold text-emerald-700">6 Months Comprehensive</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            {/* Section 2 */}
+            <section id="sec-2" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 2. Full Coverage Inclusions
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1">
+                  <strong className="text-slate-900 block font-bold">Display &amp; Digitizer</strong>
+                  <p className="text-slate-600">Ghost touch, touch responsiveness failure, unprovoked vertical lines, or display flickering not resulting from drops.</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1">
+                  <strong className="text-slate-900 block font-bold">Motherboard &amp; Chipset</strong>
+                  <p className="text-slate-600">Power IC failure, CPU throttling, internal storage read errors, Wi-Fi / Bluetooth chip malfunction.</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1">
+                  <strong className="text-slate-900 block font-bold">Battery &amp; Power</strong>
+                  <p className="text-slate-600">Rapid power drain (>20% drop per hour on standby), failure to accept charge, or abnormal thermal shutdown.</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1">
+                  <strong className="text-slate-900 block font-bold">Cameras &amp; Sensors</strong>
+                  <p className="text-slate-600">Autofocus failure, sensor blur, FaceID / Fingerprint biometric failure, proximity sensor defects.</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 3 */}
+            <section id="sec-3" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-rose-500" /> 3. Exclusions &amp; Void Conditions
+              </h2>
+              <div className="bg-rose-50/70 p-5 rounded-2xl border border-rose-200/60 text-xs space-y-2 text-slate-700">
+                <p>• <strong>Accidental &amp; Physical Impact:</strong> Cracked glass, shattered back panel, bent chassis from drops or heavy external pressure.</p>
+                <p>• <strong>Liquid / Moisture Ingress:</strong> Damage caused by immersion in water or chemical exposure (Liquid Contact Indicator triggered inside chassis).</p>
+                <p>• <strong>Unauthorized Third-Party Repair:</strong> Opening device screws or repairs carried out by unauthorized roadside technicians voids all Sellbar coverage.</p>
+                <p>• <strong>Firmware Jailbreaking / Custom ROMs:</strong> Unofficial OS modifications causing bootloops or bricked motherboard security keys.</p>
+              </div>
+            </section>
+
+            {/* Section 4 & 5 */}
+            <section id="sec-4" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Wrench className="w-5 h-5 text-[#2bbda3]" /> 4 &amp; 5. Step-by-Step Claim Flow &amp; SLA
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1.5">
+                  <span className="w-6 h-6 rounded-full bg-[#2bbda3] text-white font-bold text-xs flex items-center justify-center">1</span>
+                  <strong className="text-slate-900 block font-bold">Submit Ticket</strong>
+                  <p className="text-slate-600">Provide Order ID and short video clip of the defect to support@sellbar.in or WhatsApp.</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1.5">
+                  <span className="w-6 h-6 rounded-full bg-[#2bbda3] text-white font-bold text-xs flex items-center justify-center">2</span>
+                  <strong className="text-slate-900 block font-bold">Doorstep Pickup</strong>
+                  <p className="text-slate-600">Free reverse pickup scheduled at your address within 24 hours (West Champaran / Pan-India).</p>
+                </div>
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1.5">
+                  <span className="w-6 h-6 rounded-full bg-[#2bbda3] text-white font-bold text-xs flex items-center justify-center">3</span>
+                  <strong className="text-slate-900 block font-bold">Resolution in 5-7 Days</strong>
+                  <p className="text-slate-600">Unit is repaired with certified OEM parts or exchanged for an equivalent replacement.</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 6 */}
+            <section id="sec-6" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-2">
+              <h2 className="text-lg font-bold text-slate-900">6. Customer Grievance Redressal</h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                If your warranty repair is not concluded within 7 working days, your case is automatically escalated to our Operations Lead at <a href="mailto:grievance@sellbar.in" className="text-[#2bbda3] font-bold underline">grievance@sellbar.in</a> for priority dispatch or replacement approval.
+              </p>
+            </section>
+          </main>
         </div>
       </div>
     </div>

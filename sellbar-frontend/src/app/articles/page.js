@@ -12,7 +12,9 @@ import {
   User, 
   ChevronLeft, 
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  Mail,
+  CheckCircle2
 } from "lucide-react";
 
 const CATEGORIES = ["All", "Selling Guides", "Refurbished Tech", "Buying Guides", "Sustainability"];
@@ -25,7 +27,7 @@ const ARTICLES = [
     date: "Jan 18, 2026",
     readTime: "4 min read",
     tag: "Selling Guides",
-    author: { name: "Anand Verma", role: "Hardware Valuation Lead" },
+    author: { name: "Anand Verma", role: "Valuation Architect" },
     featured: true,
     href: "/sell-old-mobile-phone",
   },
@@ -36,7 +38,7 @@ const ARTICLES = [
     date: "Jan 12, 2026",
     readTime: "6 min read",
     tag: "Refurbished Tech",
-    author: { name: "Pooja Mehta", role: "Quality Assurance Specialist" },
+    author: { name: "Dr. Sumit Sen", role: "Head of QC & Lab" },
     href: "/what-is-refurbished",
   },
   {
@@ -46,7 +48,7 @@ const ARTICLES = [
     date: "Dec 29, 2025",
     readTime: "5 min read",
     tag: "Buying Guides",
-    author: { name: "Rohan Das", role: "Senior Tech Editor" },
+    author: { name: "Rohan Das", role: "Tech Writer" },
     href: "/buy-refurbished",
   },
   {
@@ -56,7 +58,7 @@ const ARTICLES = [
     date: "Dec 20, 2025",
     readTime: "5 min read",
     tag: "Sustainability",
-    author: { name: "Dr. Sumit Sen", role: "Sustainability Advisor" },
+    author: { name: "Pooja Mehta", role: "Sustainability Lead" },
     href: "/e-waste-policy",
   },
   {
@@ -66,7 +68,7 @@ const ARTICLES = [
     date: "Dec 15, 2025",
     readTime: "7 min read",
     tag: "Selling Guides",
-    author: { name: "Anand Verma", role: "Hardware Valuation Lead" },
+    author: { name: "Anand Verma", role: "Valuation Architect" },
     href: "/sell-old-laptop",
   },
   {
@@ -76,7 +78,7 @@ const ARTICLES = [
     date: "Dec 05, 2025",
     readTime: "6 min read",
     tag: "Buying Guides",
-    author: { name: "Rohan Das", role: "Senior Tech Editor" },
+    author: { name: "Rohan Das", role: "Tech Writer" },
     href: "/find-new-phone",
   }
 ];
@@ -84,7 +86,8 @@ const ARTICLES = [
 export default function ArticlesPage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [subEmail, setSubEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
 
   const featured = ARTICLES.find((a) => a.featured) || ARTICLES[0];
 
@@ -97,64 +100,72 @@ export default function ArticlesPage() {
     return matchesCat && matchesSearch;
   });
 
+  function handleSubscribe(e) {
+    e.preventDefault();
+    setSubscribed(true);
+  }
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
-        <nav className="flex text-sm text-gray-500">
+        {/* Breadcrumb */}
+        <nav className="flex items-center text-xs font-medium text-slate-500 gap-1.5">
           <Link href="/" className="hover:text-[#2bbda3] transition-colors">Home</Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-900 font-medium">Articles &amp; Tech Guides</span>
+          <span>/</span>
+          <span className="text-slate-900 font-semibold">Articles &amp; Tech Guides</span>
         </nav>
 
         {/* Hero */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="inline-block px-3.5 py-1 rounded-full bg-teal-50 text-[#2bbda3] text-xs font-bold uppercase tracking-wider">
-            Sellbar Tech Journal
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200/60 text-[#2bbda3] text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" /> Sellbar Tech Journal
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
             Insights, Buying Guides &amp; Smart Tech Advice
           </h1>
-          <p className="text-gray-500 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
             Expert knowledge from certified technicians on getting top cash for old devices, testing refurbished hardware, and circular electronics.
           </p>
         </div>
 
-        {/* Featured Article Banner */}
+        {/* Featured Article Hero Banner */}
         {featured && (
-          <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-teal-950 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
+          <div className="relative rounded-3xl bg-slate-950 text-white p-8 sm:p-12 overflow-hidden border border-slate-800 shadow-xl">
             <div className="relative z-10 max-w-2xl space-y-4">
               <div className="flex items-center gap-2">
                 <span className="px-3 py-1 rounded-full bg-[#2bbda3] text-white text-xs font-bold flex items-center gap-1">
                   <TrendingUp className="w-3.5 h-3.5" /> Featured Guide
                 </span>
-                <span className="text-xs text-gray-300">{featured.readTime}</span>
+                <span className="text-xs text-slate-400">•</span>
+                <span className="text-xs text-slate-300">{featured.readTime}</span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-black text-white leading-tight">
                 <Link href={featured.href} className="hover:text-[#2bbda3] transition-colors">
                   {featured.title}
                 </Link>
               </h2>
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed line-clamp-3">
+              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
                 {featured.excerpt}
               </p>
-              <div className="pt-2 flex items-center justify-between">
+              <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs text-[#2bbda3]">
+                  <div className="w-8 h-8 rounded-full bg-[#2bbda3] text-white flex items-center justify-center font-bold text-xs">
                     {featured.author.name[0]}
                   </div>
                   <div>
                     <div className="text-xs font-bold text-white">{featured.author.name}</div>
-                    <div className="text-[11px] text-gray-400">{featured.author.role} • {featured.date}</div>
+                    <div className="text-[10px] text-slate-400">{featured.author.role} • {featured.date}</div>
                   </div>
                 </div>
                 <Link
                   href={featured.href}
-                  className="px-5 py-2.5 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white text-xs font-bold transition-colors flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white text-xs font-bold transition-colors flex items-center gap-1.5 shadow-md"
                 >
-                  Read Article <ArrowRight className="w-4 h-4" />
+                  Read Full Guide <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-80 h-80 bg-[#2bbda3]/20 blur-3xl rounded-full pointer-events-none" />
           </div>
         )}
 
@@ -168,7 +179,7 @@ export default function ArticlesPage() {
                 className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
                   activeCategory === cat
                     ? "bg-[#2bbda3] text-white shadow-xs"
-                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                    : "bg-white text-slate-700 border border-slate-200/80 hover:bg-slate-50"
                 }`}
               >
                 {cat}
@@ -177,13 +188,13 @@ export default function ArticlesPage() {
           </div>
 
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search articles..."
+              placeholder="Search guides..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-gray-200 focus:border-[#2bbda3] outline-none text-xs shadow-xs"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-[#2bbda3] outline-none text-xs shadow-xs"
             />
           </div>
         </div>
@@ -193,29 +204,29 @@ export default function ArticlesPage() {
           {filtered.map((art) => (
             <div
               key={art.id}
-              className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs hover:border-[#2bbda3]/40 transition-all flex flex-col justify-between"
+              className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:border-[#2bbda3]/50 transition-all flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-[#2bbda3] font-semibold">
+                  <span className="px-2.5 py-0.5 rounded-full bg-teal-50 text-[#2bbda3] font-bold text-[11px]">
                     {art.tag}
                   </span>
-                  <span className="text-gray-400 flex items-center gap-1">
+                  <span className="text-slate-400 flex items-center gap-1 text-[11px]">
                     <Clock className="w-3 h-3" /> {art.readTime}
                   </span>
                 </div>
-                <h3 className="font-bold text-gray-900 text-base leading-snug hover:text-[#2bbda3] transition-colors">
+                <h3 className="font-bold text-slate-900 text-base leading-snug hover:text-[#2bbda3] transition-colors">
                   <Link href={art.href}>{art.title}</Link>
                 </h3>
-                <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+                <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
                   {art.excerpt}
                 </p>
               </div>
 
-              <div className="pt-5 mt-5 border-t border-gray-100 flex items-center justify-between text-xs">
+              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
                 <div>
-                  <div className="font-semibold text-gray-800 text-[11px]">{art.author.name}</div>
-                  <div className="text-[10px] text-gray-400">{art.date}</div>
+                  <div className="font-bold text-slate-800 text-[11px]">{art.author.name}</div>
+                  <div className="text-[10px] text-slate-400">{art.date}</div>
                 </div>
                 <Link
                   href={art.href}
@@ -228,24 +239,37 @@ export default function ArticlesPage() {
           ))}
         </div>
 
-        {/* Pagination Bar */}
-        <div className="flex items-center justify-between bg-white rounded-2xl p-4 border border-gray-100 text-xs text-gray-600">
-          <span>Showing 1 to {filtered.length} of {filtered.length} articles</span>
-          <div className="flex items-center gap-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-40 hover:bg-gray-50"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="px-3 py-1 rounded-lg bg-teal-50 text-[#2bbda3] font-bold">1</span>
-            <button
-              disabled={true}
-              className="p-2 rounded-lg border border-gray-200 disabled:opacity-40"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+        {/* Newsletter Subscription Box */}
+        <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 max-w-xl text-center md:text-left">
+            <span className="text-xs font-bold text-[#2bbda3] uppercase tracking-wider">Weekly Tech Digest</span>
+            <h3 className="text-2xl font-black">Get First Access to Refurbished Drops</h3>
+            <p className="text-slate-400 text-xs sm:text-sm">Join 25,000+ tech lovers receiving weekly price reduction alerts and device trade-in valuation trends.</p>
+          </div>
+
+          <div className="w-full md:w-auto shrink-0">
+            {subscribed ? (
+              <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold bg-white/10 px-4 py-2.5 rounded-xl border border-white/20">
+                <CheckCircle2 className="w-4 h-4" /> You&apos;re subscribed to Sellbar Tech Journal!
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex gap-2">
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter your email address"
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
+                  className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:border-[#2bbda3] outline-none w-full sm:w-64"
+                />
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold text-xs transition-colors shrink-0 shadow-md"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>

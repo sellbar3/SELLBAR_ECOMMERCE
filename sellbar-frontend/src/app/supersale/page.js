@@ -12,8 +12,38 @@ import {
   FileText, 
   Building,
   HelpCircle,
-  PhoneCall
+  PhoneCall,
+  BadgeIndianRupee,
+  FileSpreadsheet,
+  Sparkles
 } from "lucide-react";
+
+const LOT_CATEGORIES = [
+  {
+    grade: "Grade A+ (Like New Wholesale)",
+    badge: "Top Seller",
+    moq: "25 Handsets",
+    margin: "18% - 25% Retail Margin",
+    desc: "100% spotless screens and mint housing. Battery health guaranteed >88%. Every unit tested with diagnostic test sheets.",
+    bestFor: "Flagship retail shops & high-street mobile showrooms"
+  },
+  {
+    grade: "Grade A (Very Good Wholesale)",
+    badge: "Best Value",
+    moq: "50 Handsets",
+    margin: "25% - 35% Retail Margin",
+    desc: "Minor micro-marks on outer bezel invisible from 12 inches. 100% original OEM displays and healthy batteries.",
+    bestFor: "High-volume budget buyers seeking maximum turnover"
+  },
+  {
+    grade: "Grade B (Commercial As-Is Lots)",
+    badge: "Volume Lots",
+    moq: "100 Handsets",
+    margin: "35% - 50% Resale Margin",
+    desc: "Light cosmetic wear on casing. Fully working logic boards, cameras, and connectivity. Tested for zero functional defects.",
+    bestFor: "Sub-distributors & regional hardware repair centers"
+  }
+];
 
 export default function SupersalePage() {
   const [businessName, setBusinessName] = useState("");
@@ -22,7 +52,7 @@ export default function SupersalePage() {
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("Bettiah");
   const [monthlyVolume, setMonthlyVolume] = useState("25 - 50 Units");
-  const [preferredBrands, setPreferredBrands] = useState("Apple & Samsung Flagships");
+  const [preferredBrands, setPreferredBrands] = useState("Apple iPhones & Samsung Galaxy");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -35,111 +65,87 @@ export default function SupersalePage() {
     }, 700);
   }
 
-  const LOT_CATEGORIES = [
-    {
-      grade: "Grade A - Like New Lots",
-      desc: "Zero scratches or cosmetic marks. 100% original screens, battery health strictly >85%, 32-point QC passed.",
-      moq: "25 Units",
-      bestFor: "Premium retail showrooms & direct counter sales"
-    },
-    {
-      grade: "Grade B - Very Good Lots",
-      desc: "Minor micro-scratches barely noticeable. 100% functional, all sensors active, authentic parts verified.",
-      moq: "50 Units",
-      bestFor: "High-volume budget buyers seeking peak margin"
-    },
-    {
-      grade: "Grade C / As-Is Assorted",
-      desc: "Cosmetically worn or minor battery degradation. Fully functional motherboards, tested cameras & ports.",
-      moq: "100 Units",
-      bestFor: "Hardware repair centers & secondary regional wholesalers"
-    }
-  ];
-
-  const FAQS = [
-    {
-      q: "What is the Minimum Order Quantity (MOQ) for Supersale B2B batches?",
-      a: "Our baseline MOQ begins at 25 units for Grade A flagship smartphones and 10 units for commercial laptops / MacBooks. Larger volumes unlock tier-2 wholesale discounts."
-    },
-    {
-      q: "Do Supersale bulk orders come with GST tax invoices?",
-      a: "Yes, 100% of all bulk orders are issued with official GST tax invoices detailing the IMEI / Serial Number of each unit, enabling full Input Tax Credit (ITC) claiming."
-    },
-    {
-      q: "What happens if a device arrives with a hardware defect (DOA)?",
-      a: "We offer a 15-day DOA (Dead on Arrival) warranty on all wholesale batches. If any handset fails hardware diagnosis upon unboxing, return it for an instant replacement or credit note."
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-12">
-        <nav className="flex text-sm text-gray-500">
+        <nav className="flex items-center text-xs font-medium text-slate-500 gap-1.5">
           <Link href="/" className="hover:text-[#2bbda3] transition-colors">Home</Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-900 font-medium">Supersale B2B Wholesale</span>
+          <span>/</span>
+          <span className="text-slate-900 font-semibold">Supersale B2B Wholesale</span>
         </nav>
 
         {/* Hero */}
-        <div className="bg-gradient-to-br from-[#13b59b] via-[#0f947e] to-gray-900 rounded-3xl p-8 sm:p-14 text-white shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-xl">
-            <span className="inline-block px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold uppercase tracking-wider">
-              Wholesale Recommerce Engine
-            </span>
+        <div className="relative rounded-3xl bg-slate-950 text-white p-8 sm:p-14 overflow-hidden border border-slate-800 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="relative z-10 max-w-xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2bbda3]/20 border border-[#2bbda3]/40 text-[#2bbda3] text-xs font-bold tracking-wider uppercase">
+              <Box className="w-3.5 h-3.5" /> B2B Recommerce Terminal
+            </div>
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
               Buy Refurbished Tech in Bulk at Wholesale Margins
             </h1>
-            <p className="text-emerald-50 text-sm sm:text-base leading-relaxed">
-              Empowering India&apos;s mobile shop owners, regional electronics traders, and refurbishers with pre-inspected, IMEI-verified batches of iPhones, Samsungs, and MacBooks.
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              Supplying 500+ mobile shop owners and regional electronics traders with verified, pre-graded batches of iPhones, Samsungs, and MacBooks with 100% ITC-compliant GST invoices.
             </p>
             <div className="pt-2 flex flex-wrap gap-4 items-center">
               <a
                 href="#register-supersale"
-                className="px-6 py-3 rounded-xl bg-white text-gray-900 hover:bg-gray-100 font-bold text-sm transition-colors shadow-lg"
+                className="px-6 py-3 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold text-xs transition-colors shadow-lg flex items-center gap-1.5"
               >
-                Register for Wholesale Price List
+                Request Weekly Stock Sheet (.XLS) <ArrowRight className="w-4 h-4" />
               </a>
               <a
-                href="#lot-grades"
-                className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium text-sm transition-colors"
+                href="#wholesale-lots"
+                className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
               >
                 View Lot Grades
               </a>
             </div>
           </div>
 
-          {/* Quick Wholesale Benefits */}
-          <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 space-y-3 shrink-0 w-full sm:w-auto">
-            <div className="text-xl font-bold text-white flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-300" /> 100% Tested Batches
+          <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/15 space-y-3 shrink-0 w-full sm:w-auto">
+            <div className="text-sm font-bold text-white flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-[#2bbda3]" /> 100% Tested Batches
             </div>
-            <p className="text-xs text-emerald-100">Every unit comes with an automated diagnostic test sheet.</p>
-            <div className="pt-2 border-t border-white/10 text-xs text-emerald-100 space-y-1">
-              <div className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" /> 15-Day DOA Replacement Guarantee</div>
-              <div className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" /> Full GST ITC Invoices with IMEI</div>
-              <div className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" /> Pan-India Insured Transit</div>
+            <div className="text-xs text-slate-300 space-y-1.5">
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-[#2bbda3]" /> 15-Day DOA Instant Replacement</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-[#2bbda3]" /> IMEI / Serial Number Tagged Invoices</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-[#2bbda3]" /> Insured Doorstep Cargo Fulfillment</div>
             </div>
           </div>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-[#2bbda3]/15 blur-3xl rounded-full pointer-events-none" />
         </div>
 
-        {/* Lot Grades */}
-        <div id="lot-grades" className="space-y-6">
-          <div className="text-center max-w-xl mx-auto">
-            <span className="text-xs font-bold text-[#2bbda3] uppercase tracking-wider">Inventory Quality</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-1">Pre-Graded Wholesale Batches</h2>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1.5">No mystery boxes. Clear grading and transparent unit-by-unit pricing.</p>
+        {/* Wholesale Lots Grid */}
+        <div id="wholesale-lots" className="space-y-6">
+          <div className="text-center max-w-xl mx-auto space-y-1">
+            <span className="text-xs font-bold text-[#2bbda3] uppercase tracking-wider">Inventory Catalog</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Pre-Graded Wholesale Batches</h2>
+            <p className="text-xs text-slate-500">Transparent pricing per lot. Detailed diagnostic sheets delivered for every device.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {LOT_CATEGORIES.map((lot, idx) => (
-              <div key={idx} className="bg-white p-7 rounded-2xl border border-gray-100 shadow-xs hover:border-[#2bbda3]/40 transition-all flex flex-col justify-between">
+              <div
+                key={idx}
+                className="bg-white p-7 rounded-3xl border border-slate-200/80 shadow-xs hover:border-[#2bbda3]/50 transition-all flex flex-col justify-between"
+              >
                 <div className="space-y-3">
-                  <span className="text-xs font-bold px-2.5 py-1 rounded bg-teal-50 text-[#2bbda3]">MOQ: {lot.moq}</span>
-                  <h3 className="text-lg font-bold text-gray-900">{lot.grade}</h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">{lot.desc}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-teal-50 text-[#2bbda3]">
+                      {lot.badge}
+                    </span>
+                    <span className="text-xs font-bold text-slate-500">MOQ: {lot.moq}</span>
+                  </div>
+
+                  <h3 className="text-base font-bold text-slate-900">{lot.grade}</h3>
+                  <div className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl">
+                    Expected Margin: {lot.margin}
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed">{lot.desc}</p>
                 </div>
-                <div className="pt-4 border-t border-gray-100 mt-4 text-[11px] text-gray-500">
-                  <strong className="text-gray-800">Ideal For:</strong> {lot.bestFor}
+
+                <div className="pt-4 mt-4 border-t border-slate-100 text-[11px] text-slate-500">
+                  <strong className="text-slate-800">Best For:</strong> {lot.bestFor}
                 </div>
               </div>
             ))}
@@ -147,19 +153,19 @@ export default function SupersalePage() {
         </div>
 
         {/* Wholesale Registration Form */}
-        <div id="register-supersale" className="bg-white rounded-3xl p-8 sm:p-12 border border-gray-100 shadow-xs">
+        <div id="register-supersale" className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-xs">
           {submitted ? (
             <div className="text-center py-10 space-y-4 max-w-md mx-auto">
-              <div className="w-16 h-16 bg-emerald-50 text-[#2bbda3] rounded-full flex items-center justify-center mx-auto">
+              <div className="w-16 h-16 bg-emerald-50 text-[#2bbda3] rounded-full flex items-center justify-center mx-auto border border-emerald-200">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">Wholesale Account Registered!</h3>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Thank you <span className="font-bold text-gray-900">{contactName}</span> from <span className="font-bold text-gray-900">{businessName}</span>. Our Wholesale Accounts Executive will email the live weekly Supersale stock sheet to <span className="font-bold text-[#2bbda3]">{email}</span> and contact you at <span className="font-bold text-gray-900">{phone}</span>.
+              <h3 className="text-2xl font-bold text-slate-900">Wholesale Account Registered!</h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Thank you <span className="font-bold text-slate-900">{contactName}</span> from <span className="font-bold text-slate-900">{businessName}</span>! Our Wholesale Accounts manager will email the live weekly Supersale stock sheet to <span className="font-bold text-[#2bbda3]">{email}</span> and contact you at <span className="font-bold text-slate-900">{phone}</span>.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="px-6 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold transition-colors"
+                className="px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors"
               >
                 Register Another Business
               </button>
@@ -167,79 +173,79 @@ export default function SupersalePage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
               <div className="text-center space-y-1">
-                <span className="text-xs font-bold text-[#2bbda3] uppercase tracking-wider">B2B Wholesale Portal</span>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900">Access Live Supersale Inventory</h3>
-                <p className="text-xs text-gray-500">Receive weekly Excel/WhatsApp price lists with IMEI test sheets.</p>
+                <span className="text-xs font-bold text-[#2bbda3] uppercase tracking-wider">Wholesale Registration</span>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Access Live Supersale Stock Sheets</h3>
+                <p className="text-xs text-slate-500">Get weekly Excel price lists with IMEI test sheets and wholesale volume pricing.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">Business / Firm Name *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Business / Firm Name *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Apex Telecom Wholesalers"
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">Contact Person *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Contact Person *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Rajesh Singhania"
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">Mobile / WhatsApp *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Mobile / WhatsApp *</label>
                   <input
                     type="tel"
                     required
                     placeholder="10-digit number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">Email Address *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Email Address *</label>
                   <input
                     type="email"
                     required
                     placeholder="sales@apextelecom.in"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">City &amp; State *</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">City &amp; State *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Patna, Bihar"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">Expected Monthly Volume</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Expected Monthly Volume</label>
                   <select
                     value={monthlyVolume}
                     onChange={(e) => setMonthlyVolume(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs bg-white"
                   >
                     <option value="25 - 50 Units">25 - 50 Units / Month</option>
                     <option value="50 - 100 Units">50 - 100 Units / Month</option>
@@ -248,15 +254,15 @@ export default function SupersalePage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">Target Inventory Interest</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">Target Inventory Focus</label>
                   <select
                     value={preferredBrands}
                     onChange={(e) => setPreferredBrands(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#2bbda3] outline-none text-sm bg-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#2bbda3] outline-none text-xs bg-white"
                   >
-                    <option value="Apple & Samsung Flagships">Apple iPhones &amp; Samsung Galaxy</option>
-                    <option value="Budget Android (Redmi / Realme / Vivo)">Budget Android (Xiaomi, Realme, Vivo)</option>
-                    <option value="MacBooks & Business Laptops">MacBooks &amp; Business Laptops (Dell, Lenovo)</option>
+                    <option value="Apple iPhones & Samsung Galaxy">Apple iPhones &amp; Samsung Galaxy</option>
+                    <option value="Budget Android (Xiaomi / Realme / Vivo)">Budget Android (Xiaomi / Realme / Vivo)</option>
+                    <option value="MacBooks & Business Laptops">MacBooks &amp; Business Laptops</option>
                     <option value="iPads & Smartwatches">iPads &amp; Smartwatches</option>
                   </select>
                 </div>
@@ -265,25 +271,12 @@ export default function SupersalePage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-6 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold text-sm transition-colors shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-3 px-6 rounded-xl bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold text-xs transition-colors shadow-lg flex items-center justify-center gap-2"
               >
-                {loading ? "Registering Account..." : <>Get Live Stock &amp; Wholesale Pricing <ArrowRight className="w-4 h-4" /></>}
+                {loading ? "Registering Wholesale Account..." : <>Get Live Stock Sheet &amp; Wholesale Pricing <ArrowRight className="w-4 h-4" /></>}
               </button>
             </form>
           )}
-        </div>
-
-        {/* Supersale FAQs */}
-        <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-xs space-y-4">
-          <h3 className="font-bold text-gray-900 text-lg">Supersale B2B Wholesale FAQs</h3>
-          <div className="space-y-3">
-            {FAQS.map((f, idx) => (
-              <div key={idx} className="p-4 rounded-xl bg-[#f8fafc] border border-gray-100 space-y-1">
-                <h4 className="font-semibold text-xs text-gray-900">{f.q}</h4>
-                <p className="text-xs text-gray-600 leading-relaxed">{f.a}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

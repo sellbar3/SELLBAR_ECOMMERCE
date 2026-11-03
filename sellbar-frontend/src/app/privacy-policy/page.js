@@ -1,92 +1,160 @@
-import React from "react";
-import Link from "next/link";
-import { Lock, ShieldCheck, Eye, Database, Bell } from "lucide-react";
+"use client";
 
-export const metadata = {
-  title: "Privacy Policy | Sellbar.in",
-  description: "Learn how Sellbar collects, protects, and handles your personal information with strict data privacy standards.",
-};
+import React, { useState } from "react";
+import Link from "next/link";
+import { 
+  Lock, 
+  ShieldCheck, 
+  Eye, 
+  Database, 
+  Bell, 
+  FileText, 
+  CheckCircle2, 
+  Sparkles 
+} from "lucide-react";
 
 export default function PrivacyPolicyPage() {
+  const [activeSection, setActiveSection] = useState("sec-1");
+
+  const TOC = [
+    { id: "sec-1", title: "1. Information We Collect" },
+    { id: "sec-2", title: "2. How We Use Customer Data" },
+    { id: "sec-3", title: "3. Device Data Sanitization" },
+    { id: "sec-4", title: "4. Third-Party Sharing Rules" },
+    { id: "sec-5", title: "5. Cookie & Tracking Controls" },
+    { id: "sec-6", title: "6. Your DPDP Statutory Rights" }
+  ];
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <nav className="flex text-sm text-gray-500 mb-6">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center text-xs font-medium text-slate-500 gap-1.5">
           <Link href="/" className="hover:text-[#2bbda3] transition-colors">Home</Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-900 font-medium">Privacy Policy</span>
+          <span>/</span>
+          <span className="text-slate-900 font-semibold">Privacy Policy</span>
         </nav>
 
-        <div className="bg-white rounded-2xl p-8 shadow-xs border border-gray-100 mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-[#2bbda3]/10 text-[#2bbda3] flex items-center justify-center">
-              <Lock className="w-6 h-6" />
+        {/* Page Header */}
+        <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 shadow-xs relative overflow-hidden">
+          <div className="max-w-3xl space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200/60 text-[#2bbda3] text-xs font-bold uppercase tracking-wider">
+              <Lock className="w-3.5 h-3.5" /> Data Security &amp; Trust
             </div>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Privacy Policy</h1>
-              <p className="text-sm text-gray-500">Committed to protecting your privacy &amp; data security</p>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Privacy Policy &amp; Data Protection Standards
+            </h1>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              At Sellbar, we respect your privacy. This policy outlines how we collect, store, process, and protect your personal information in strict compliance with the Digital Personal Data Protection (DPDP) Act, 2023.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center gap-4 text-xs text-slate-500">
+              <span><strong>Updated:</strong> January 1, 2026</span>
+              <span>•</span>
+              <span className="text-emerald-600 font-semibold flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" /> 256-Bit TLS Encryption &amp; Zero Data Selling
+              </span>
             </div>
-          </div>
-          <p className="text-gray-600 leading-relaxed">
-            At <strong>Sellbar</strong>, we value your trust and take the security of your personal information very seriously. This policy details how your data is collected, stored, and protected in compliance with the Digital Personal Data Protection (DPDP) Act.
-          </p>
-          <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-            <span>Last Updated: January 1, 2026</span>
-            <span className="font-semibold text-emerald-600">DPDP Act &amp; ISO 27001 Compliant</span>
           </div>
         </div>
 
-        {/* Table of Contents */}
-        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs mb-8">
-          <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-            <Lock className="w-4 h-4 text-[#2bbda3]" /> Table of Contents
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600">
-            <a href="#priv-1" className="hover:text-[#2bbda3] transition-colors">1. Information We Collect</a>
-            <a href="#priv-2" className="hover:text-[#2bbda3] transition-colors">2. How We Use Your Information</a>
-            <a href="#priv-3" className="hover:text-[#2bbda3] transition-colors">3. Data Protection &amp; Device Sanitization</a>
-            <a href="#priv-4" className="hover:text-[#2bbda3] transition-colors">4. Your Statutory Privacy Rights</a>
-          </div>
-        </div>
+        {/* Two-Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+          {/* Sticky Left Sidebar */}
+          <aside className="lg:col-span-1 space-y-4 lg:sticky lg:top-24">
+            <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs space-y-3">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <FileText className="w-4 h-4 text-[#2bbda3]" /> Document Navigation
+              </h3>
+              <nav className="space-y-1">
+                {TOC.map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    onClick={() => setActiveSection(item.id)}
+                    className={`block px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+                      activeSection === item.id
+                        ? "bg-teal-50 text-[#2bbda3] font-bold"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {item.title}
+                  </a>
+                ))}
+              </nav>
+            </div>
 
-        <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-xs border border-gray-100 space-y-8 text-gray-700 leading-relaxed text-[15px]">
-          <section id="priv-1">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <Eye className="w-5 h-5 text-[#2bbda3]" /> 1. Information We Collect
-            </h2>
-            <ul className="list-disc pl-5 space-y-2">
-              <li><strong>Contact &amp; Account Data:</strong> Name, phone number, email address, and saved delivery/pickup addresses.</li>
-              <li><strong>Transaction Data:</strong> Details of products purchased, devices sold, payment status, and bank/UPI details for buyback payouts.</li>
-              <li><strong>Device &amp; Usage Data:</strong> IP address, device specs, browser type, and diagnostic logs to enhance platform performance.</li>
-            </ul>
-          </section>
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-2 text-xs">
+              <h4 className="font-bold text-slate-900">Privacy Officer</h4>
+              <p className="text-slate-500">For data deletion requests or privacy grievances:</p>
+              <a href="mailto:privacy@sellbar.in" className="text-[#2bbda3] font-bold underline block pt-1">
+                privacy@sellbar.in
+              </a>
+            </div>
+          </aside>
 
-          <section id="priv-2">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <Database className="w-5 h-5 text-[#2bbda3]" /> 2. How We Use Your Information
-            </h2>
-            <p>
-              Your data is exclusively used to fulfill your orders, dispatch doorstep technicians for device evaluation, process instant payouts, provide warranty support, and send order tracking updates. We <strong>never sell your personal data</strong> to third-party advertisers.
-            </p>
-          </section>
+          {/* Main Content Area */}
+          <main className="lg:col-span-3 space-y-8">
+            {/* Section 1 */}
+            <section id="sec-1" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-3">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Eye className="w-5 h-5 text-[#2bbda3]" /> 1. Information We Collect
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/60 space-y-1">
+                  <strong className="text-slate-900 block font-bold">Contact &amp; Account Data</strong>
+                  <p className="text-slate-600">Your name, phone number, email address, and saved doorstep pickup or delivery addresses.</p>
+                </div>
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/60 space-y-1">
+                  <strong className="text-slate-900 block font-bold">Transaction &amp; Payout Data</strong>
+                  <p className="text-slate-600">Orders placed, buyback quotes calculated, and customer UPI IDs or bank account details for instant trade-in disbursements.</p>
+                </div>
+              </div>
+            </section>
 
-          <section id="priv-3">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#2bbda3]" /> 3. Data Protection &amp; Device Sanitization
-            </h2>
-            <p>
-              For all devices collected through our buyback and recommerce channels, Sellbar enforces a <strong>military-grade data erasure protocol</strong> (DoD 5220.22-M / NIST 800-88 standard) to ensure no residual personal data remains on any recycled or refurbished device.
-            </p>
-          </section>
+            {/* Section 2 */}
+            <section id="sec-2" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-3">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Database className="w-5 h-5 text-[#2bbda3]" /> 2. How We Use Customer Data
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Your data is exclusively used to fulfill your e-commerce orders, dispatch certified evaluation riders for device inspections, disburse payouts, and handle warranty claims. We <strong>never sell, lease, or rent customer personal data</strong> to third-party telemarketers or advertisers.
+              </p>
+            </section>
 
-          <section id="priv-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-[#2bbda3]" /> 4. Your Rights
-            </h2>
-            <p>
-              You have the right to review, update, or request deletion of your account and personal records at any time. Simply email <a href="mailto:privacy@sellbar.in" className="text-[#2bbda3] underline font-medium">privacy@sellbar.in</a>.
-            </p>
-          </section>
+            {/* Section 3 */}
+            <section id="sec-3" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-3">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-[#2bbda3]" /> 3. Device Data Sanitization (DoD 5220.22-M)
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                For all devices traded in through Sellbar, we execute a certified DoD 5220.22-M / NIST 800-88 cryptographic wipe before any device enters the refurbishment or resale pipeline. No previous owner data can ever be recovered.
+              </p>
+            </section>
+
+            {/* Section 4, 5, 6 */}
+            <section id="sec-4" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-3">
+              <h2 className="text-lg font-bold text-slate-900">4. Third-Party Service Providers</h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                We share relevant fulfillment data strictly with authorized logistics partners (BlueDart, Delhivery) and PCI-DSS compliant payment gateways (Razorpay, Cashfree). All partners operate under strict NDAs and data processing agreements.
+              </p>
+            </section>
+
+            <section id="sec-5" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-3">
+              <h2 className="text-lg font-bold text-slate-900">5. Cookies &amp; Tracking Technologies</h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                We use necessary session cookies for shopping cart memory, account authentication, and anonymous web analytics to improve website load speeds. You can adjust your browser cookie preferences at any time.
+              </p>
+            </section>
+
+            <section id="sec-6" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-3">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[#2bbda3]" /> 6. Your Statutory Rights under DPDP Act
+              </h2>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Under the Indian Digital Personal Data Protection Act, you have the full right to access your stored data, request corrections, or request complete account erasure by emailing <a href="mailto:privacy@sellbar.in" className="text-[#2bbda3] font-bold underline">privacy@sellbar.in</a>.
+              </p>
+            </section>
+          </main>
         </div>
       </div>
     </div>
