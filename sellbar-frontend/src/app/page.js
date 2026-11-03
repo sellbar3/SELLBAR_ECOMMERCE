@@ -45,19 +45,7 @@ export default function HomePage() {
       device: 'Repaired OnePlus 11 Display',
     },
   ];
-  return (<div suppressHydrationWarning className="space-y-8 sm:space-y-10 pb-16 font-sans">
-
-    {/* Primary Accessible & SEO H1 Title */}
-    <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-0">
-      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 border-b border-slate-100 pb-3">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Sell Old Devices &amp; Buy Certified Refurbished Gadgets
-        </h1>
-        <p className="text-xs sm:text-sm font-medium text-slate-500">
-          Instant doorstep cash in 60s &bull; 12-month warranty &bull; 32-point quality check
-        </p>
-      </div>
-    </header>
+  return (<div suppressHydrationWarning className="space-y-10 sm:space-y-12 pb-16 font-sans">
 
     {/* 1. HERO SLIDER CAROUSEL (6 Real Cashify Promotional Banners) */}
     <HeroCarousel />

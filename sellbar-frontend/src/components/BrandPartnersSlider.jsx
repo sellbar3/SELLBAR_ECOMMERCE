@@ -142,27 +142,8 @@ export default function BrandPartnersSlider() {
     ];
     // We repeat the array 2 times to ensure seamless infinite looping without gaps
     const repeatedBrands = [...brands, ...brands];
-    return (<div className="w-full bg-[#13b59b] py-3.5 sm:py-4.5 overflow-hidden shadow-xs relative select-none">
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes marquee-ltr {
-          0% {
-            transform: translateX(-50%);
-          }
-          100% {
-            transform: translateX(0%);
-          }
-        }
-        .animate-marquee-left-to-right {
-          display: flex;
-          width: max-content;
-          animation: marquee-ltr 32s linear infinite;
-        }
-        .animate-marquee-left-to-right:hover {
-          animation-play-state: paused;
-        }
-      ` }}/>
-
-      <div className="animate-marquee-left-to-right items-center gap-10 sm:gap-14 text-white">
+    return (<div suppressHydrationWarning className="w-full bg-[#13b59b] py-3.5 sm:py-4.5 overflow-hidden shadow-xs relative select-none">
+      <div suppressHydrationWarning className="animate-marquee-left-to-right items-center gap-10 sm:gap-14 text-white">
         {repeatedBrands.map((brand, index) => (<Link key={index} href={brand.href} className="flex items-center gap-2 hover:opacity-85 transition-opacity shrink-0 px-2 group cursor-pointer" title={`${brand.name} - Sell & Buy Refurbished`}>
             <div className="transition-transform duration-200 group-hover:scale-110 flex items-center justify-center">
               {brand.icon}

@@ -274,7 +274,7 @@ const FoldText = ({ text = 'Design unfolds', splitBy = 'char', hinge = 'top', fo
         '--fold-perspective': `${Math.max(120, perspective)}px`,
         ...style
     };
-    return (<span ref={rootRef} className={`fold-text ${className}`.trim()} style={rootStyle}>
+    return (<span ref={rootRef} suppressHydrationWarning className={`fold-text ${className}`.trim()} style={rootStyle}>
       <span className="fold-text-sr-only">{text}</span>
       <span className="fold-text-visual" aria-hidden="true">
         {segments}

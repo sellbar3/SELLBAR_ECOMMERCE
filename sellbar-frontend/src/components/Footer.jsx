@@ -10,13 +10,13 @@ export default function Footer() {
   // Bulletproof path detection: Do not render storefront footer within Admin or Vendor enterprise portals
   const currentPath =
     pathname ||
-    (typeof window !== 'undefined' ? window.location.pathname : '');
+    '';
 
   if (currentPath.startsWith('/admin') || currentPath.startsWith('/vendor')) {
     return null;
   }
   return (
-    <footer className="storefront-footer bg-slate-50 text-slate-600 border-t border-slate-200 text-sm mt-16 antialiased">
+    <footer suppressHydrationWarning className="storefront-footer bg-slate-50 text-slate-600 border-t border-slate-200 text-sm mt-16 antialiased">
       {/* Main Footer Container */}
       <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
 
@@ -352,12 +352,12 @@ export default function Footer() {
 
                 {/* Text */}
                 <div className="text-left">
-                  <div className="text-sm font-bold leading-tight">
+                  <p className="text-sm font-bold leading-tight">
                     Chat with Us
-                  </div>
-                  <div className="text-xs text-white/90 leading-tight mt-0.5 font-normal">
+                  </p>
+                  <p className="text-xs text-white/90 leading-tight mt-0.5 font-normal">
                     Got questions? Just ask.
-                  </div>
+                  </p>
                 </div>
               </Link>
             </div>
