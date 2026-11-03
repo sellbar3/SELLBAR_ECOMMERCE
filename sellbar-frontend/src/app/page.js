@@ -45,7 +45,7 @@ export default function HomePage() {
       device: 'Repaired OnePlus 11 Display',
     },
   ];
-  return (<div className="space-y-10 sm:space-y-12 pb-16 font-sans">
+  return (<div suppressHydrationWarning className="space-y-10 sm:space-y-12 pb-16 font-sans">
 
     {/* 1. HERO SLIDER CAROUSEL (6 Real Cashify Promotional Banners) */}
     <HeroCarousel />

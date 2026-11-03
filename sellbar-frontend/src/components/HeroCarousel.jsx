@@ -70,17 +70,20 @@ export default function HeroCarousel() {
 
   return (
     <section
+      suppressHydrationWarning
       className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2 select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-sm border border-gray-200/80 bg-gray-100">
+      <div suppressHydrationWarning className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-sm border border-gray-200/80 bg-gray-100">
         {/* Banner Link & Image Container */}
         <Link
+          suppressHydrationWarning
           href={HERO_BANNERS[currentSlide].href}
           className="block w-full aspect-21/9 sm:aspect-24/9 md:aspect-3/1 max-h-95 relative overflow-hidden"
         >
           <img
+            suppressHydrationWarning
             src={HERO_BANNERS[currentSlide].image}
             alt={HERO_BANNERS[currentSlide].alt}
             className="w-full h-full object-cover object-center transition-all duration-500 hover:scale-[1.01]"

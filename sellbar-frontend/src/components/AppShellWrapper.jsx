@@ -12,16 +12,11 @@ import Footer from './Footer';
  * storefront markup flashes or renders during initial page loads or hard reloads.
  */
 export default function AppShellWrapper({ children }) {
-  const pathname = usePathname();
-
-  // Bulletproof path detection: Next.js usePathname with window.location fallback
-  const currentPath =
-    pathname ||
-    (typeof window !== 'undefined' ? window.location.pathname : '');
+  const pathname = usePathname() || '';
 
   const isPortal =
-    currentPath.startsWith('/admin') ||
-    currentPath.startsWith('/vendor');
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/vendor');
 
   if (isPortal) {
     return (
@@ -29,18 +24,6 @@ export default function AppShellWrapper({ children }) {
         {children}
       </main>
     );
-  }
-
-  // Double check client-side window.location so no hydration race condition can ever show customer chrome
-  if (typeof window !== 'undefined') {
-    const loc = window.location.pathname;
-    if (loc.startsWith('/admin') || loc.startsWith('/vendor')) {
-      return (
-        <main className="flex-1 flex flex-col min-h-screen w-full" suppressHydrationWarning>
-          {children}
-        </main>
-      );
-    }
   }
 
   return (
