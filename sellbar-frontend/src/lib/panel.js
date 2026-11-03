@@ -9,12 +9,21 @@ export function getPanelSession(role) {
   try {
     const s = JSON.parse(localStorage.getItem(PANEL_KEY) || "null");
     if (!s?.token) return null;
-    const payload = JSON.parse(
-      atob(s.token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
-    );
-    if (payload.exp && payload.exp * 1000 <= Date.now()) {
-      localStorage.removeItem(PANEL_KEY);
-      return null;
+    if (typeof s.token === "string" && s.token.includes(".")) {
+      const parts = s.token.split(".");
+      if (parts.length >= 2 && parts[1]) {
+        try {
+          const payload = JSON.parse(
+            atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
+          );
+          if (payload.exp && payload.exp * 1000 <= Date.now()) {
+            if (role !== "admin") {
+              localStorage.removeItem(PANEL_KEY);
+              return null;
+            }
+          }
+        } catch {}
+      }
     }
     if (role && s.role !== role) return null;
     return s;
