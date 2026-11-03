@@ -19,6 +19,8 @@ import {
   RotateCcw,
   Sparkles,
   Settings,
+  Smartphone,
+  Sliders,
 } from "lucide-react";
 
 export const ADMIN_SIDEBAR_MODULES = [
@@ -45,7 +47,7 @@ export const ADMIN_SIDEBAR_MODULES = [
       { label: "Add New Product", href: "/admin/products?action=new" },
       { label: "Product Categories", href: "/admin/categories" },
       { label: "Subcategories", href: "/admin/products/subcategories" },
-      { label: "Brands", href: "/admin/products/brands" },
+      { label: "Brands Directory", href: "/admin/brands" },
       { label: "Product Attributes", href: "/admin/products/attributes" },
       { label: "Product Variants", href: "/admin/products/variants" },
       { label: "Featured Products", href: "/admin/products?filter=featured" },
@@ -74,6 +76,19 @@ export const ADMIN_SIDEBAR_MODULES = [
       { label: "Returned Orders", href: "/admin/orders?status=returned" },
       { label: "Refunded Orders", href: "/admin/orders?status=refunded" },
       { label: "Create Manual Order", href: "/admin/orders?action=new" },
+    ],
+  },
+  {
+    id: "sell-mobiles",
+    title: "Sell Old Mobiles & Trade-In",
+    icon: Smartphone,
+    basePath: "/admin/sell-orders",
+    badge: "Recommerce",
+    items: [
+      { label: "Sell Requests / Orders", href: "/admin/sell-orders" },
+      { label: "Mobile Models Catalog", href: "/admin/sell-models" },
+      { label: "Valuation Engine Rules", href: "/admin/valuation" },
+      { label: "Supported Brands", href: "/admin/brands" },
     ],
   },
   {

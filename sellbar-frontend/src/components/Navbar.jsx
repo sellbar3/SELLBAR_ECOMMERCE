@@ -677,7 +677,23 @@ export default function Navbar() {
                         className="flex items-center gap-2 px-3.5 py-2 text-gray-700 hover:bg-gray-50"
                       >
                         <UserIcon className="w-4 h-4 text-gray-500" />
-                        My Account & Orders
+                        My Account &amp; Orders
+                      </Link>
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-gray-700 hover:bg-gray-50"
+                      >
+                        <Tag className="w-4 h-4 text-rose-500" />
+                        Saved Wishlist
+                      </Link>
+                      <Link
+                        href="/account/sell-orders"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 px-3.5 py-2 text-gray-700 hover:bg-gray-50"
+                      >
+                        <Smartphone className="w-4 h-4 text-[#13b59b]" />
+                        Sell Phone Requests
                       </Link>
                       {currentUser.role === 'ADMIN' && (
                         <Link
