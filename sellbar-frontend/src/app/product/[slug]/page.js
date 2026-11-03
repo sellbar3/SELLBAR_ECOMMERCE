@@ -81,6 +81,17 @@ function ProductDetailContent() {
   // Customer photo modal
   const [selectedReviewPhoto, setSelectedReviewPhoto] = useState(null);
 
+  // Customer Reviews Filters (Amazon / Flipkart style)
+  const [reviewStarFilter, setReviewStarFilter] = useState(null);
+  const [reviewVerifiedOnly, setReviewVerifiedOnly] = useState(false);
+  const [reviewPhotoOnly, setReviewPhotoOnly] = useState(false);
+  const [reviewSearchQuery, setReviewSearchQuery] = useState("");
+  const [reviewSort, setReviewSort] = useState("recent");
+
+  // Compatible Accessories Add-on State
+  const [selectedAddons, setSelectedAddons] = useState(["charger", "glass"]);
+  const [addonCategoryFilter, setAddonCategoryFilter] = useState("all");
+
   // Sync location & initial delivery check
   useEffect(() => {
     try {
@@ -802,6 +813,7 @@ function ProductDetailContent() {
             {[
               { id: "specs", label: "Technical Specifications", icon: Cpu },
               { id: "desc", label: "Product Overview", icon: Layers },
+              { id: "accessories", label: "Compatible Add-ons & Bundles", icon: Package },
               { id: "box", label: "What's in the Box", icon: Box },
               { id: "warranty", label: "Warranty & Protection", icon: ShieldCheck },
               { id: "reviews", label: `Customer Reviews (${productData.customerReviews?.length || productData.reviewsCount || 0})`, icon: Star },
@@ -1060,63 +1072,395 @@ function ProductDetailContent() {
                   </div>
                 </div>
 
-                {/* Verified Customer Reviews List */}
-                <div className="space-y-4 pt-2">
-                  {(productData.customerReviews && productData.customerReviews.length > 0
-                    ? productData.customerReviews
-                    : [
-                        {
-                          reviewerName: "Rahul Sharma",
-                          rating: 5,
-                          title: "Looks and performs absolutely like brand new!",
-                          comment:
-                            "Received the device within 2 days in Gurgaon. Packaging was sealed and tamper-evident. Ran 32 hardware benchmark tests and battery health is at 94%. Outstanding deal from Sellbar!",
-                          date: "24 Oct 2026",
-                          verifiedBuyer: true,
-                        },
-                        {
-                          reviewerName: "Ananya Deshmukh",
-                          rating: 5,
-                          title: "Saved over 40% compared to buying new",
-                          comment:
-                            "Grade Flawless is literally flawless — no marks or scratches anywhere on the screen or body. The 12-month warranty gives great peace of mind. Highly recommend Sellbar for electronics!",
-                          date: "18 Oct 2026",
-                          verifiedBuyer: true,
-                        },
-                      ]
-                  ).map((rev, revIdx) => (
-                    <div
-                      key={revIdx}
-                      className="p-5 rounded-2xl border border-gray-100 bg-[#f8fafc] space-y-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-xs sm:text-sm text-gray-900">
-                            {rev.reviewerName}
-                          </span>
-                          {rev.verifiedBuyer && (
-                            <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
-                              <CheckCircle2 className="w-3 h-3" /> Verified Buyer
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-[11px] text-gray-400">{rev.date}</span>
-                      </div>
-
-                      <div className="flex text-amber-500">
-                        {[...Array(rev.rating || 5)].map((_, i) => (
-                          <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                        ))}
-                      </div>
-
-                      {rev.title && (
-                        <h5 className="text-xs sm:text-sm font-bold text-gray-900">{rev.title}</h5>
+                {/* AMAZON-STYLE CUSTOMER REVIEWS FILTER TOOLBAR */}
+                <div className="bg-[#f8fafc] p-4 sm:p-5 rounded-2xl border border-gray-200/80 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    {/* Search inside reviews */}
+                    <div className="relative flex-1 max-w-sm">
+                      <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        value={reviewSearchQuery}
+                        onChange={(e) => setReviewSearchQuery(e.target.value)}
+                        placeholder="Search customer reviews..."
+                        className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-[#2bbda3]"
+                      />
+                      {reviewSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setReviewSearchQuery("")}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       )}
-                      <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                        {rev.comment}
-                      </p>
                     </div>
+
+                    {/* Sort Reviews */}
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-gray-500 font-semibold">Sort by:</span>
+                      <select
+                        value={reviewSort}
+                        onChange={(e) => setReviewSort(e.target.value)}
+                        className="bg-white border border-gray-200 text-gray-800 font-bold py-1.5 px-2.5 rounded-lg text-xs focus:outline-none focus:border-[#2bbda3]"
+                      >
+                        <option value="recent">Most Recent</option>
+                        <option value="highest">Highest Rating</option>
+                        <option value="lowest">Lowest Rating</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Star Rating Pills & Checkbox Filters */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-gray-200/60">
+                    <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mr-1">
+                        Filter:
+                      </span>
+                      {[
+                        { label: "All Stars", val: null },
+                        { label: "5 ★", val: 5 },
+                        { label: "4 ★", val: 4 },
+                        { label: "3 ★", val: 3 },
+                        { label: "2 ★", val: 2 },
+                        { label: "1 ★", val: 1 },
+                      ].map((item) => {
+                        const isSelected = reviewStarFilter === item.val;
+                        return (
+                          <button
+                            key={item.label}
+                            type="button"
+                            onClick={() => setReviewStarFilter(item.val)}
+                            className={`px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer ${
+                              isSelected
+                                ? "bg-[#2bbda3] text-white"
+                                : "bg-white border border-gray-200 text-gray-700 hover:bg-gray-100"
+                            }`}
+                          >
+                            {item.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="flex items-center gap-4 text-xs font-medium text-gray-700">
+                      <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={reviewVerifiedOnly}
+                          onChange={(e) => setReviewVerifiedOnly(e.target.checked)}
+                          className="rounded text-[#2bbda3] focus:ring-[#2bbda3]"
+                        />
+                        <span>Verified Buyer Only</span>
+                      </label>
+
+                      <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={reviewPhotoOnly}
+                          onChange={(e) => setReviewPhotoOnly(e.target.checked)}
+                          className="rounded text-[#2bbda3] focus:ring-[#2bbda3]"
+                        />
+                        <span>With Photos</span>
+                      </label>
+
+                      {(reviewStarFilter !== null ||
+                        reviewVerifiedOnly ||
+                        reviewPhotoOnly ||
+                        reviewSearchQuery) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReviewStarFilter(null);
+                            setReviewVerifiedOnly(false);
+                            setReviewPhotoOnly(false);
+                            setReviewSearchQuery("");
+                          }}
+                          className="text-xs font-bold text-rose-600 hover:underline"
+                        >
+                          Reset Filters
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Filtered Verified Customer Reviews List */}
+                <div className="space-y-4 pt-2">
+                  {(() => {
+                    const rawList =
+                      productData.customerReviews && productData.customerReviews.length > 0
+                        ? productData.customerReviews
+                        : [
+                            {
+                              reviewerName: "Rahul Sharma",
+                              rating: 5,
+                              title: "Looks and performs absolutely like brand new!",
+                              comment:
+                                "Received the device within 2 days in Gurgaon. Packaging was sealed and tamper-evident. Ran 32 hardware benchmark tests and battery health is at 94%. Outstanding deal from Sellbar!",
+                              date: "24 Oct 2026",
+                              verifiedBuyer: true,
+                              hasPhoto: true,
+                            },
+                            {
+                              reviewerName: "Ananya Deshmukh",
+                              rating: 5,
+                              title: "Saved over 40% compared to buying new",
+                              comment:
+                                "Grade Flawless is literally flawless — no marks or scratches anywhere on the screen or body. The 12-month warranty gives great peace of mind. Highly recommend Sellbar for electronics!",
+                              date: "18 Oct 2026",
+                              verifiedBuyer: true,
+                              hasPhoto: true,
+                            },
+                            {
+                              reviewerName: "Vikram Mehta",
+                              rating: 4,
+                              title: "Solid device, verified 32-point inspection certificate in box",
+                              comment:
+                                "Screen is in pristine condition. Battery backup is solid. The Sellbar team responded to my query on WhatsApp within 10 minutes. Will buy again.",
+                              date: "10 Oct 2026",
+                              verifiedBuyer: true,
+                              hasPhoto: false,
+                            },
+                          ];
+
+                    let list = [...rawList];
+                    if (reviewStarFilter !== null) {
+                      list = list.filter((r) => r.rating === reviewStarFilter);
+                    }
+                    if (reviewVerifiedOnly) {
+                      list = list.filter((r) => r.verifiedBuyer);
+                    }
+                    if (reviewPhotoOnly) {
+                      list = list.filter((r) => r.hasPhoto);
+                    }
+                    if (reviewSearchQuery.trim()) {
+                      const q = reviewSearchQuery.toLowerCase();
+                      list = list.filter(
+                        (r) =>
+                          r.comment.toLowerCase().includes(q) ||
+                          (r.title && r.title.toLowerCase().includes(q)) ||
+                          r.reviewerName.toLowerCase().includes(q)
+                      );
+                    }
+                    if (reviewSort === "highest") {
+                      list.sort((a, b) => b.rating - a.rating);
+                    } else if (reviewSort === "lowest") {
+                      list.sort((a, b) => a.rating - b.rating);
+                    }
+
+                    if (list.length === 0) {
+                      return (
+                        <div className="p-8 text-center bg-[#f8fafc] rounded-2xl border border-gray-100 space-y-2">
+                          <p className="text-xs text-gray-500">No reviews found matching the selected filter criteria.</p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setReviewStarFilter(null);
+                              setReviewVerifiedOnly(false);
+                              setReviewPhotoOnly(false);
+                              setReviewSearchQuery("");
+                            }}
+                            className="text-xs font-bold text-[#2bbda3] hover:underline"
+                          >
+                            Clear all filters
+                          </button>
+                        </div>
+                      );
+                    }
+
+                    return list.map((rev, revIdx) => (
+                      <div
+                        key={revIdx}
+                        className="p-5 rounded-2xl border border-gray-100 bg-[#f8fafc] space-y-2"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-xs sm:text-sm text-gray-900">
+                              {rev.reviewerName}
+                            </span>
+                            {rev.verifiedBuyer && (
+                              <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3" /> Verified Buyer
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-gray-400">{rev.date}</span>
+                        </div>
+
+                        <div className="flex text-amber-500">
+                          {[...Array(rev.rating || 5)].map((_, i) => (
+                            <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                          ))}
+                        </div>
+
+                        {rev.title && (
+                          <h5 className="text-xs sm:text-sm font-bold text-gray-900">{rev.title}</h5>
+                        )}
+                        <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                          {rev.comment}
+                        </p>
+                      </div>
+                    ));
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: COMPATIBLE ACCESSORIES & BUNDLES (Amazon style) */}
+            {activeTab === "accessories" && (
+              <div className="space-y-6 max-w-5xl">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    Frequently Bought Together &amp; Compatible Accessories
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Certified fast chargers, rugged MagSafe cases, and 9H tempered glass tailored for {productData.name}.
+                  </p>
+                </div>
+
+                {/* Filter Pills for Accessories */}
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "all", label: "All Accessories" },
+                    { id: "chargers", label: "Fast Adapters & Cables" },
+                    { id: "cases", label: "Protection Cases" },
+                    { id: "glass", label: "9H Tempered Glass" },
+                    { id: "audio", label: "Wireless Audio" },
+                  ].map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setAddonCategoryFilter(cat.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                        addonCategoryFilter === cat.id
+                          ? "bg-[#2bbda3] text-white"
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
                   ))}
+                </div>
+
+                {/* Accessories Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    {
+                      id: "charger",
+                      cat: "chargers",
+                      name: "Apple/Samsung 20W PD Fast Charging Adapter",
+                      price: 1299,
+                      compare: 1900,
+                      image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=300&q=80",
+                    },
+                    {
+                      id: "glass",
+                      cat: "glass",
+                      name: "9H Edge-to-Edge HD Tempered Glass",
+                      price: 299,
+                      compare: 699,
+                      image: "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=300&q=80",
+                    },
+                    {
+                      id: "case",
+                      cat: "cases",
+                      name: "Shockproof Clear Hybrid Armor Case",
+                      price: 499,
+                      compare: 999,
+                      image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=300&q=80",
+                    },
+                    {
+                      id: "earbuds",
+                      cat: "audio",
+                      name: "Sellbar Certified Wireless TWS ANC Earbuds",
+                      price: 1799,
+                      compare: 3499,
+                      image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=300&q=80",
+                    },
+                  ]
+                    .filter((acc) => addonCategoryFilter === "all" || acc.cat === addonCategoryFilter)
+                    .map((acc) => {
+                      const isSelected = selectedAddons.includes(acc.id);
+                      return (
+                        <div
+                          key={acc.id}
+                          onClick={() =>
+                            setSelectedAddons((prev) =>
+                              prev.includes(acc.id)
+                                ? prev.filter((x) => x !== acc.id)
+                                : [...prev, acc.id]
+                            )
+                          }
+                          className={`p-4 rounded-2xl border transition cursor-pointer flex flex-col justify-between select-none ${
+                            isSelected
+                              ? "bg-teal-50/50 border-[#2bbda3] shadow-xs"
+                              : "bg-white border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          <div>
+                            <div className="aspect-square bg-white rounded-xl p-2 mb-3 flex items-center justify-center overflow-hidden border border-gray-100">
+                              <img
+                                src={acc.image}
+                                alt={acc.name}
+                                className="max-h-full max-w-full object-contain"
+                              />
+                            </div>
+                            <div className="flex items-start gap-2">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                readOnly
+                                className="mt-1 rounded text-[#2bbda3] focus:ring-[#2bbda3]"
+                              />
+                              <div>
+                                <span className="text-xs font-bold text-gray-900 block leading-tight">
+                                  {acc.name}
+                                </span>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span className="text-xs font-black text-gray-900">
+                                    ₹{acc.price.toLocaleString("en-IN")}
+                                  </span>
+                                  <span className="text-[10px] text-gray-400 line-through">
+                                    ₹{acc.compare.toLocaleString("en-IN")}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <span
+                            className={`mt-3 block text-center py-1.5 rounded-lg text-xs font-bold ${
+                              isSelected
+                                ? "bg-[#2bbda3] text-white"
+                                : "bg-gray-100 text-gray-700"
+                            }`}
+                          >
+                            {isSelected ? "Selected ✓" : "+ Add to Bundle"}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* Bundle Summary Card (Amazon style) */}
+                <div className="p-5 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl border border-teal-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <span className="text-xs font-bold text-teal-800 uppercase tracking-wider block">
+                      Bundle &amp; Save Offer
+                    </span>
+                    <div className="text-sm font-bold text-gray-900 mt-0.5">
+                      {selectedAddons.length} Accessories selected with this device
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      alert("Selected accessories bundle added to your cart with exclusive combo discount!");
+                    }}
+                    className="px-6 py-2.5 bg-[#2bbda3] hover:bg-[#249e88] text-white rounded-xl text-xs font-bold shadow-md transition"
+                  >
+                    Add Complete Bundle to Cart →
+                  </button>
                 </div>
               </div>
             )}
