@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
-    name: "Sellbar.in - India's Trusted Refurbished Electronics & Resale Marketplace",
-    short_name: "Sellbar.in",
+    name: "Sellbar - India's Trusted Refurbished Electronics & Resale Marketplace",
+    short_name: "Sellbar",
     description: "Instant doorstep cash for old phones and certified refurbished gadgets with 12 months warranty.",
     start_url: "/",
     display: "standalone",

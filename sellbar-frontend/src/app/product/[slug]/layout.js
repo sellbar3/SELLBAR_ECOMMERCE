@@ -40,15 +40,15 @@ export async function generateMetadata({ params }) {
       canonical: `https://sellbar.in/product/${slug}`,
     },
     openGraph: {
-      title: `${product.name} | Sellbar.in`,
+      title: `${product.name} | Sellbar`,
       description: desc,
       url: `https://sellbar.in/product/${slug}`,
-      siteName: 'Sellbar.in',
+      siteName: 'Sellbar',
       images: product.images?.[0] ? [{ url: product.images[0] }] : [],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.name} | Sellbar.in`,
+      title: `${product.name} | Sellbar`,
       description: desc,
     },
   };

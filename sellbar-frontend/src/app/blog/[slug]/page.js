@@ -33,10 +33,10 @@ export async function generateMetadata({ params }) {
       canonical: `https://sellbar.in/blog/${slug}`,
     },
     openGraph: {
-      title: `${post.title} | Sellbar.in`,
+      title: `${post.title} | Sellbar`,
       description: post.excerpt,
       url: `https://sellbar.in/blog/${slug}`,
-      siteName: 'Sellbar.in',
+      siteName: 'Sellbar',
     },
   };
 }

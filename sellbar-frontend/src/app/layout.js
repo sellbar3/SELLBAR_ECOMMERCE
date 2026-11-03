@@ -11,8 +11,8 @@ export const viewport = {
 };
 export const metadata = {
     title: {
-        default: "Sellbar.in - India's Trusted Refurbished Electronics & Resale Marketplace",
-        template: '%s | Sellbar.in',
+        default: "Sellbar - India's Trusted Refurbished Electronics & Resale Marketplace",
+        template: '%s | Sellbar',
     },
     description: 'Turn old tech into instant money with free doorstep pickup. Buy certified refurbished smartphones, MacBooks, and laptops with 32-point inspection and 12 months warranty.',
     keywords: [
@@ -43,16 +43,16 @@ export const metadata = {
         },
     },
     openGraph: {
-        title: 'Sellbar.in | Sell Smart. Buy Better.',
+        title: 'Sellbar | Sell Smart. Buy Better.',
         description: 'Instant Doorstep Valuation & Certified Refurbished Electronics with 12 Months Warranty.',
         url: 'https://sellbar.in',
-        siteName: 'Sellbar.in',
+        siteName: 'Sellbar',
         locale: 'en_IN',
         type: 'website',
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Sellbar.in - Sell Old Devices & Buy Certified Refurbished Tech',
+        title: 'Sellbar - Sell Old Devices & Buy Certified Refurbished Tech',
         description: 'Instant doorstep cash payout and certified refurbished electronics with 12 months warranty.',
     },
     verification: {
@@ -85,7 +85,7 @@ const jsonLd = {
             '@type': 'WebSite',
             '@id': 'https://sellbar.in/#website',
             url: 'https://sellbar.in',
-            name: 'Sellbar.in',
+            name: 'Sellbar',
             description: 'India\'s Leading Re-Commerce & Refurbished Electronics Marketplace',
             publisher: {
                 '@id': 'https://sellbar.in/#organization',
@@ -101,6 +101,11 @@ const jsonLd = {
 export default function RootLayout({ children, }) {
     return (<html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
         <head>
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `(function(){if(typeof window==='undefined')return;function cleanBis(){var els=document.querySelectorAll('[bis_skin_checked]');for(var i=0;i<els.length;i++){els[i].removeAttribute('bis_skin_checked');}}cleanBis();if(window.MutationObserver){var observer=new MutationObserver(function(mutations){for(var i=0;i<mutations.length;i++){var m=mutations[i];if(m.type==='attributes'&&m.attributeName==='bis_skin_checked'){m.target.removeAttribute('bis_skin_checked');}}});if(document.documentElement){observer.observe(document.documentElement,{attributes:true,subtree:true,attributeFilter:['bis_skin_checked']});}}})();`,
+                }}
+            />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </head>
         <body suppressHydrationWarning className={`${inter.className} min-h-screen bg-[#f8fafc] text-gray-900 flex flex-col selection:bg-[#13b59b] selection:text-white`}>
