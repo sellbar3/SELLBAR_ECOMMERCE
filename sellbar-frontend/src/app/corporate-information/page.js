@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { Building2, ShieldCheck, FileCheck, Mail, MapPin } from "lucide-react";
+import { Building2, ShieldCheck, FileCheck, Mail, MapPin, ExternalLink, FileText } from "lucide-react";
 
 export const metadata = {
   title: "Corporate Information | Sellbar Technologies India",
-  description: "Official corporate details, registered office address, CIN, and statutory compliance information for Sellbar.",
+  description: "Official corporate details, registered office address, regional facilities, CIN, and statutory compliance information for Sellbar.",
 };
 
 export default function CorporateInformationPage() {
@@ -24,7 +24,7 @@ export default function CorporateInformationPage() {
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Corporate Information</h1>
-              <p className="text-sm text-gray-500">Statutory &amp; Entity Details</p>
+              <p className="text-sm text-gray-500">Statutory Governance &amp; Corporate Entity Details</p>
             </div>
           </div>
           <p className="text-gray-600 leading-relaxed text-sm">
@@ -33,7 +33,7 @@ export default function CorporateInformationPage() {
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-xs space-y-6 text-sm text-gray-700">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
               <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold block mb-1">Company Legal Name</span>
               <p className="font-bold text-gray-900">Sellbar Technologies India Private Limited</p>
@@ -55,26 +55,62 @@ export default function CorporateInformationPage() {
             </div>
           </div>
 
-          <div className="p-5 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
-            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#2bbda3]" /> Registered Office Address
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Sellbar Technologies India Pvt. Ltd.<br />
-              Plot 14, Okhla Industrial Area Phase-III, New Delhi, Delhi - 110020, India.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 bg-gray-50 rounded-xl border border-gray-200 space-y-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-gray-200 text-gray-700">Headquarters</span>
+              <h3 className="font-semibold text-gray-900 flex items-center gap-1.5 text-sm pt-1">
+                <MapPin className="w-4 h-4 text-[#2bbda3]" /> Registered Office
+              </h3>
+              <p className="text-gray-600 text-xs leading-relaxed">
+                Sellbar Technologies India Pvt. Ltd.<br />
+                Plot 14, Okhla Industrial Area Phase-III,<br />
+                New Delhi - 110020, India.
+              </p>
+            </div>
+
+            <div className="p-5 bg-gray-50 rounded-xl border border-gray-200 space-y-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-100 text-[#2bbda3]">Operations &amp; Lab</span>
+              <h3 className="font-semibold text-gray-900 flex items-center gap-1.5 text-sm pt-1">
+                <MapPin className="w-4 h-4 text-[#2bbda3]" /> Regional Diagnostic Center
+              </h3>
+              <p className="text-gray-600 text-xs leading-relaxed">
+                Supriya Cinema Road, Near Station Chowk,<br />
+                Bettiah, West Champaran, Bihar - 845438, India.
+              </p>
+            </div>
           </div>
 
           <div className="p-5 bg-gray-50 rounded-xl border border-gray-200 space-y-2">
             <h3 className="font-semibold text-gray-900 flex items-center gap-2">
               <Mail className="w-4 h-4 text-[#2bbda3]" /> Grievance &amp; Compliance Officer
             </h3>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-xs leading-relaxed">
               In accordance with Information Technology Act 2000 and Consumer Protection (E-Commerce) Rules, 2020:
             </p>
-            <p className="text-xs text-gray-500">
-              Email: <a href="mailto:grievance@sellbar.in" className="text-[#2bbda3] font-medium underline">grievance@sellbar.in</a> | Phone: +91-77175-17777
+            <p className="text-xs text-gray-600">
+              Email: <a href="mailto:grievance@sellbar.in" className="text-[#2bbda3] font-medium underline">grievance@sellbar.in</a> | Customer Support: <span className="font-semibold text-gray-800">+91-77175-17777</span>
             </p>
+          </div>
+
+          {/* Statutory Policy Links */}
+          <div className="space-y-3 pt-2">
+            <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#2bbda3]" /> Statutory Documents &amp; Policies
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <Link href="/terms-conditions" className="p-2.5 rounded-lg border border-gray-200 hover:border-[#2bbda3] bg-white text-center font-medium text-gray-700">
+                Terms &amp; Conditions
+              </Link>
+              <Link href="/privacy-policy" className="p-2.5 rounded-lg border border-gray-200 hover:border-[#2bbda3] bg-white text-center font-medium text-gray-700">
+                Privacy Policy
+              </Link>
+              <Link href="/warranty-policy" className="p-2.5 rounded-lg border border-gray-200 hover:border-[#2bbda3] bg-white text-center font-medium text-gray-700">
+                Warranty Policy
+              </Link>
+              <Link href="/e-waste-policy" className="p-2.5 rounded-lg border border-gray-200 hover:border-[#2bbda3] bg-white text-center font-medium text-gray-700">
+                E-Waste Policy
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -32,11 +32,30 @@ export default function TermsConditionsPage() {
           <p className="text-gray-600 leading-relaxed">
             Welcome to <strong>Sellbar.in</strong>. By accessing our website, purchasing certified refurbished tech, or using our device buyback and recycling services, you agree to abide by these Terms and Conditions.
           </p>
+          <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+            <span>Effective Date: January 1, 2026</span>
+            <span className="font-semibold text-emerald-600">Governing Law: Republic of India</span>
+          </div>
+        </div>
+
+        {/* Table of Contents */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs mb-8">
+          <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#2bbda3]" /> Table of Contents
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600">
+            <a href="#terms-1" className="hover:text-[#2bbda3] transition-colors">1. Eligibility &amp; User Account</a>
+            <a href="#terms-2" className="hover:text-[#2bbda3] transition-colors">2. Buying Refurbished Products</a>
+            <a href="#terms-3" className="hover:text-[#2bbda3] transition-colors">3. Selling Devices (Recommerce &amp; Buyback)</a>
+            <a href="#terms-4" className="hover:text-[#2bbda3] transition-colors">4. Pricing, Payments &amp; Invoicing</a>
+            <a href="#terms-5" className="hover:text-[#2bbda3] transition-colors">5. Limitation of Liability</a>
+            <a href="#terms-6" className="hover:text-[#2bbda3] transition-colors">6. Governing Law &amp; Dispute Resolution</a>
+          </div>
         </div>
 
         {/* Content Card */}
         <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-xs border border-gray-100 space-y-8 text-gray-700 leading-relaxed text-[15px]">
-          <section>
+          <section id="terms-1">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 1. Eligibility &amp; User Account
             </h2>
@@ -45,7 +64,7 @@ export default function TermsConditionsPage() {
             </p>
           </section>
 
-          <section>
+          <section id="terms-2">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 2. Buying Refurbished Products
             </h2>
@@ -54,7 +73,7 @@ export default function TermsConditionsPage() {
             </p>
           </section>
 
-          <section>
+          <section id="terms-3">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 3. Selling Devices (Recommerce &amp; Buyback)
             </h2>
@@ -66,7 +85,7 @@ export default function TermsConditionsPage() {
             </p>
           </section>
 
-          <section>
+          <section id="terms-4">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 4. Pricing and Payments
             </h2>
@@ -75,12 +94,21 @@ export default function TermsConditionsPage() {
             </p>
           </section>
 
-          <section>
+          <section id="terms-5">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 5. Limitation of Liability
             </h2>
             <p>
               Sellbar Technologies India Pvt. Ltd. shall not be liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our services or products beyond the total purchase or buyback value of the transaction.
+            </p>
+          </section>
+
+          <section id="terms-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#2bbda3]" /> 6. Governing Law &amp; Dispute Resolution
+            </h2>
+            <p>
+              These Terms shall be governed by and construed in accordance with the laws of India. Any legal dispute or proceeding arising hereunder shall be subject to the exclusive jurisdiction of the competent courts in New Delhi / Bettiah, Bihar.
             </p>
           </section>
 

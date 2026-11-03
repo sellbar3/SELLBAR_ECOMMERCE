@@ -30,10 +30,27 @@ export default function PrivacyPolicyPage() {
           <p className="text-gray-600 leading-relaxed">
             At <strong>Sellbar</strong>, we value your trust and take the security of your personal information very seriously. This policy details how your data is collected, stored, and protected in compliance with the Digital Personal Data Protection (DPDP) Act.
           </p>
+          <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+            <span>Last Updated: January 1, 2026</span>
+            <span className="font-semibold text-emerald-600">DPDP Act &amp; ISO 27001 Compliant</span>
+          </div>
+        </div>
+
+        {/* Table of Contents */}
+        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-xs mb-8">
+          <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <Lock className="w-4 h-4 text-[#2bbda3]" /> Table of Contents
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600">
+            <a href="#priv-1" className="hover:text-[#2bbda3] transition-colors">1. Information We Collect</a>
+            <a href="#priv-2" className="hover:text-[#2bbda3] transition-colors">2. How We Use Your Information</a>
+            <a href="#priv-3" className="hover:text-[#2bbda3] transition-colors">3. Data Protection &amp; Device Sanitization</a>
+            <a href="#priv-4" className="hover:text-[#2bbda3] transition-colors">4. Your Statutory Privacy Rights</a>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl p-8 sm:p-10 shadow-xs border border-gray-100 space-y-8 text-gray-700 leading-relaxed text-[15px]">
-          <section>
+          <section id="priv-1">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <Eye className="w-5 h-5 text-[#2bbda3]" /> 1. Information We Collect
             </h2>
@@ -44,7 +61,7 @@ export default function PrivacyPolicyPage() {
             </ul>
           </section>
 
-          <section>
+          <section id="priv-2">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <Database className="w-5 h-5 text-[#2bbda3]" /> 2. How We Use Your Information
             </h2>
@@ -53,7 +70,7 @@ export default function PrivacyPolicyPage() {
             </p>
           </section>
 
-          <section>
+          <section id="priv-3">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-[#2bbda3]" /> 3. Data Protection &amp; Device Sanitization
             </h2>
@@ -62,7 +79,7 @@ export default function PrivacyPolicyPage() {
             </p>
           </section>
 
-          <section>
+          <section id="priv-4">
             <h2 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <Bell className="w-5 h-5 text-[#2bbda3]" /> 4. Your Rights
             </h2>
