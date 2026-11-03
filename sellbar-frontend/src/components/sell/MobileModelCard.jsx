@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 export default function MobileModelCard({ model }) {
   const brandSlug = model.brandSlug.toLowerCase();
@@ -17,10 +18,14 @@ export default function MobileModelCard({ model }) {
       {/* Top Banner & Device Image */}
       <div className="relative aspect-[4/3] bg-gradient-to-b from-slate-50 to-slate-100 flex items-center justify-center p-6 overflow-hidden">
         <img
-          src={model.image}
+          src={getProductImageUrl(model, 'mobile')}
           alt={model.name}
           className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = getCategoryFallbackImage('mobile');
+          }}
         />
 
         {/* Brand Tag */}

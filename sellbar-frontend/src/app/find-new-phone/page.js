@@ -15,6 +15,7 @@ import {
   Sparkles,
   Scale
 } from "lucide-react";
+import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
 
 const PHONES_DATABASE = [
   {
@@ -31,6 +32,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.8,
     performanceRating: 9.4,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "ip-14",
@@ -46,6 +48,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.7,
     performanceRating: 9.1,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1663499482523-1c0c1bae4ce1?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "ip-13",
@@ -61,6 +64,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.6,
     performanceRating: 8.9,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "s24-ultra",
@@ -76,6 +80,7 @@ const PHONES_DATABASE = [
     batteryRating: 9.5,
     performanceRating: 9.8,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "s23",
@@ -91,6 +96,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.5,
     performanceRating: 9.3,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "op-12",
@@ -106,6 +112,7 @@ const PHONES_DATABASE = [
     batteryRating: 9.7,
     performanceRating: 9.6,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "op-11r",
@@ -121,6 +128,7 @@ const PHONES_DATABASE = [
     batteryRating: 9.3,
     performanceRating: 9.2,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "pixel-8",
@@ -136,6 +144,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.4,
     performanceRating: 8.8,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "pixel-7a",
@@ -151,6 +160,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.2,
     performanceRating: 8.6,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02560?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "redmi-note-13-pro",
@@ -166,6 +176,7 @@ const PHONES_DATABASE = [
     batteryRating: 9.2,
     performanceRating: 8.7,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: "moto-edge-40",
@@ -181,6 +192,7 @@ const PHONES_DATABASE = [
     batteryRating: 8.6,
     performanceRating: 8.3,
     link: "/buy-refurbished",
+    image: "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?w=600&auto=format&fit=crop&q=80",
   }
 ];
 
@@ -367,6 +379,19 @@ export default function FindNewPhonePage() {
                         5G Ready
                       </span>
                     )}
+                  </div>
+
+                  <div className="relative aspect-[4/3] w-full bg-[#f8fafc] rounded-2xl p-4 my-2 overflow-hidden flex items-center justify-center border border-slate-100">
+                    <img
+                      src={getProductImageUrl(phone, 'mobile')}
+                      alt={phone.name}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage('mobile');
+                      }}
+                      className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
 
                   <h3 className="text-lg font-bold text-gray-900">{phone.name}</h3>

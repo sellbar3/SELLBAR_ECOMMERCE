@@ -17,6 +17,7 @@ import {
   Check,
 } from 'lucide-react';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 const RENTAL_PLANS = [
   {
@@ -120,8 +121,16 @@ export default function RentPs5Page() {
             {/* Quick Hero Visual Card */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 text-center space-y-4 max-w-sm w-full shadow-2xl">
-                <div className="w-24 h-24 mx-auto bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Gamepad2 className="w-12 h-12 text-white" />
+                <div className="w-28 h-28 mx-auto bg-white/20 rounded-2xl flex items-center justify-center p-2 shadow-lg backdrop-blur-md overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80"
+                    alt="Sony PlayStation 5 Console"
+                    className="max-h-full max-w-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getCategoryFallbackImage('gaming-consoles');
+                    }}
+                  />
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-white">Sony PlayStation 5 Console</h3>
@@ -172,6 +181,18 @@ export default function RentPs5Page() {
                   <div>
                     <h3 className="text-lg font-black text-gray-900">{plan.name}</h3>
                     <p className="text-xs text-gray-500">{plan.duration}</p>
+                  </div>
+
+                  <div className="relative aspect-[16/9] w-full bg-slate-50 rounded-2xl p-3 overflow-hidden flex items-center justify-center border border-slate-100">
+                    <img
+                      src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80"
+                      alt={plan.name}
+                      className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage('gaming-consoles');
+                      }}
+                    />
                   </div>
 
                   <div className="flex items-baseline gap-1">

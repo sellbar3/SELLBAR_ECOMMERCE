@@ -14,6 +14,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { money } from '@/lib/panel';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 export default function CustomerSellOrdersHistoryPage() {
   const [orders, setOrders] = useState([]);
@@ -85,8 +86,16 @@ export default function CustomerSellOrdersHistoryPage() {
                 className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-[#13b59b] flex items-center justify-center shrink-0">
-                    <Smartphone size={28} />
+                  <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 p-1.5 overflow-hidden">
+                    <img
+                      src={getProductImageUrl(o.device, 'mobile')}
+                      alt={o.device?.model || "Device"}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage('mobile');
+                      }}
+                      className="max-h-full max-w-full object-contain"
+                    />
                   </div>
 
                   <div>

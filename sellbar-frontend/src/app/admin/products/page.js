@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import PanelShell from "../../../components/PanelShell";
 import { money } from "../../../lib/panel";
 import { getCloudinaryUrl } from "../../../lib/cloudinary";
+import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
 
 function AdminProductsList({ session }) {
   const [products, setProducts] = useState([]);
@@ -525,10 +526,7 @@ function AdminProductsList({ session }) {
             </thead>
             <tbody>
               {filtered.map((p) => {
-                const img =
-                  p.images?.[0]?.url ||
-                  p.imageUrl ||
-                  getCloudinaryUrl("/products/iphone-14.webp");
+                const img = getProductImageUrl(p);
                 const catName =
                   typeof p.category === "object"
                     ? p.category?.name || p.category?.slug
@@ -543,6 +541,10 @@ function AdminProductsList({ session }) {
                       <img
                         src={img}
                         alt=""
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getCategoryFallbackImage(catName);
+                        }}
                         style={{
                           width: 44,
                           height: 44,

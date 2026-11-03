@@ -35,6 +35,7 @@ import {
   Package,
 } from 'lucide-react';
 import { DEVICE_CATEGORIES_CONFIG } from '@/lib/deviceAssessmentData';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 export default function UniversalDeviceSellView({ categoryKey }) {
   const config = DEVICE_CATEGORIES_CONFIG[categoryKey] || DEVICE_CATEGORIES_CONFIG['laptop'];
@@ -436,7 +437,24 @@ export default function UniversalDeviceSellView({ categoryKey }) {
               </p>
             </div>
 
-            <div className="bg-slate-50 p-5 rounded-2xl text-left text-xs space-y-2 border border-slate-200">
+            <div className="bg-slate-50 p-5 rounded-2xl text-left text-xs space-y-3 border border-slate-200">
+              <div className="flex items-center gap-3.5 pb-3 border-b border-slate-200">
+                <div className="w-14 h-14 bg-white rounded-xl p-1.5 border border-slate-200 shrink-0 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={getProductImageUrl(selectedModel, categoryKey)}
+                    alt={selectedModel?.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getCategoryFallbackImage(categoryKey);
+                    }}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">{selectedModel?.name}</div>
+                  <div className="text-[11px] text-teal-700 font-semibold">Doorstep Pickup Scheduled</div>
+                </div>
+              </div>
               <div className="flex justify-between font-bold">
                 <span className="text-slate-500">Device:</span>
                 <span className="text-slate-900">{selectedModel?.name}</span>
@@ -503,12 +521,25 @@ export default function UniversalDeviceSellView({ categoryKey }) {
               </button>
             </div>
 
-            <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200 flex items-center justify-between">
-              <div>
-                <div className="text-xs font-bold text-slate-700">{selectedModel.name}</div>
-                <div className="text-[11px] text-teal-800 font-semibold">100% Guaranteed Doorstep Payout</div>
+            <div className="p-4 rounded-2xl bg-teal-50/70 border border-teal-200 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-14 h-14 bg-white rounded-xl p-1.5 border border-teal-100 shrink-0 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={getProductImageUrl(selectedModel, categoryKey)}
+                    alt={selectedModel.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getCategoryFallbackImage(categoryKey);
+                    }}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-800">{selectedModel.name}</div>
+                  <div className="text-[11px] text-teal-800 font-semibold">100% Guaranteed Doorstep Payout</div>
+                </div>
               </div>
-              <div className="text-xl font-black text-[#13b59b]">
+              <div className="text-xl font-black text-[#13b59b] shrink-0">
                 ₹{calculatedPrice.toLocaleString('en-IN')}
               </div>
             </div>
@@ -616,17 +647,30 @@ export default function UniversalDeviceSellView({ categoryKey }) {
         {stepIndex === 1 && selectedModel && (
           <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-200">
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div>
-                <span className="text-[10px] font-black uppercase text-[#13b59b] tracking-wider">Step 2: Condition Assessment</span>
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-                  {selectedModel.name}
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  Brand: <strong className="text-slate-800">{selectedModel.brand}</strong> • Base Value: <strong className="text-slate-800">₹{selectedModel.basePrice.toLocaleString('en-IN')}</strong>
-                </p>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 border border-slate-200 rounded-2xl p-2 shrink-0 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={getProductImageUrl(selectedModel, categoryKey)}
+                    alt={selectedModel.name}
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getCategoryFallbackImage(categoryKey);
+                    }}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-[#13b59b] tracking-wider">Step 2: Condition Assessment</span>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
+                    {selectedModel.name}
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Brand: <strong className="text-slate-800">{selectedModel.brand}</strong> • Base Value: <strong className="text-slate-800">₹{selectedModel.basePrice.toLocaleString('en-IN')}</strong>
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center sm:text-right w-full sm:w-auto">
+              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center sm:text-right w-full sm:w-auto shrink-0">
                 <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Current Estimated Valuation</span>
                 <div className="text-2xl sm:text-3xl font-black text-emerald-700 mt-0.5">
                   ₹{calculatedPrice.toLocaleString('en-IN')}
@@ -887,7 +931,20 @@ export default function UniversalDeviceSellView({ categoryKey }) {
                           <h3 className="font-bold text-sm text-slate-900 group-hover:text-[#13b59b] transition line-clamp-2 leading-snug">
                             {m.name}
                           </h3>
-                          {m.specs && <p className="text-[11px] text-slate-400 mt-1.5">{m.specs}</p>}
+                          {m.specs && <p className="text-[11px] text-slate-400 mt-1">{m.specs}</p>}
+
+                          <div className="relative aspect-[4/3] w-full bg-[#f8fafc] rounded-2xl p-4 my-3 overflow-hidden flex items-center justify-center border border-slate-100">
+                            <img
+                              src={getProductImageUrl(m, categoryKey)}
+                              alt={m.name}
+                              loading="lazy"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = getCategoryFallbackImage(categoryKey);
+                              }}
+                              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
                         </div>
 
                         <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">

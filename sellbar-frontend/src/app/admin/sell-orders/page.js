@@ -21,6 +21,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { money, getPanelSession } from '@/lib/panel';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 const STATUS_OPTIONS = [
   'All',
@@ -228,10 +229,25 @@ export default function AdminSellOrdersPage() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-slate-900 block">{o.device?.model}</span>
-                        <span className="text-[11px] text-slate-500">
-                          {o.device?.variant?.ram} / {o.device?.variant?.storage}
-                        </span>
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center p-1 shrink-0 overflow-hidden">
+                            <img
+                              src={getProductImageUrl(o.device, 'mobile')}
+                              alt={o.device?.model || "Device"}
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = getCategoryFallbackImage('mobile');
+                              }}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-900 block">{o.device?.model}</span>
+                            <span className="text-[11px] text-slate-500">
+                              {o.device?.variant?.ram} / {o.device?.variant?.storage}
+                            </span>
+                          </div>
+                        </div>
                       </td>
 
                       <td className="py-3.5 px-4">

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getSession } from "../../lib/auth";
 import { apiRequest } from "../../lib/api";
 import { getMyOrders } from "../../lib/checkout";
+import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
 
 const money = (n) =>
   new Intl.NumberFormat("en-IN", {
@@ -253,9 +254,13 @@ export default function OrdersPage() {
                   key={`${item.product}-${index}`}
                   style={{ display: "flex", gap: 12, alignItems: "center", padding: "6px 0" }}
                 >
-                  {item.image ? (
+                  {getProductImageUrl(item, item.category) ? (
                     <img
-                      src={item.image}
+                      src={getProductImageUrl(item, item.category)}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage(item.category);
+                      }}
                       alt=""
                       width={48}
                       height={48}

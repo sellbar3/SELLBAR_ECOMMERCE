@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { addToCart } from '@/lib/cart';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 const SAMPLE_WISHLIST = [
   {
@@ -184,18 +185,17 @@ export default function WishlistPage() {
                     </div>
 
                     {/* Image */}
-                    <div className="relative h-44 w-full flex items-center justify-center bg-slate-50/50 rounded-xl overflow-hidden mb-4">
-                      {item.image ? (
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-16 h-16 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400">
-                          <Heart size={24} />
-                        </div>
-                      )}
+                    <div className="relative h-44 w-full flex items-center justify-center bg-slate-50/50 rounded-xl overflow-hidden mb-4 p-2">
+                      <img
+                        src={getProductImageUrl(item, item.category)}
+                        alt={item.name}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getCategoryFallbackImage(item.category);
+                        }}
+                        className="h-36 w-auto max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
                       {item.discount && (
                         <span className="absolute top-2 left-2 px-2 py-0.5 bg-rose-500 text-white rounded-md text-[10px] font-black">
                           {item.discount}

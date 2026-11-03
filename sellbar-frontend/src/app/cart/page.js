@@ -12,6 +12,7 @@ import {
   getCart,
 } from "../../lib/cart";
 import { getCloudinaryUrl } from "@/lib/cloudinary";
+import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
 import LoginModal from "@/components/LoginModal";
 
 export default function CartPage() {
@@ -135,16 +136,16 @@ export default function CartPage() {
                     className="bg-white p-5 rounded-2xl border border-gray-100 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
-                        {item.image ? (
-                          <img
-                            src={getCloudinaryUrl(item.image)}
-                            alt={item.name}
-                            className="w-full h-full object-contain p-1"
-                          />
-                        ) : (
-                          <ShoppingBag className="w-8 h-8 text-gray-300" />
-                        )}
+                      <div className="w-16 h-16 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden p-1">
+                        <img
+                          src={getProductImageUrl(item, item.category)}
+                          alt={item.name}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = getCategoryFallbackImage(item.category);
+                          }}
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                       <div>
                         <h3 className="font-bold text-sm text-gray-900 line-clamp-1">{item.name}</h3>

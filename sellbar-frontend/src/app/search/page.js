@@ -12,6 +12,7 @@ import {
   ShoppingBag,
 } from 'lucide-react';
 import { MOBILE_MODELS } from '@/lib/sellMobileData';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
@@ -124,7 +125,15 @@ function SearchPageContent() {
                   className="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm hover:shadow-md transition flex items-center justify-between group"
                 >
                   <div className="flex items-center gap-3">
-                    <img src={m.image} alt={m.name} className="w-10 h-10 object-contain" />
+                    <img
+                      src={getProductImageUrl(m, 'mobile')}
+                      alt={m.name}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage('mobile');
+                      }}
+                      className="w-10 h-10 object-contain"
+                    />
                     <div>
                       <h4 className="font-bold text-xs text-slate-900 group-hover:text-[#13b59b] line-clamp-1">
                         {m.name}
@@ -159,14 +168,23 @@ function SearchPageContent() {
           ) : products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((p) => {
-                const img = p.images?.[0]?.url || '/products/iphone-14.webp';
+                const img = getProductImageUrl(p, p.category);
                 return (
                   <div
                     key={p._id || p.id}
                     className="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm hover:shadow-xl transition flex flex-col justify-between"
                   >
-                    <div className="aspect-square bg-slate-50 rounded-2xl p-4 flex items-center justify-center mb-4">
-                      <img src={img} alt={p.name} className="h-full w-full object-contain" />
+                    <div className="aspect-square bg-slate-50 rounded-2xl p-4 flex items-center justify-center mb-4 overflow-hidden">
+                      <img
+                        src={img}
+                        alt={p.name}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getCategoryFallbackImage(p.category);
+                        }}
+                        className="h-full w-full object-contain"
+                      />
                     </div>
 
                     <div>

@@ -22,6 +22,7 @@ import {
   Check,
 } from 'lucide-react';
 import { getMobileModelBySlug, MOBILE_MODELS } from '@/lib/sellMobileData';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 import ConditionAssessmentWizard from '@/components/sell/ConditionAssessmentWizard';
 import SellBookingModal from '@/components/sell/SellBookingModal';
 
@@ -133,9 +134,13 @@ export default function IndividualSellMobilePage() {
             <div className="md:col-span-4 flex justify-center">
               <div className="relative w-64 h-64 sm:w-72 sm:h-72 bg-gradient-to-b from-slate-50 to-slate-100 rounded-3xl p-6 border border-slate-200/80 flex items-center justify-center shadow-inner">
                 <img
-                  src={model.image}
+                  src={getProductImageUrl(model, 'mobile')}
                   alt={model.name}
                   className="max-h-full max-w-full object-contain drop-shadow-md"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = getCategoryFallbackImage('mobile');
+                  }}
                 />
                 <span className="absolute top-4 left-4 bg-white/95 backdrop-blur text-slate-800 text-[11px] font-black px-2.5 py-0.5 rounded-full border border-slate-200 uppercase">
                   {model.brand}

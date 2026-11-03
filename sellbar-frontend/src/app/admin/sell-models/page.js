@@ -18,6 +18,7 @@ import {
   Tag
 } from 'lucide-react';
 import { MOBILE_MODELS } from '@/lib/sellMobileData';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 export default function AdminSellModelsPage() {
   const [models, setModels] = useState(MOBILE_MODELS);
@@ -216,12 +217,16 @@ export default function AdminSellModelsPage() {
                   <tr key={model.id} className="hover:bg-slate-50/60 transition">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center p-1 border border-slate-200 shrink-0">
-                          {model.image ? (
-                            <img src={model.image} alt={model.name} className="h-full w-auto object-contain" />
-                          ) : (
-                            <Smartphone size={16} className="text-slate-400" />
-                          )}
+                        <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center p-1 border border-slate-200 shrink-0 overflow-hidden">
+                          <img
+                            src={getProductImageUrl(model, 'mobile')}
+                            alt={model.name}
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = getCategoryFallbackImage('mobile');
+                            }}
+                            className="h-full w-auto object-contain"
+                          />
                         </div>
                         <div>
                           <div className="font-bold text-slate-900 text-sm">{model.name}</div>

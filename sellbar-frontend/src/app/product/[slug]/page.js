@@ -42,6 +42,7 @@ import {
 import { addToCart, getLocalCart } from "@/lib/cart";
 import { fetchProductByIdOrSlug } from "@/lib/productApi";
 import { getCloudinaryUrl } from "@/lib/cloudinary";
+import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
 
 const RECENTLY_VIEWED_KEY = "sellbar_recently_viewed";
 
@@ -176,11 +177,14 @@ function ProductDetailContent() {
 
   // Gallery image list with fallbacks
   const images = useMemo(() => {
-    if (!productData) return [getCloudinaryUrl("/products/iphone-14.webp")];
+    if (!productData) return [getCategoryFallbackImage('all')];
     if (productData.images && productData.images.length > 0) {
-      return productData.images.map((img) => getCloudinaryUrl(img.url));
+      return productData.images.map((img) => {
+        const raw = typeof img === 'string' ? img : img.url;
+        return raw ? getCloudinaryUrl(raw) : getProductImageUrl(productData, productData.category);
+      });
     }
-    return [getCloudinaryUrl("/products/iphone-14.webp")];
+    return [getProductImageUrl(productData, productData.category)];
   }, [productData]);
 
   // Active image
@@ -445,6 +449,10 @@ function ProductDetailContent() {
                 src={currentImage}
                 alt={`${productData.name} - ${selectedVariant?.name || "Refurbished Electronics"}`}
                 className="max-h-full max-w-full object-contain transition-transform duration-200"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getCategoryFallbackImage(productData?.category?.slug || productData?.category);
+                }}
                 style={
                   zoomPos.show
                     ? {
@@ -484,6 +492,10 @@ function ProductDetailContent() {
                       src={img}
                       alt={`Product view ${idx + 1}`}
                       className="max-h-full max-w-full object-contain"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage(productData?.category?.slug || productData?.category);
+                      }}
                     />
                     <span className="absolute bottom-1 right-1 text-[8px] font-mono text-gray-400 bg-white/80 px-1 rounded">
                       #{idx + 1}
@@ -1559,8 +1571,7 @@ function ProductDetailContent() {
 
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               {relatedProducts.map((rel) => {
-                const img =
-                  rel.images?.[0]?.url || getCloudinaryUrl("/products/iphone-14.webp");
+                const img = getProductImageUrl(rel, rel.category);
                 const relCompare = rel.compareAtPrice || Math.round(rel.price * 1.4);
                 const relOff = Math.round(((relCompare - rel.price) / relCompare) * 100);
 
@@ -1577,8 +1588,12 @@ function ProductDetailContent() {
                           </span>
                         )}
                         <img
-                          src={getCloudinaryUrl(img)}
+                          src={img}
                           alt={rel.name}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = getCategoryFallbackImage(rel.category);
+                          }}
                           className="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300"
                         />
                       </div>
@@ -1628,7 +1643,7 @@ function ProductDetailContent() {
                             price: rel.price,
                             compareAtPrice: relCompare,
                             quantity: 1,
-                            image: getCloudinaryUrl(img),
+                            image: img,
                           })
                         }
                         className="w-full mt-2.5 py-2 rounded-xl bg-teal-50 hover:bg-[#2bbda3] hover:text-white text-[#2bbda3] font-bold text-[11px] transition flex items-center justify-center gap-1.5 cursor-pointer"
@@ -1656,8 +1671,12 @@ function ProductDetailContent() {
                 >
                   <div className="aspect-square w-full bg-[#f8fafc] rounded-lg p-2 flex items-center justify-center mb-2 overflow-hidden">
                     <img
-                      src={getCloudinaryUrl(item.image)}
+                      src={getProductImageUrl(item, item.category)}
                       alt={item.name}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = getCategoryFallbackImage(item.category);
+                      }}
                       className="max-h-full max-w-full object-contain group-hover:scale-105 transition"
                     />
                   </div>

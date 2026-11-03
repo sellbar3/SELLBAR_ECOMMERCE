@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import PanelShell from "../../../components/PanelShell";
 import { fmtDate, money, panelRequest, pickList } from "../../../lib/panel";
+import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
 
 const STATUSES = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
 
@@ -61,7 +62,18 @@ function Orders({ session }) {
           </p>
           <ul style={{ margin: "0 0 10px", paddingLeft: 18, fontSize: 13 }}>
             {(o.items || []).map((it, i) => (
-              <li key={i}>{it.productName} × {it.quantity} — {money(it.lineTotal)}</li>
+              <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, margin: "6px 0" }}>
+                <img
+                  src={getProductImageUrl(it, it.category)}
+                  alt=""
+                  style={{ width: 28, height: 28, objectFit: "contain", borderRadius: 4, border: "1px solid #e2e8f0", background: "#f8fafc" }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = getCategoryFallbackImage(it.category);
+                  }}
+                />
+                <span>{it.productName} × {it.quantity} — {money(it.lineTotal)}</span>
+              </li>
             ))}
           </ul>
           <div className="pn-row">

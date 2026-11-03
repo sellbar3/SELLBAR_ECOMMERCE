@@ -30,6 +30,7 @@ import {
 import { fetchProducts, fetchCategories } from '@/lib/productApi';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
 import { addToCart } from '@/lib/cart';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 const CONDITION_GRADES = [
   { id: 'Flawless', name: 'Flawless (Grade A+)', desc: 'Like brand new, zero marks, 90%+ battery' },
@@ -345,7 +346,7 @@ export default function EcommerceCatalogView({
       name: product.name,
       price: Number(product.price) || 0,
       compareAtPrice: Number(product.compareAtPrice) || Math.round(Number(product.price) * 1.35),
-      image: product.images?.[0]?.url || getCloudinaryUrl('/products/iphone-14.webp'),
+      image: getProductImageUrl(product, categoryKey),
       conditionGrade: product.condition || 'Flawless',
       color: product.color || 'Default',
       storage: product.storage || '128GB',
@@ -1024,7 +1025,7 @@ export default function EcommerceCatalogView({
                   const emi = Math.round(price / 12);
                   const isAdded = addedItem === id;
                   const isWished = wishlist.includes(id);
-                  const imgUrl = p.images?.[0]?.url || getCloudinaryUrl('/products/iphone-14.webp');
+                  const imgUrl = getProductImageUrl(p, categoryKey);
                   const condition = p.condition || 'Flawless';
                   const brand = typeof p.brand === 'object' ? p.brand?.name : p.brand || '';
 
@@ -1070,9 +1071,13 @@ export default function EcommerceCatalogView({
                           </span>
                         )}
                         <img
-                          src={getCloudinaryUrl(imgUrl)}
+                          src={imgUrl}
                           alt={p.name}
                           loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = getCategoryFallbackImage(categoryKey);
+                          }}
                           className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
                         />
                       </Link>
@@ -1173,7 +1178,7 @@ export default function EcommerceCatalogView({
                   const emi = Math.round(price / 12);
                   const isAdded = addedItem === id;
                   const isWished = wishlist.includes(id);
-                  const imgUrl = p.images?.[0]?.url || getCloudinaryUrl('/products/iphone-14.webp');
+                  const imgUrl = getProductImageUrl(p, categoryKey);
                   const condition = p.condition || 'Flawless';
                   const brand = typeof p.brand === 'object' ? p.brand?.name : p.brand || '';
 
@@ -1192,8 +1197,13 @@ export default function EcommerceCatalogView({
                           </span>
                         )}
                         <img
-                          src={getCloudinaryUrl(imgUrl)}
+                          src={imgUrl}
                           alt={p.name}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = getCategoryFallbackImage(categoryKey);
+                          }}
                           className="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-300"
                         />
                       </Link>
