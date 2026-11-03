@@ -50,6 +50,8 @@ export function addToCart(product, quantity = 1) {
   return items;
 }
 
+export const addToLocalCart = addToCart;
+
 export function removeFromLocalCart(productId) {
   const items = getLocalCart().filter(
     (item) => (item.id || item._id || item.slug) !== productId
