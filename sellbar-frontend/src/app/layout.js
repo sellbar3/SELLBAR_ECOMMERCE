@@ -3,6 +3,12 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import AppShellWrapper from '@/components/AppShellWrapper';
 const inter = Inter({ subsets: ['latin'] });
+export const viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    themeColor: '#13b59b',
+};
 export const metadata = {
     title: 'Sellbar.in - India\'s Trusted Refurbished Electronics & Resale Marketplace',
     description: 'Turn old tech into instant money with free doorstep pickup. Buy certified refurbished smartphones, MacBooks, and laptops with 32-point inspection and 12 months warranty.',

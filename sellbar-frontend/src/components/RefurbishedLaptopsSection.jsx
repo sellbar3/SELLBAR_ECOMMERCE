@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchProducts } from '@/lib/productApi';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 export default function RefurbishedLaptopsSection() {
   const scrollRef = useRef(null);
@@ -111,7 +112,7 @@ export default function RefurbishedLaptopsSection() {
             ))
           ) : (
             laptops.map((laptop) => {
-              const imageUrl = laptop.images?.[0]?.url || getCloudinaryUrl("/cashify/laptop-dell-3410-i5.png");
+              const imageUrl = getProductImageUrl(laptop, 'laptop');
               const discountAmount = laptop.compareAtPrice && laptop.compareAtPrice > laptop.price
                 ? laptop.compareAtPrice - laptop.price
                 : null;
@@ -141,6 +142,10 @@ export default function RefurbishedLaptopsSection() {
                         src={imageUrl}
                         alt={laptop.name}
                         loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getCategoryFallbackImage('laptop');
+                        }}
                         className="max-h-full max-w-full object-contain transition-transform duration-200 hover:scale-105"
                       />
                     </div>

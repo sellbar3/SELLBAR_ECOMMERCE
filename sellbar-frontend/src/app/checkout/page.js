@@ -9,6 +9,7 @@ import { getSession } from "@/lib/auth";
 import { getLocalCart } from "@/lib/cart";
 import LoginModal from "@/components/LoginModal";
 import { Button } from "@/components/ui/button";
+import { getProductImageUrl } from "@/lib/productImageHelper";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -56,9 +57,7 @@ export default function CheckoutPage() {
         name: item.name || "Refurbished Tech",
         price: Number(item.price) || 0,
         originalPrice: Math.round((Number(item.price) || 0) * 1.5),
-        image:
-          item.image ||
-          "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&q=80",
+        image: getProductImageUrl(item, item.category),
         quantity: item.quantity || 1,
       }));
       setCartItems(formatted);

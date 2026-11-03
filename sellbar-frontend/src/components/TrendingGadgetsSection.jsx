@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Star, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { fetchProducts } from '@/lib/productApi';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 const TABS = [
   { id: 'all', label: 'All Gadgets' },
@@ -160,10 +161,7 @@ export default function TrendingGadgetsSection() {
             </div>
           ) : (
             products.map((item) => {
-              const imageUrl =
-                item.images?.[0]?.url ||
-                item.imageUrl ||
-                getCloudinaryUrl('/products/iphone-14.webp');
+              const imageUrl = getProductImageUrl(item, activeTab !== 'all' ? activeTab : item.category);
               const discountAmount =
                 item.compareAtPrice && item.compareAtPrice > item.price
                   ? item.compareAtPrice - item.price
@@ -197,6 +195,10 @@ export default function TrendingGadgetsSection() {
                         src={imageUrl}
                         alt={item.name}
                         loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getCategoryFallbackImage(activeTab !== 'all' ? activeTab : item.category);
+                        }}
                         className="max-h-full max-w-full object-contain transition-transform duration-200 hover:scale-105"
                       />
                     </div>

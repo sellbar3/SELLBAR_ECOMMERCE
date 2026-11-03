@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchProducts } from '@/lib/productApi';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
+import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
 
 export default function RefurbishedPhonesSection() {
   const scrollRef = useRef(null);
@@ -111,7 +112,7 @@ export default function RefurbishedPhonesSection() {
             ))
           ) : (
             phones.map((phone) => {
-              const imageUrl = phone.images?.[0]?.url || getCloudinaryUrl("/products/iphone-14.webp");
+              const imageUrl = getProductImageUrl(phone, 'mobile-phones');
               const discountAmount = phone.compareAtPrice && phone.compareAtPrice > phone.price
                 ? phone.compareAtPrice - phone.price
                 : null;
@@ -147,6 +148,10 @@ export default function RefurbishedPhonesSection() {
                         src={imageUrl}
                         alt={phone.name}
                         loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getCategoryFallbackImage('mobile-phones');
+                        }}
                         className="max-h-full max-w-full object-contain transition-transform duration-200 hover:scale-105"
                       />
                     </div>
