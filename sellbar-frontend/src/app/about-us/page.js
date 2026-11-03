@@ -73,7 +73,7 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: "Ashish Kumar",
+    name: "Rahul",
     role: "Founder & Chief Executive Officer",
     bio: "Pioneering organized recommerce and high-standard refurbishment across Tier-2 and Tier-3 India."
   },
