@@ -63,6 +63,7 @@ export const ADMIN_SIDEBAR_MODULES = [
     basePath: "/admin/orders",
     items: [
       { label: "All Orders", href: "/admin/orders" },
+      { label: "Phone Trade-In / Sell Orders", href: "/admin/sell-orders" },
       { label: "New Orders", href: "/admin/orders?status=new" },
       { label: "Pending Orders", href: "/admin/orders?status=pending" },
       { label: "Confirmed Orders", href: "/admin/orders?status=confirmed" },
