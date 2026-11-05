@@ -33,7 +33,7 @@ export default function BuyRefurbishedMobilePhonesClient({ initialProducts, }) {
     const toggleWishlist = (id) => {
         setWishlist((prev) => prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]);
     };
-    // Brands list matching Cashify's exact top brands
+    // Top Brands on Sellbar
     const brands = [
         {
             name: 'All Brands',
@@ -108,7 +108,7 @@ export default function BuyRefurbishedMobilePhonesClient({ initialProducts, }) {
             count: 4,
         },
     ];
-    // Curated Flash Sale & Bestselling Refurbished Mobiles with Cashify images & verified prices
+    // Curated Flash Sale & Bestselling Refurbished Mobiles with verified prices
     const catalogProducts = useMemo(() => {
         if (initialProducts && initialProducts.length > 0) {
             return initialProducts.map((p) => {
@@ -506,7 +506,7 @@ export default function BuyRefurbishedMobilePhonesClient({ initialProducts, }) {
             comment: 'Bought an iPhone 12 for my daughter under ₹25,000. Super clean screen, battery backup is solid and delivery was completed in 48 hours. Genuine accessories included.',
         },
     ];
-    // Exact FAQs from live Cashify page
+    // Exact FAQs for Sellbar Refurbished Mobiles
     const faqs = [
         {
             q: 'Why should I buy refurbished phones instead of new ones?',

@@ -49,7 +49,7 @@ const TRENDING_SEARCHES = [
 ];
 
 // =========================================================================
-// 1. ALL DROPDOWN CATEGORIES (Exact Structure from Cashify Reference Image)
+// 1. ALL DROPDOWN CATEGORIES (Exact Structure from Sellbar Standard)
 // =========================================================================
 const ALL_SUB_ITEMS = [
   // SELL NESTED ITEMS
@@ -743,13 +743,13 @@ export default function Navbar() {
         </div>
 
         {/* ========================================================= */}
-        {/* 2. SECONDARY CATEGORY BAR (Cashify 8 Menu Items With ∨)    */}
+        {/* 2. SECONDARY CATEGORY BAR (Sellbar 8 Menu Items With ∨)    */}
         {/* ========================================================= */}
         <div className="border-t border-gray-200 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav ref={navBarRef} className="hidden lg:flex items-center justify-between text-sm py-2.5">
               
-              {/* ITEM 1: All ∨ (Exact Cashify Mega-Menu from Reference Images) */}
+              {/* ITEM 1: All ∨ (Exact Sellbar Mega-Menu Architecture) */}
               <div className="relative" onMouseEnter={() => handleDropdownEnter('all')} onMouseLeave={handleDropdownLeave}>
                 <button
                   type="button"
@@ -2214,7 +2214,7 @@ export default function Navbar() {
       )}
 
       {/* ========================================================= */}
-      {/* 4. CASHIFY LOGIN / SIGNUP MODAL                           */}
+      {/* 4. SELLBAR LOGIN / SIGNUP MODAL                           */}
       {/* ========================================================= */}
       <LoginModal
         isOpen={loginModalOpen}

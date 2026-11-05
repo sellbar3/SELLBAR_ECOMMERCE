@@ -115,7 +115,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }) {
       {/* Modal Dialog Card */}
       <div className="bg-white rounded-3xl w-full max-w-190 shadow-2xl overflow-hidden flex flex-col md:flex-row relative animate-in zoom-in-95 duration-200 min-h-115" onClick={(e) => e.stopPropagation()}>
         {/* ========================================================= */}
-        {/* LEFT COLUMN: Cashify Mint-Teal Brand Banner with Characters */}
+        {/* LEFT COLUMN: Sellbar Mint-Teal Brand Banner with Characters */}
         {/* ========================================================= */}
         <div className="w-full md:w-[42%] bg-[#2bbb9e] text-white p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden select-none shrink-0">
           

@@ -75,7 +75,7 @@ export default function HomeFaq() {
         </h2>
       </div>
 
-      {/* Category Tabs (Exact Cashify Tabs) */}
+      {/* Category Tabs (Sellbar Tabs) */}
       <div className="flex items-center justify-center gap-2 mb-6">
         <div className="inline-flex p-1 bg-gray-100 rounded-2xl border border-gray-200">
           {tabs.map((tab) => (<button key={tab} onClick={() => {

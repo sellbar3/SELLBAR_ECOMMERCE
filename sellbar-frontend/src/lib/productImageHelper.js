@@ -4,8 +4,8 @@ const CATEGORY_FALLBACK_IMAGES = {
   'mobile-phones': '/products/iphone-14.webp',
   'mobile': '/products/iphone-14.webp',
   'phone': '/products/iphone-14.webp',
-  'laptop': '/cashify/laptop-macbook-pro-m3.webp',
-  'laptops': '/cashify/laptop-macbook-pro-m3.webp',
+  'laptop': '/sellbar/laptop-macbook-pro-m3.webp',
+  'laptops': '/sellbar/laptop-macbook-pro-m3.webp',
   'tablets': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
   'tablet': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80',
   'smart-watches': 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=600&q=80',
@@ -16,7 +16,7 @@ const CATEGORY_FALLBACK_IMAGES = {
   'camera': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80',
   'accessories': 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=600&q=80',
   'television': 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80',
-  'smart-speaker': '/cashify/guide-bose-speaker.webp',
+  'smart-speaker': '/sellbar/guide-bose-speaker.webp',
   'earbuds': 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=600&q=80',
   'imac': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80',
   'default': '/products/iphone-14.webp',
@@ -24,12 +24,12 @@ const CATEGORY_FALLBACK_IMAGES = {
 
 const BRAND_FALLBACK_IMAGES = {
   apple: '/products/iphone-14.webp',
-  samsung: '/cashify/phone-samsung-s24.jpg',
-  oneplus: '/cashify/phone-oneplus-12.jpg',
+  samsung: '/sellbar/phone-samsung-s24.jpg',
+  oneplus: '/sellbar/phone-oneplus-12.jpg',
   google: '/products/google-pixel-7.webp',
-  dell: '/cashify/laptop-dell-5320.png',
-  hp: '/cashify/laptop-dell-3410-i7.png',
-  lenovo: '/cashify/laptop-lenovo-thinkpad.webp',
+  dell: '/sellbar/laptop-dell-5320.png',
+  hp: '/sellbar/laptop-dell-3410-i7.png',
+  lenovo: '/sellbar/laptop-lenovo-thinkpad.webp',
   sony: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80',
 };
 

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 export default function AboutClient() {
-    // Stepper / History data matching Cashify exactly
+    // Stepper / History data for Sellbar
     const historyData = [
         {
             year: '2022',
@@ -69,7 +69,7 @@ export default function AboutClient() {
             </p>
           </div>
 
-          {/* Right Image Column (Cashify Hero Recycling Girl with Bag) */}
+          {/* Right Image Column (Sellbar Hero Recycling Girl with Bag) */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
             <div className="relative max-w-md w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -105,7 +105,7 @@ export default function AboutClient() {
               <p>By redefining what we choose to do with it</p>
             </div>
 
-            {/* Circular icon graphic matching Cashify */}
+            {/* Circular icon graphic for Sellbar */}
             <div className="pt-4 flex justify-end">
               <div className="w-20 h-20 rounded-full border border-gray-200 flex items-center justify-center p-3 opacity-80">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -186,7 +186,7 @@ export default function AboutClient() {
           </p>
         </div>
 
-        {/* Bottom Black Strip with 3 Impact Numbers and Cashify 3D Visuals */}
+        {/* Bottom Black Strip with 3 Impact Numbers and Sellbar 3D Visuals */}
         <div className="bg-black text-white py-16 px-4 sm:px-8">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center items-start">
             {/* Card 1: Water */}
@@ -253,7 +253,7 @@ export default function AboutClient() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 6. SECTION: OUR HISTORY (Horizontal Stepper Line matching Cashify)        */}
+      {/* 6. SECTION: OUR HISTORY (Horizontal Stepper Line for Sellbar)        */}
       {/* ========================================================================= */}
       <section className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-8 text-center space-y-12">
         <div className="space-y-3 max-w-3xl mx-auto">
@@ -490,62 +490,58 @@ export default function AboutClient() {
           </p>
         </div>
 
-        {/* 4 People Columns matching Cashify with Real Portraits */}
+        {/* 4 People Columns with Sellbar Leadership Portraits */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
-          {/* Person 1: Mandeep Manocha */}
+          {/* Person 1: Rahul */}
           <div className="flex flex-col space-y-3">
-            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://s3ng.cashify.in/builder/23a74583d4e84a20afac32f2079003e8.png" alt="Mandeep Manocha" className="w-full h-full object-contain"/>
+            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-emerald-50 flex items-center justify-center border border-emerald-100">
+              <span className="text-4xl font-black text-[#13b59b]">R</span>
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-900">
-                <span className="text-[#42c8b7] font-black text-2xl">M</span>andeep Manocha
+                <span className="text-[#42c8b7] font-black text-2xl">R</span>ahul
               </h3>
-              <p className="text-xs text-gray-500 font-medium pt-0.5">Co-Founder, CEO</p>
+              <p className="text-xs text-gray-500 font-medium pt-0.5">Founder &amp; Chief Executive Officer</p>
             </div>
           </div>
 
-          {/* Person 2: Amit Sethi */}
+          {/* Person 2: Dr. Sumit Sen */}
           <div className="flex flex-col space-y-3">
-            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://s3ng.cashify.in/builder/a9b4256d77c94feeb81bf622699c2658.png" alt="Amit Sethi" className="w-full h-full object-contain"/>
+            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-teal-50 flex items-center justify-center border border-teal-100">
+              <span className="text-4xl font-black text-[#13b59b]">SS</span>
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-900">
-                <span className="text-[#42c8b7] font-black text-2xl">A</span>mit Sethi
+                <span className="text-[#42c8b7] font-black text-2xl">D</span>r. Sumit Sen
               </h3>
-              <p className="text-xs text-gray-500 font-medium pt-0.5">Co-Founder</p>
+              <p className="text-xs text-gray-500 font-medium pt-0.5">Head of Hardware Diagnostics &amp; QC</p>
             </div>
           </div>
 
-          {/* Person 3: Nakul Kumar */}
+          {/* Person 3: Anand Verma */}
           <div className="flex flex-col space-y-3">
-            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://s3ng.cashify.in/builder/82283d93128944e5b4b1e13b581ffc06.png" alt="Nakul Kumar" className="w-full h-full object-contain"/>
+            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-sky-50 flex items-center justify-center border border-sky-100">
+              <span className="text-4xl font-black text-[#13b59b]">AV</span>
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-900">
-                <span className="text-[#42c8b7] font-black text-2xl">N</span>akul Kumar
+                <span className="text-[#42c8b7] font-black text-2xl">A</span>nand Verma
               </h3>
-              <p className="text-xs text-gray-500 font-medium pt-0.5">Co-Founder, Chief Marketing Officer</p>
+              <p className="text-xs text-gray-500 font-medium pt-0.5">Lead Valuation Architect</p>
             </div>
           </div>
 
-          {/* Person 4: Siddhant Dhingra */}
+          {/* Person 4: Pooja Mehta */}
           <div className="flex flex-col space-y-3">
-            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://s3ng.cashify.in/builder/6d494746821e4217a9233f7172c417ea.png" alt="Siddhant Dhingra" className="w-full h-full object-contain"/>
+            <div className="aspect-square w-full rounded-2xl overflow-hidden bg-purple-50 flex items-center justify-center border border-purple-100">
+              <span className="text-4xl font-black text-[#13b59b]">PM</span>
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-900">
-                <span className="text-[#42c8b7] font-black text-2xl">S</span>iddhant Dhingra
+                <span className="text-[#42c8b7] font-black text-2xl">P</span>ooja Mehta
               </h3>
               <p className="text-xs text-gray-500 font-medium pt-0.5">
-                Co-Founder, Chief Business Officer, Global Markets
+                Director of Customer Care &amp; Warranty
               </p>
             </div>
           </div>

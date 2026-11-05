@@ -5,14 +5,14 @@ export const DEVICE_CATEGORIES_CONFIG = {
     heroSubtitle: 'Choose your laptop brand and specs to calculate exact resale valuation with free doorstep pickup across West Champaran & Bihar.',
     brands: ['Apple', 'Dell', 'HP', 'Lenovo', 'Asus', 'Acer'],
     models: [
-      { id: 'mba-m2', brand: 'Apple', name: 'Apple MacBook Air M2 (13.6")', basePrice: 62000, specs: 'Apple M2, Liquid Retina', image: '/cashify/laptop-macbook-pro-m3.webp' },
+      { id: 'mba-m2', brand: 'Apple', name: 'Apple MacBook Air M2 (13.6")', basePrice: 62000, specs: 'Apple M2, Liquid Retina', image: '/sellbar/laptop-macbook-pro-m3.webp' },
       { id: 'mba-m1', brand: 'Apple', name: 'Apple MacBook Air M1 (13.3")', basePrice: 46000, specs: 'Apple M1 8-Core, Retina', image: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=500&q=80' },
-      { id: 'mbp-14-m2', brand: 'Apple', name: 'Apple MacBook Pro 14 M2 Pro', basePrice: 110000, specs: 'M2 Pro 10-Core, 120Hz XDR', image: '/cashify/laptop-macbook-pro-m3.webp' },
-      { id: 'dell-xps-13', brand: 'Dell', name: 'Dell XPS 13 (9310)', basePrice: 48000, specs: 'Core i7 11th Gen, FHD+', image: '/cashify/laptop-dell-5320.png' },
-      { id: 'dell-lat-5420', brand: 'Dell', name: 'Dell Latitude 5420', basePrice: 24000, specs: 'Core i5 11th Gen, Business Rugged', image: '/cashify/laptop-dell-3410-i5.png' },
-      { id: 'hp-envy-x360', brand: 'HP', name: 'HP Envy x360 2-in-1', basePrice: 35000, specs: 'Ryzen 7 5700U, Touchscreen', image: '/cashify/laptop-dell-3410-i7.png' },
-      { id: 'len-x1-carbon', brand: 'Lenovo', name: 'Lenovo ThinkPad X1 Carbon Gen 9', basePrice: 42000, specs: 'Core i7 11th Gen, Ultralight Carbon', image: '/cashify/laptop-lenovo-thinkpad.webp' },
-      { id: 'asus-zenbook-14', brand: 'Asus', name: 'Asus ZenBook 14 OLED', basePrice: 38000, specs: 'Core i5 12th Gen, 2.8K OLED', image: '/cashify/laptop-dell-5310.png' },
+      { id: 'mbp-14-m2', brand: 'Apple', name: 'Apple MacBook Pro 14 M2 Pro', basePrice: 110000, specs: 'M2 Pro 10-Core, 120Hz XDR', image: '/sellbar/laptop-macbook-pro-m3.webp' },
+      { id: 'dell-xps-13', brand: 'Dell', name: 'Dell XPS 13 (9310)', basePrice: 48000, specs: 'Core i7 11th Gen, FHD+', image: '/sellbar/laptop-dell-5320.png' },
+      { id: 'dell-lat-5420', brand: 'Dell', name: 'Dell Latitude 5420', basePrice: 24000, specs: 'Core i5 11th Gen, Business Rugged', image: '/sellbar/laptop-dell-3410-i5.png' },
+      { id: 'hp-envy-x360', brand: 'HP', name: 'HP Envy x360 2-in-1', basePrice: 35000, specs: 'Ryzen 7 5700U, Touchscreen', image: '/sellbar/laptop-dell-3410-i7.png' },
+      { id: 'len-x1-carbon', brand: 'Lenovo', name: 'Lenovo ThinkPad X1 Carbon Gen 9', basePrice: 42000, specs: 'Core i7 11th Gen, Ultralight Carbon', image: '/sellbar/laptop-lenovo-thinkpad.webp' },
+      { id: 'asus-zenbook-14', brand: 'Asus', name: 'Asus ZenBook 14 OLED', basePrice: 38000, specs: 'Core i5 12th Gen, 2.8K OLED', image: '/sellbar/laptop-dell-5310.png' },
     ],
     assessmentSteps: [
       {
@@ -335,7 +335,7 @@ export const DEVICE_CATEGORIES_CONFIG = {
       { id: 'homepod-2', brand: 'Apple', name: 'Apple HomePod (2nd Gen)', basePrice: 19000, specs: 'High-Excursion Woofer, Spatial Audio', image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=500&q=80' },
       { id: 'homepod-mini', brand: 'Apple', name: 'Apple HomePod Mini', basePrice: 6500, specs: '360-Degree Audio, Siri', image: 'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=500&q=80' },
       { id: 'echo-show-10', brand: 'Amazon', name: 'Amazon Echo Show 10 (3rd Gen)', basePrice: 14000, specs: '10.1" HD Screen with Motion', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=80' },
-      { id: 'echo-dot-5', brand: 'Amazon', name: 'Amazon Echo Dot (5th Gen)', basePrice: 2800, specs: 'Deeper Bass, Clock LED', image: '/cashify/guide-bose-speaker.webp' },
+      { id: 'echo-dot-5', brand: 'Amazon', name: 'Amazon Echo Dot (5th Gen)', basePrice: 2800, specs: 'Deeper Bass, Clock LED', image: '/sellbar/guide-bose-speaker.webp' },
     ],
     assessmentSteps: [
       {

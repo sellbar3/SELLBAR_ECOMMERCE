@@ -295,7 +295,7 @@ sellbar-frontend/
 ├── public/                           # Static assets
 │   ├── assets/3d/                    # 3D models (smartphone.glb, sneaker.glb)
 │   ├── banners/                      # Local fallbacks (all 74 backed by Cloudinary)
-│   ├── cashify/                      # Guides & article thumbnails
+│   ├── sellbar/                      # Guides & article thumbnails
 │   ├── products/                     # Product images
 │   ├── sell-icons/                   # Trade-in device category icons
 │   └── services/                     # Storefront services icons
@@ -327,7 +327,7 @@ sellbar-frontend/
 │   │   ├── HotDealsSection.jsx       # Dynamic hot deals slider
 │   │   ├── OurServicesSection.jsx    # Sellbar core services grid
 │   │   ├── SellYourOldDeviceSection.jsx # Instant cash device sale icons
-│   │   ├── CashifyGuidesSection.jsx  # Device buying guides
+│   │   ├── SellbarGuidesSection.jsx  # Device buying guides
 │   │   ├── TrendingArticlesSection.jsx # Tech news & updates
 │   │   ├── Navbar.jsx                # Responsive header with live search & cart counter
 │   │   ├── Footer.jsx                # Complete site footer with legal links
@@ -452,7 +452,7 @@ To ensure the frontend is **100% resilient** and never crashes when the develope
 
 ### Cloudinary CDN Asset Pipeline
 
-- All **74 images** inside `sellbar-frontend/public` (hero banners, service icons, sell icons, product photos, cashify thumbnails) were migrated to Cloudinary under account `dbd4anwt`.
+- All **74 images** inside `sellbar-frontend/public` (hero banners, service icons, sell icons, product photos, device guides) were migrated to Cloudinary under account `dbd4anwt`.
 - **Mapping**: Loaded via [`sellbar-frontend/src/config/cloudinary-mapping.json`](file:///d:/Sellbar%20Ecommerce/sellbar-frontend/src/config/cloudinary-mapping.json).
 - **Helper** ([`sellbar-frontend/src/lib/cloudinary.js`](file:///d:/Sellbar%20Ecommerce/sellbar-frontend/src/lib/cloudinary.js)):
   ```javascript

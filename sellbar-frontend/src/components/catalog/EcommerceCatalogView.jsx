@@ -531,7 +531,7 @@ export default function EcommerceCatalogView({
         )}
       </div>
 
-      {/* 3. Refurbished Condition Grades (Amazon / Cashify style) */}
+      {/* 3. Refurbished Condition Grades (Sellbar Certified Grades) */}
       <div className="border-b border-slate-200 pb-5">
         <button
           type="button"

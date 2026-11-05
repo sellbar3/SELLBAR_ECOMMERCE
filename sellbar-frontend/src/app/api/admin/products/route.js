@@ -134,7 +134,7 @@ export async function POST(request) {
     } else {
       const catSlug = String(category || "").toLowerCase();
       let fallbackUrl = "/products/iphone-14.webp";
-      if (catSlug.includes("laptop")) fallbackUrl = "/cashify/laptop-macbook-pro-m3.webp";
+      if (catSlug.includes("laptop")) fallbackUrl = "/sellbar/laptop-macbook-pro-m3.webp";
       else if (catSlug.includes("watch")) fallbackUrl = "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=600&q=80";
       else if (catSlug.includes("tablet")) fallbackUrl = "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80";
       else if (catSlug.includes("gaming")) fallbackUrl = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=600&q=80";

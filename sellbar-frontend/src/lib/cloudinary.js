@@ -10,7 +10,21 @@ export function getCloudinaryUrl(path) {
     return path;
   }
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  return cloudinaryMapping[cleanPath] || path;
+  if (cloudinaryMapping[cleanPath]) {
+    return cloudinaryMapping[cleanPath];
+  }
+
+  // Support both /sellbar/ and /cashify/ interchangeable lookup
+  if (cleanPath.startsWith("/sellbar/")) {
+    const cashifyVariant = cleanPath.replace(/^\/sellbar\//, "/cashify/");
+    if (cloudinaryMapping[cashifyVariant]) return cloudinaryMapping[cashifyVariant];
+  }
+  if (cleanPath.startsWith("/cashify/")) {
+    const sellbarVariant = cleanPath.replace(/^\/cashify\//, "/sellbar/");
+    if (cloudinaryMapping[sellbarVariant]) return cloudinaryMapping[sellbarVariant];
+  }
+
+  return cleanPath;
 }
 
 /**

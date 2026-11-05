@@ -29,7 +29,7 @@ const SAMPLE_WISHLIST = [
     rating: 4.8,
     reviewsCount: 342,
     conditionGrade: 'Superb',
-    image: getCloudinaryUrl('/cashify/guide-iphone13-mini.webp'),
+    image: getCloudinaryUrl('/sellbar/guide-iphone13-mini.webp'),
     inStock: true,
   },
   {
@@ -43,7 +43,7 @@ const SAMPLE_WISHLIST = [
     rating: 4.7,
     reviewsCount: 189,
     conditionGrade: 'Flawless',
-    image: getCloudinaryUrl('/cashify/phone-oneplus-12.jpg'),
+    image: getCloudinaryUrl('/sellbar/phone-oneplus-12.jpg'),
     inStock: true,
   },
   {
@@ -57,7 +57,7 @@ const SAMPLE_WISHLIST = [
     rating: 4.9,
     reviewsCount: 421,
     conditionGrade: 'Superb',
-    image: getCloudinaryUrl('/cashify/phone-s24-ultra.jpg'),
+    image: getCloudinaryUrl('/sellbar/phone-s24-ultra.jpg'),
     inStock: true,
   }
 ];

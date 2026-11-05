@@ -679,7 +679,7 @@ export async function POST(request, { params }) {
       const generated = {
         title: `${title} - Sellbar Certified Refurbished`,
         shortDescription: `Fully tested with 32-point diagnostics. Flawless cosmetic condition with genuine OEM battery and screen. Includes 12 Months Replacement Warranty.`,
-        tags: ["refurbished", "certified", "sellbar-assured", "warranty", "cashify-alternative"],
+        tags: ["refurbished", "certified", "sellbar-assured", "warranty", "best-resale"],
         seoTitle: `Buy ${title} Online at Lowest Price with Warranty | Sellbar`,
         metaDescription: `Get the best deal on certified refurbished ${title}. 100% verified, 7-day replacement, free doorstep delivery across West Champaran.`,
       };

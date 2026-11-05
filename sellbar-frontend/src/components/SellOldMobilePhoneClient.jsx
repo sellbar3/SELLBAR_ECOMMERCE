@@ -11,7 +11,7 @@ export default function SellOldMobilePhoneClient() {
     const [screenCondition, setScreenCondition] = useState('flawless');
     const [bodyCondition, setBodyCondition] = useState('like_new');
     const [activeStoryIdx, setActiveStoryIdx] = useState(0);
-    // Exact 15 Top Selling Brands matching Cashify
+    // Exact 15 Top Selling Brands on Sellbar
     const brands = [
         { name: 'Apple', slug: 'apple', logoUrl: 'https://s3ng.cashify.in/cashify/brand/img/xhdpi/2e7cdc22-5a5f.jpg', popular: true },
         { name: 'Xiaomi', slug: 'xiaomi', logoUrl: 'https://s3ng.cashify.in/cashify/brand/img/xhdpi/cb96df6e-080f.jpg', popular: true },
@@ -29,7 +29,7 @@ export default function SellOldMobilePhoneClient() {
         { name: 'POCO', slug: 'poco', logoUrl: 'https://s3ng.cashify.in/cashify/brand/img/xhdpi/fef4e5ae-6507.jpg' },
         { name: 'LG', slug: 'lg', logoUrl: 'https://s3ng.cashify.in/cashify/brand/img/xhdpi/426a8581-c30f.jpg' },
     ];
-    // Exact 10 Top Selling Mobile Phones with Cashify transparent cutouts & prices
+    // Exact 10 Top Selling Mobile Phones with transparent cutouts & prices
     const topSellingPhones = [
         {
             id: 'm-ip13-128',
@@ -157,7 +157,7 @@ export default function SellOldMobilePhoneClient() {
             date: 'Verified Order • 3 days ago',
         },
     ];
-    // Exact FAQs matching Cashify
+    // Exact FAQs for Sellbar
     const faqs = [
         {
             q: 'How do I know the price of my old phone?',
@@ -188,7 +188,7 @@ export default function SellOldMobilePhoneClient() {
             a: 'Your digital privacy is our top priority. Every device acquired by Sellbar undergoes certified, military-grade data sanitization compliant with ISO/IEC 27001 & NIST 800-88 standards at our processing hub. We issue a formal Data Destruction Certificate releasing you of all privacy risks.',
         },
     ];
-    // Editorial tech articles matching Cashify's "Be Smart. Sell Smart"
+    // Editorial tech articles for Sellbar "Be Smart. Sell Smart"
     const articles = [
         {
             title: '512GB Phones: The Sweet Spot For Resale Value In 2026',
@@ -275,7 +275,7 @@ export default function SellOldMobilePhoneClient() {
                   Sell Old Mobile Phone for <span className="text-[#13b59b]">Instant Cash</span>
                 </h1>
                 
-                {/* 3 Pills matching Cashify Hero */}
+                {/* 3 Pills for Sellbar Hero */}
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-3">
                   <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
                     <CheckCircle2 className="w-4 h-4 text-[#13b59b]"/> Maximum Value
@@ -300,7 +300,7 @@ export default function SellOldMobilePhoneClient() {
                 </div>
               </div>
 
-              {/* Brands Grid (Exact 15 brands with logos matching Cashify) */}
+              {/* Brands Grid (Top 15 brands on Sellbar) */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wider">
@@ -376,7 +376,7 @@ export default function SellOldMobilePhoneClient() {
         </div>
       </section>
 
-      {/* 3. HOW SELLBAR WORKS (3 Steps matching Cashify) */}
+      {/* 3. HOW SELLBAR WORKS (3 Steps) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
@@ -444,7 +444,7 @@ export default function SellOldMobilePhoneClient() {
         </div>
       </section>
 
-      {/* 5. TOP SELLING MOBILE PHONES (Live Pricing Grid matching Cashify) */}
+      {/* 5. TOP SELLING MOBILE PHONES (Live Pricing Grid) */}
       <section id="top-models" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
@@ -511,7 +511,7 @@ export default function SellOldMobilePhoneClient() {
           </div>)}
       </section>
 
-      {/* 6. WHY US (6 Value Pillars matching Cashify) */}
+      {/* 6. WHY US (6 Value Pillars on Sellbar) */}
       <section className="bg-white border-y border-gray-200 py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -666,7 +666,7 @@ export default function SellOldMobilePhoneClient() {
         </div>
       </section>
 
-      {/* 10. FAQS (Matching Cashify) */}
+      {/* 10. FAQS (Sellbar Customer Support) */}
       <section className="bg-white border-y border-gray-200 py-12 sm:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">

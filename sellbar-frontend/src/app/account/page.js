@@ -71,7 +71,7 @@ export default function AccountPage() {
       status: 'Delivered',
       date: '28 Oct 2026',
       warranty: '12 Months Warranty Active',
-      image: getCloudinaryUrl('/cashify/guide-iphone13-mini.webp'),
+      image: getCloudinaryUrl('/sellbar/guide-iphone13-mini.webp'),
     },
     {
       id: 'ORD-SB-74102',
@@ -81,7 +81,7 @@ export default function AccountPage() {
       status: 'Completed',
       date: '15 Oct 2026',
       paymentMethod: 'Instant UPI (@okhdfcbank)',
-      image: getCloudinaryUrl('/cashify/phone-oneplus-12.jpg'),
+      image: getCloudinaryUrl('/sellbar/phone-oneplus-12.jpg'),
     },
   ];
 

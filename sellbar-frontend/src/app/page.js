@@ -8,7 +8,7 @@ import RefurbishedPhonesSection from '@/components/RefurbishedPhonesSection';
 import RefurbishedLaptopsSection from '@/components/RefurbishedLaptopsSection';
 import TrendingGadgetsSection from '@/components/TrendingGadgetsSection';
 import ExclusiveStoresSection from '@/components/ExclusiveStoresSection';
-import CashifyGuidesSection from '@/components/CashifyGuidesSection';
+import SellbarGuidesSection from '@/components/SellbarGuidesSection';
 import TrendingArticlesSection from '@/components/TrendingArticlesSection';
 import SeoEditorialSection from '@/components/SeoEditorialSection';
 import SellYourOldDeviceSection from '@/components/SellYourOldDeviceSection';
@@ -47,7 +47,7 @@ export default function HomePage() {
   ];
   return (<div suppressHydrationWarning className="space-y-10 sm:space-y-12 pb-16 font-sans">
 
-    {/* 1. HERO SLIDER CAROUSEL (6 Real Cashify Promotional Banners) */}
+    {/* 1. HERO SLIDER CAROUSEL (6 Real Sellbar Promotional Banners) */}
     <HeroCarousel />
 
     {/* 2. OUR SERVICES (Exact 16 Inspected Mint Cards in 2 Rows) */}
@@ -56,7 +56,7 @@ export default function HomePage() {
     {/* 3. SELL YOUR OLD DEVICE NOW (Exact Match to Screenshot) */}
     <SellYourOldDeviceSection />
 
-    {/* 4. HOT DEALS (Cashify Promotional Banners) */}
+    {/* 4. HOT DEALS (Sellbar Promotional Banners) */}
     <HotDealsSection />
 
     {/* 5. BUY REFURBISHED PHONES (Exact Certified Phones with Assured Badge & Filters) */}
@@ -68,7 +68,7 @@ export default function HomePage() {
     {/* 6B. TRENDING GADGETS (Smartwatches, Tablets, Consoles & Cameras) */}
     <TrendingGadgetsSection />
 
-    {/* 7. DOORSTEP MOBILE & LAPTOP REPAIR SERVICES (Cashify 30-Min Live Fix) */}
+    {/* 7. DOORSTEP MOBILE & LAPTOP REPAIR SERVICES (Sellbar 30-Min Live Fix) */}
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-linear-to-r from-[#0d2a26] via-[#103a35] to-[#124942] rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-[#13b59b]/15 rounded-full blur-3xl pointer-events-none" />
@@ -132,8 +132,8 @@ export default function HomePage() {
     {/* 8B. BRAND PARTNERS & ECOSYSTEM SLIDER (Left to right continuous marquee) */}
     <BrandPartnersSlider />
 
-    {/* 9. BETTER FOR POCKET & BE SMART SELL SMART (Cashify's 8 Guide Cards) */}
-    <CashifyGuidesSection />
+    {/* 9. BETTER FOR POCKET & BE SMART SELL SMART (Sellbar's 8 Guide Cards) */}
+    <SellbarGuidesSection />
 
     {/* 10. HOW TO SELL IN 3 STEPS */}
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -340,10 +340,10 @@ export default function HomePage() {
       </div>
     </section>
 
-    {/* 16. FREQUENTLY ASKED QUESTIONS (3 Cashify Category Tabs) */}
+    {/* 16. FREQUENTLY ASKED QUESTIONS (3 Sellbar Category Tabs) */}
     <HomeFaq />
 
-    {/* 17. SEO EDITORIAL GUIDE SECTION (Expandable Cashify Guide) */}
+    {/* 17. SEO EDITORIAL GUIDE SECTION (Expandable Sellbar Guide) */}
     <SeoEditorialSection />
 
     {/* 18. DOWNLOAD APP & STORE HUBS BANNER */}

@@ -38,7 +38,7 @@ export default function SellCategoryView({ categorySlug, categoryName, deviceTyp
         </div>
       </div>
 
-      {/* Hero Section: Cashify Split Layout */}
+      {/* Hero Section: Sellbar Split Layout */}
       <section className="bg-white border-b border-gray-200 pt-8 pb-12 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -99,13 +99,13 @@ export default function SellCategoryView({ categorySlug, categoryName, deviceTyp
               </div>
             </div>
 
-            {/* Right Column: Cashify 3D Hero Graphic + Trust Floating Badges (5 cols) */}
+            {/* Right Column: Sellbar 3D Hero Graphic + Trust Floating Badges (5 cols) */}
             <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
               <div className="relative w-full max-w-md aspect-4/3 flex items-center justify-center">
                 {/* Mint Glow Backdrop */}
                 <div className="absolute w-72 h-72 rounded-full bg-[#13b59b]/15 blur-3xl -z-10"/>
 
-                {/* Official Cashify Phone Selling Hero Graphic */}
+                {/* Official Sellbar Phone Selling Hero Graphic */}
                 <img src="https://s3ng.cashify.in/cashify/web/1bf13dcba9414a7ebe6e7a7afdc10f41.webp" alt="Sell Old Device Online on Sellbar" className="max-h-80 w-auto object-contain drop-shadow-xl animate-float"/>
 
                 {/* Floating Card 1: Instant Cash */}
@@ -164,7 +164,7 @@ export default function SellCategoryView({ categorySlug, categoryName, deviceTyp
         </div>
       </section>
 
-      {/* Section 2: How Sellbar Works (3-Step 3D Process with Cashify 3D Assets) */}
+      {/* Section 2: How Sellbar Works (3-Step 3D Process with Sellbar Assets) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="bg-white border border-gray-200 rounded-3xl p-6 sm:p-10 shadow-sm relative overflow-hidden">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -319,7 +319,7 @@ export default function SellCategoryView({ categorySlug, categoryName, deviceTyp
           </div>)}
       </section>
 
-      {/* Section 4: Why Sell to Sellbar (6 3D Feature Cards matching Cashify) */}
+      {/* Section 4: Why Sell to Sellbar (6 3D Feature Cards) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
         <div className="bg-white border border-gray-200 rounded-3xl p-6 sm:p-10 shadow-sm space-y-8">
           <div className="text-center max-w-2xl mx-auto">

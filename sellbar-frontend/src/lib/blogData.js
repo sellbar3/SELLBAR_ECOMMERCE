@@ -24,7 +24,7 @@ export const BLOG_POSTS = [
     category: 'Selling Guide',
     author: 'Aman Verma',
     authorRole: 'Hardware Diagnostic Lead',
-    tags: ['iPhone', 'Sell Phone', 'Resale Tips', 'Cashify Alternative'],
+    tags: ['iPhone', 'Sell Phone', 'Resale Tips', 'Sellbar Resale'],
   },
   {
     slug: 'refurbished-vs-used-vs-second-hand-guide',

@@ -101,7 +101,7 @@ async function seed() {
       sku: "OPP-RENO15-PRO",
       description: "Sellbar Certified OPPO Reno15 Pro 5G with 12GB RAM, 256GB Storage. Features flagship Sony portrait cameras, 80W SuperVOOC fast charging, and vibrant 120Hz curved AMOLED display. Fully inspected with 12 months comprehensive warranty.",
       images: [
-        { url: getCloudinary("/cashify/phone-oppo-reno15.jpg"), publicId: "sellbar/cashify/phone-oppo-reno15", alt: "OPPO Reno15 Pro 5G" },
+        { url: getCloudinary("/sellbar/phone-oppo-reno15.jpg"), publicId: "sellbar/cashify/phone-oppo-reno15", alt: "OPPO Reno15 Pro 5G" },
       ],
       rating: 4.8,
       reviewsCount: 184,
@@ -129,7 +129,7 @@ async function seed() {
       sku: "SAM-S21-ULTRA",
       description: "Certified Refurbished Samsung Galaxy S21 Ultra 5G. 108MP Quad Camera, 100x Space Zoom, Dynamic AMOLED 2X 120Hz display with S-Pen support. Inspected and certified by Sellbar technicians.",
       images: [
-        { url: getCloudinary("/cashify/phone-samsung-s21.jpg"), publicId: "sellbar/cashify/phone-samsung-s21", alt: "Samsung Galaxy S21 Ultra" },
+        { url: getCloudinary("/sellbar/phone-samsung-s21.jpg"), publicId: "sellbar/cashify/phone-samsung-s21", alt: "Samsung Galaxy S21 Ultra" },
       ],
       rating: 4.7,
       reviewsCount: 312,
@@ -157,7 +157,7 @@ async function seed() {
       sku: "SAM-S24-ULTRA",
       description: "Sellbar Certified Samsung Galaxy S24 Ultra 5G in Titanium Gray. Snapdragon 8 Gen 3 for Galaxy, Galaxy AI features, Titanium frame and built-in S Pen. Backed by 12-month doorstep replacement guarantee.",
       images: [
-        { url: getCloudinary("/cashify/phone-samsung-s24.jpg"), publicId: "sellbar/cashify/phone-samsung-s24", alt: "Samsung Galaxy S24 Ultra" },
+        { url: getCloudinary("/sellbar/phone-samsung-s24.jpg"), publicId: "sellbar/cashify/phone-samsung-s24", alt: "Samsung Galaxy S24 Ultra" },
       ],
       rating: 4.9,
       reviewsCount: 420,
@@ -185,7 +185,7 @@ async function seed() {
       sku: "1P-12-BLK",
       description: "Sellbar Certified OnePlus 12 5G with Hasselblad Camera System, Snapdragon 8 Gen 3, and 5400 mAh high-density battery with 100W SuperVOOC. Pristine like-new condition.",
       images: [
-        { url: getCloudinary("/cashify/phone-oneplus-12.jpg"), publicId: "sellbar/cashify/phone-oneplus-12", alt: "OnePlus 12 5G" },
+        { url: getCloudinary("/sellbar/phone-oneplus-12.jpg"), publicId: "sellbar/cashify/phone-oneplus-12", alt: "OnePlus 12 5G" },
       ],
       rating: 4.8,
       reviewsCount: 198,
@@ -213,7 +213,7 @@ async function seed() {
       sku: "SAM-ZFOLD5-512",
       description: "Certified Refurbished Samsung Galaxy Z Fold5. 7.6-inch folding Dynamic AMOLED 2X inner display with Flex Hinge. Thoroughly stress-tested for 200,000+ folds.",
       images: [
-        { url: getCloudinary("/cashify/phone-samsung-fold5.jpg"), publicId: "sellbar/cashify/phone-samsung-fold5", alt: "Samsung Galaxy Z Fold5" },
+        { url: getCloudinary("/sellbar/phone-samsung-fold5.jpg"), publicId: "sellbar/cashify/phone-samsung-fold5", alt: "Samsung Galaxy Z Fold5" },
       ],
       rating: 4.9,
       reviewsCount: 156,
@@ -327,7 +327,7 @@ async function seed() {
       sku: "DELL-LAT3410-I5",
       description: "Certified Refurbished Dell Latitude 3410 Enterprise Laptop. 10th Gen Intel Core i5 processor, 16GB DDR4 RAM, 512GB Fast NVMe SSD, Full HD Anti-Glare display, and original Dell high-speed charger.",
       images: [
-        { url: getCloudinary("/cashify/laptop-dell-3410-i5.png"), publicId: "sellbar/cashify/laptop-dell-3410-i5", alt: "Dell Latitude 3410 Core i5" },
+        { url: getCloudinary("/sellbar/laptop-dell-3410-i5.png"), publicId: "sellbar/cashify/laptop-dell-3410-i5", alt: "Dell Latitude 3410 Core i5" },
       ],
       rating: 4.6,
       reviewsCount: 165,
@@ -356,7 +356,7 @@ async function seed() {
       sku: "DELL-LAT3410-I7",
       description: "Refurbished Dell Latitude 3410 powered by Intel Core i7 10th Gen, 16GB RAM, 512GB SSD. Perfect for coding, multitasking, and heavy enterprise workloads.",
       images: [
-        { url: getCloudinary("/cashify/laptop-dell-3410-i7.png"), publicId: "sellbar/cashify/laptop-dell-3410-i7", alt: "Dell Latitude 3410 Core i7" },
+        { url: getCloudinary("/sellbar/laptop-dell-3410-i7.png"), publicId: "sellbar/cashify/laptop-dell-3410-i7", alt: "Dell Latitude 3410 Core i7" },
       ],
       rating: 4.8,
       reviewsCount: 140,
@@ -384,7 +384,7 @@ async function seed() {
       sku: "DELL-LAT5310-I5",
       description: "Ultraportable 13.3-inch Dell Latitude 5310 enterprise laptop. Premium magnesium chassis, backlit keyboard, Wi-Fi 6, and USB-C Thunderbolt support.",
       images: [
-        { url: getCloudinary("/cashify/laptop-dell-5310.png"), publicId: "sellbar/cashify/laptop-dell-5310", alt: "Dell Latitude 5310" },
+        { url: getCloudinary("/sellbar/laptop-dell-5310.png"), publicId: "sellbar/cashify/laptop-dell-5310", alt: "Dell Latitude 5310" },
       ],
       rating: 4.7,
       reviewsCount: 98,
@@ -412,7 +412,7 @@ async function seed() {
       sku: "DELL-LAT5320-I5",
       description: "Sellbar Certified Dell Latitude 5320 featuring 11th Gen Intel Core i5 processor with Iris Xe graphics, 16GB RAM, and 512GB PCIe Gen 4 SSD.",
       images: [
-        { url: getCloudinary("/cashify/laptop-dell-5320.png"), publicId: "sellbar/cashify/laptop-dell-5320", alt: "Dell Latitude 5320" },
+        { url: getCloudinary("/sellbar/laptop-dell-5320.png"), publicId: "sellbar/cashify/laptop-dell-5320", alt: "Dell Latitude 5320" },
       ],
       rating: 4.9,
       reviewsCount: 110,
@@ -440,7 +440,7 @@ async function seed() {
       sku: "LEN-THINKPAD-L14",
       description: "Legendary Lenovo ThinkPad durability with spill-resistant keyboard, TrackPoint navigation, MIL-STD 810H tested chassis, and Intel Core i5 processor.",
       images: [
-        { url: getCloudinary("/cashify/laptop-lenovo-thinkpad.webp"), publicId: "sellbar/cashify/laptop-lenovo-thinkpad", alt: "Lenovo ThinkPad L14" },
+        { url: getCloudinary("/sellbar/laptop-lenovo-thinkpad.webp"), publicId: "sellbar/cashify/laptop-lenovo-thinkpad", alt: "Lenovo ThinkPad L14" },
       ],
       rating: 4.8,
       reviewsCount: 135,
@@ -468,7 +468,7 @@ async function seed() {
       sku: "APL-MBP-M3",
       description: "Certified Refurbished Apple MacBook Pro with Apple M3 Silicon chip, 14.2-inch Liquid Retina XDR display with ProMotion 120Hz, Space Grey finish, and MagSafe 3 charging.",
       images: [
-        { url: getCloudinary("/cashify/laptop-macbook-pro-m3.webp"), publicId: "sellbar/cashify/laptop-macbook-pro-m3", alt: "Apple MacBook Pro M3" },
+        { url: getCloudinary("/sellbar/laptop-macbook-pro-m3.webp"), publicId: "sellbar/cashify/laptop-macbook-pro-m3", alt: "Apple MacBook Pro M3" },
       ],
       rating: 4.9,
       reviewsCount: 88,
@@ -499,7 +499,7 @@ async function seed() {
       sku: "BOSE-FLEX-SPK",
       description: "Certified Refurbished Bose SoundLink Flex Waterproof Bluetooth Speaker. PositionIQ technology detects orientation and optimizes sound automatically.",
       images: [
-        { url: getCloudinary("/cashify/hot-deal-1.webp"), publicId: "sellbar/cashify/hot-deal-1", alt: "Bose SoundLink Flex" },
+        { url: getCloudinary("/sellbar/hot-deal-1.webp"), publicId: "sellbar/cashify/hot-deal-1", alt: "Bose SoundLink Flex" },
       ],
       rating: 4.9,
       reviewsCount: 310,
@@ -526,7 +526,7 @@ async function seed() {
       sku: "APL-WATCH-S8-45",
       description: "Certified Refurbished Apple Watch Series 8 (45mm Aluminum Case). Temperature sensing, Blood Oxygen app, ECG, Crash Detection, and Always-On Retina display.",
       images: [
-        { url: getCloudinary("/cashify/hot-deal-2.webp"), publicId: "sellbar/cashify/hot-deal-2", alt: "Apple Watch Series 8" },
+        { url: getCloudinary("/sellbar/hot-deal-2.webp"), publicId: "sellbar/cashify/hot-deal-2", alt: "Apple Watch Series 8" },
       ],
       rating: 4.8,
       reviewsCount: 260,
@@ -554,7 +554,7 @@ async function seed() {
       sku: "SONY-PS5-DISC",
       description: "Certified Refurbished Sony PlayStation 5 with Ultra-High Speed 825GB SSD, Ray Tracing, 4K-TV Gaming up to 120fps, and original DualSense Wireless Controller.",
       images: [
-        { url: getCloudinary("/cashify/hot-deal-3.webp"), publicId: "sellbar/cashify/hot-deal-3", alt: "Sony PlayStation 5" },
+        { url: getCloudinary("/sellbar/hot-deal-3.webp"), publicId: "sellbar/cashify/hot-deal-3", alt: "Sony PlayStation 5" },
       ],
       rating: 4.9,
       reviewsCount: 410,
@@ -582,7 +582,7 @@ async function seed() {
       sku: "CANON-1500D-KIT",
       description: "Certified Refurbished Canon EOS 1500D 24.1MP Digital SLR Camera with EF S18-55 is II Lens. Includes battery, charger, strap, and 16GB high-speed SD card.",
       images: [
-        { url: getCloudinary("/cashify/hot-deal-4.webp"), publicId: "sellbar/cashify/hot-deal-4", alt: "Canon EOS 1500D DSLR" },
+        { url: getCloudinary("/sellbar/hot-deal-4.webp"), publicId: "sellbar/cashify/hot-deal-4", alt: "Canon EOS 1500D DSLR" },
       ],
       rating: 4.7,
       reviewsCount: 180,

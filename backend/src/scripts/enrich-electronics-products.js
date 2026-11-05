@@ -24,8 +24,8 @@ async function enrichProducts() {
   const phoneImg1 = getCloudinary("/products/iphone-14.webp");
   const phoneImg2 = getCloudinary("/products/iphone-13.webp");
   const phoneImg3 = getCloudinary("/products/samsung-s23.webp");
-  const laptopImg1 = getCloudinary("/cashify/laptop-dell-3410-i5.png");
-  const laptopImg2 = getCloudinary("/cashify/laptop-dell-5310.png");
+  const laptopImg1 = getCloudinary("/sellbar/laptop-dell-3410-i5.png");
+  const laptopImg2 = getCloudinary("/sellbar/laptop-dell-5310.png");
 
   for (const p of products) {
     const catSlug = p.category?.slug || "";
