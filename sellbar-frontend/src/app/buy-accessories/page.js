@@ -15,7 +15,6 @@ export default function BuyAccessoriesPage() {
       categoryTitle="Original Electronics Accessories & Fast Chargers"
       categorySubtitle="100% Genuine Apple 20W adapters, Samsung PD chargers, MagSafe cases, braided USB-C cables and certified tempered glass with doorstep delivery."
       breadcrumbCategory="Electronics Accessories"
-      categoryIcon={Sparkles}
       heroBadge="OEM Certified Accessories"
     />
   );

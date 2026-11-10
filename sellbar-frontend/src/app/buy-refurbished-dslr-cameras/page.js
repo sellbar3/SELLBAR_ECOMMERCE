@@ -15,7 +15,6 @@ export default function BuyRefurbishedDslrCamerasPage() {
       categoryTitle="Buy Refurbished DSLR, Mirrorless Cameras & Lenses"
       categorySubtitle="Sony Alpha, Canon EOS, Nikon Z mirrorless cameras and prime/zoom lenses. Tested sensor, clean glass, shutter count verified with 12-Month Doorstep Warranty."
       breadcrumbCategory="Refurbished DSLR & Mirrorless Cameras"
-      categoryIcon={Camera}
       heroBadge="Pro Photography Gear"
     />
   );

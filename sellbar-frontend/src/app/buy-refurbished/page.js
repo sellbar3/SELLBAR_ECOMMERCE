@@ -15,7 +15,6 @@ export default function BuyRefurbishedPage() {
       categoryTitle="Certified Refurbished Electronics & Gadgets"
       categorySubtitle="Save up to 70% on Apple iPhones, MacBooks, Samsung flagships, tablets and smartwatches. 100% genuine with 32-point hardware inspection & 1-Year Doorstep Warranty."
       breadcrumbCategory="All Refurbished Electronics"
-      categoryIcon={Sparkles}
       heroBadge="Sellbar Official Certified Store"
     />
   );

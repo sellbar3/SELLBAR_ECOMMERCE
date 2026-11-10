@@ -26,11 +26,30 @@ import {
   Check,
   Info,
   Package,
+  Watch,
+  Smartphone,
+  Laptop,
+  Tablet,
+  Gamepad2,
+  Camera,
+  Headphones,
 } from 'lucide-react';
 import { fetchProducts, fetchCategories } from '@/lib/productApi';
 import { getCloudinaryUrl } from '@/lib/cloudinary';
 import { addToCart } from '@/lib/cart';
 import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImageHelper';
+
+const CATEGORY_ICON_MAP = {
+  'smart-watches': Watch,
+  'mobile-phones': Smartphone,
+  'laptops': Laptop,
+  'tablets': Tablet,
+  'gaming-consoles': Gamepad2,
+  'cameras': Camera,
+  'accessories': Headphones,
+  'gadgets': Zap,
+  'all': Sparkles,
+};
 
 const CONDITION_GRADES = [
   { id: 'Flawless', name: 'Flawless (Grade A+)', desc: 'Like brand new, zero marks, 90%+ battery' },
@@ -65,10 +84,11 @@ export default function EcommerceCatalogView({
   categoryTitle = 'Certified Refurbished Electronics',
   categorySubtitle = 'Tested across 32 rigorous hardware points with 12-Month Doorstep Replacement Warranty & Free Insured Shipping.',
   breadcrumbCategory = 'Electronics',
-  categoryIcon: CategoryIcon = Zap,
+  categoryIcon = null,
   specFilters = [],
   heroBadge = 'Sellbar Certified Store',
 }) {
+  const CategoryIcon = categoryIcon || CATEGORY_ICON_MAP[categoryKey] || Zap;
   // Products & Raw Data States
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
