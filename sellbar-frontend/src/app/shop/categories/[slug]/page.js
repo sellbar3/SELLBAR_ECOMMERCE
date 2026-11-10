@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import {
@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { addToLocalCart } from '@/lib/cart';
 
-export default function ShopCategoryDetailPage() {
+function ShopCategoryDetailContent() {
   const params = useParams();
   const slug = params?.slug ? String(params.slug) : 'mobile-phones';
 
@@ -168,5 +168,13 @@ export default function ShopCategoryDetailPage() {
         )}
       </section>
     </div>
+  );
+}
+
+export default function ShopCategoryDetailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500 font-bold text-sm">Loading Category...</div>}>
+      <ShopCategoryDetailContent />
+    </Suspense>
   );
 }

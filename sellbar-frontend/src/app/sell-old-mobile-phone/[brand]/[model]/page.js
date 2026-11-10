@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -26,7 +26,7 @@ import { getProductImageUrl, getCategoryFallbackImage } from '@/lib/productImage
 import ConditionAssessmentWizard from '@/components/sell/ConditionAssessmentWizard';
 import SellBookingModal from '@/components/sell/SellBookingModal';
 
-export default function IndividualSellMobilePage() {
+function IndividualSellMobileContent() {
   const params = useParams();
   const router = useRouter();
 
@@ -369,5 +369,13 @@ export default function IndividualSellMobilePage() {
         assessmentData={bookingData}
       />
     </div>
+  );
+}
+
+export default function IndividualSellMobilePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500 font-bold text-sm">Loading Device Evaluation...</div>}>
+      <IndividualSellMobileContent />
+    </Suspense>
   );
 }

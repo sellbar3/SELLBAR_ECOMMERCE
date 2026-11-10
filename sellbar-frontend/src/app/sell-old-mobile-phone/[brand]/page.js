@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -18,7 +18,7 @@ import SellSearchBar from '@/components/sell/SellSearchBar';
 import MobileModelCard from '@/components/sell/MobileModelCard';
 import SellFiltersSidebar from '@/components/sell/SellFiltersSidebar';
 
-export default function SellBrandPage() {
+function SellBrandContent() {
   const params = useParams();
   const router = useRouter();
   const brandSlug = params?.brand ? String(params.brand).toLowerCase() : '';
@@ -223,5 +223,13 @@ export default function SellBrandPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function SellBrandPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-slate-500 font-bold text-sm">Loading Brand Models...</div>}>
+      <SellBrandContent />
+    </Suspense>
   );
 }
