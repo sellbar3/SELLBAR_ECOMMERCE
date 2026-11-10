@@ -17,6 +17,34 @@ export const POPULAR_BRANDS = [
 export const MOBILE_MODELS = [
   // ================= APPLE =================
   {
+    id: "apple-iphone-17-pro",
+    brand: "Apple",
+    brandSlug: "apple",
+    name: "Apple iPhone 17 Pro",
+    slug: "iphone-17-pro",
+    series: "iPhone 17 Series",
+    launchYear: 2025,
+    launchPrice: 154900,
+    baseResalePrice: 105000,
+    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80",
+    network: "5G",
+    popularity: 100,
+    variants: [
+      { id: "v1", ram: "12GB", storage: "256GB", color: "Natural Titanium", priceDelta: 0 },
+      { id: "v2", ram: "12GB", storage: "512GB", color: "Natural Titanium", priceDelta: 12000 },
+      { id: "v3", ram: "12GB", storage: "1TB", color: "Dark Titanium", priceDelta: 25000 },
+    ],
+    specs: {
+      display: "6.3-inch LTPO Super Retina XDR OLED 120Hz ProMotion (3000 nits)",
+      processor: "Apple A19 Pro 2nm Chip (Hardware Ray Tracing)",
+      rearCamera: "48MP Fusion + 48MP Ultra Wide + 48MP 5x Telephoto",
+      frontCamera: "24MP TrueDepth with Center Stage",
+      battery: "3,988 mAh with 40W Fast Charging & 25W MagSafe",
+      os: "iOS 19 (Apple Intelligence)",
+      weight: "194g",
+    },
+  },
+  {
     id: "apple-iphone-16-pro",
     brand: "Apple",
     brandSlug: "apple",
@@ -439,6 +467,33 @@ export const MOBILE_MODELS = [
   },
 
   // ================= VIVO =================
+  {
+    id: "vivo-v30-pro-5g",
+    brand: "Vivo",
+    brandSlug: "vivo",
+    name: "Vivo V30 Pro 5G (V300 Pro)",
+    slug: "vivo-v30-pro-5g",
+    series: "V Series",
+    launchYear: 2024,
+    launchPrice: 46999,
+    baseResalePrice: 28000,
+    image: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80",
+    network: "5G",
+    popularity: 95,
+    variants: [
+      { id: "v1", ram: "12GB", storage: "256GB", color: "Andaman Blue", priceDelta: 0 },
+      { id: "v2", ram: "12GB", storage: "512GB", color: "Classic Black", priceDelta: 4000 },
+    ],
+    specs: {
+      display: "6.78-inch 1.5K 120Hz 3D Curved AMOLED (2800 nits)",
+      processor: "MediaTek Dimensity 8200 4nm Flagship Chip",
+      rearCamera: "Triple 50MP ZEISS (IMX920 OIS + 2x Telephoto + Ultra-Wide) + Smart Aura Light",
+      frontCamera: "50MP Eye AF Selfie Camera",
+      battery: "5,000 mAh with 80W FlashCharge",
+      os: "Funtouch OS 14 (Android 14)",
+      weight: "188g",
+    },
+  },
   {
     id: "vivo-x100-pro",
     brand: "Vivo",

@@ -1,5 +1,756 @@
 [
   {
+    "_id": "6ae50001a151280001000001",
+    "vendor": {
+      "_id": "6ad87002d197dee4204dbf4c",
+      "storeName": "SELLBAR Demo Store"
+    },
+    "name": "Apple iPhone 15 (128GB) - Refurbished",
+    "slug": "apple-iphone-15-128gb",
+    "description": "Certified Refurbished Apple iPhone 15 in pristine condition. Powered by the high-performance Apple A16 Bionic chip, vibrant 6.1\" Super Retina XDR OLED with Dynamic Island, and 48MP main camera with 2x in-sensor zoom. Thoroughly 32-point tested with original battery health >88%. Comes with USB-C cable and 12-Month Sellbar Doorstep Replacement Warranty.",
+    "category": {
+      "_id": "6ae450ba17712f00f8a206ab",
+      "name": "Mobile Phones",
+      "slug": "mobile-phones"
+    },
+    "brand": "Apple",
+    "sku": "APL-IP15-128GB-BLU",
+    "price": 51999,
+    "compareAtPrice": 74900,
+    "stock": 10,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/iphone-15-front",
+        "alt": "Apple iPhone 15 (128GB) - Front View"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1695048133031-64d4a9ec85b2?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/iphone-15-back",
+        "alt": "Apple iPhone 15 (128GB) - Back View"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1695048065042-45e0d4a7f058?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/iphone-15-angle",
+        "alt": "Apple iPhone 15 (128GB) - Contoured Profile"
+      }
+    ],
+    "tags": [
+      "apple",
+      "iphone",
+      "iphone-15",
+      "ios",
+      "bionic",
+      "dynamic-island",
+      "5g"
+    ],
+    "status": "active",
+    "isFeatured": true,
+    "featuredType": "hot-deals",
+    "rating": 4.9,
+    "reviewsCount": 184,
+    "badge": "Sellbar Assured",
+    "condition": "Flawless",
+    "specs": "6.1\" OLED • A16 Bionic • 48MP Dual Camera • 128GB ROM",
+    "createdAt": "2026-11-10T10:00:00.000Z",
+    "updatedAt": "2026-11-10T10:00:00.000Z",
+    "customerReviews": [
+      {
+        "reviewerName": "Ankit Srivastava",
+        "rating": 5,
+        "title": "Unbelievable condition! Battery health 96%",
+        "comment": "Ordered this iPhone 15 128GB. The Dynamic Island works great, zero scratches on the glass or frame, and fast delivery in 48 hours. Saved over ₹22,000 compared to brand new!",
+        "date": "08 Nov 2026",
+        "verifiedPurchase": true
+      },
+      {
+        "reviewerName": "Meera Nair",
+        "rating": 5,
+        "title": "Best refurbished purchase on Sellbar",
+        "comment": "Color infused back glass feels premium. USB-C port is super convenient. Packaging was secure with test certificate and 1-year warranty card.",
+        "date": "05 Nov 2026",
+        "verifiedPurchase": true
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the battery health of this refurbished iPhone 15?",
+        "a": "Every Sellbar Certified iPhone 15 is guaranteed to have original battery health between 88% and 100%."
+      },
+      {
+        "q": "Does it come with original charging accessories?",
+        "a": "Yes, it includes a brand new certified braided USB-C charging cable, SIM ejector tool, and a 12-Month warranty card."
+      },
+      {
+        "q": "What warranty is included with the iPhone 15?",
+        "a": "It comes with 12 Months Comprehensive Doorstep Replacement Warranty and a 7-day hassle-free return window."
+      }
+    ],
+    "modelNumber": "A3090 / MT3V3HN/A",
+    "specifications": {
+      "Display & Build": [
+        {
+          "label": "Screen Size & Tech",
+          "value": "6.1-inch Super Retina XDR OLED (2556 x 1179 at 460 ppi)"
+        },
+        {
+          "label": "Special Display Features",
+          "value": "Dynamic Island, HDR, True Tone, 2000 nits Peak Outdoor Brightness"
+        },
+        {
+          "label": "Build Materials",
+          "value": "Ceramic Shield Front, Color-Infused Glass Back with Contoured Aluminum Frame"
+        },
+        {
+          "label": "Water & Dust Rating",
+          "value": "IP68 Certified (Up to 6 meters for 30 minutes)"
+        }
+      ],
+      "Performance & Storage": [
+        {
+          "label": "Processor Chipset",
+          "value": "Apple A16 Bionic (4nm, 6-Core CPU with 2 Performance + 4 Efficiency Cores)"
+        },
+        {
+          "label": "Graphics (GPU)",
+          "value": "Apple 5-Core GPU"
+        },
+        {
+          "label": "Neural Processing",
+          "value": "16-Core Neural Engine"
+        },
+        {
+          "label": "RAM",
+          "value": "6GB LPDDR5"
+        },
+        {
+          "label": "Internal Storage",
+          "value": "128GB NVMe High-Speed Storage"
+        }
+      ],
+      "Camera System": [
+        {
+          "label": "Primary Rear Camera",
+          "value": "48MP Main (26mm, f/1.6, Sensor-shift OIS, 2x Telephoto optical zoom quality)"
+        },
+        {
+          "label": "Ultra-Wide Camera",
+          "value": "12MP Ultra-Wide (13mm, f/2.4, 120-degree Field of View)"
+        },
+        {
+          "label": "Front Camera",
+          "value": "12MP TrueDepth (f/1.9, Autofocus with Focus Pixels, 4K60 Dolby Vision HDR)"
+        },
+        {
+          "label": "Video Features",
+          "value": "Cinematic Mode (4K HDR up to 30 fps), Action Mode, Photonic Engine"
+        }
+      ],
+      "Battery & Power": [
+        {
+          "label": "Battery Capacity",
+          "value": "3,349 mAh (Up to 20 hours video playback)"
+        },
+        {
+          "label": "Charging Port",
+          "value": "USB-C (Universal Charging & Audio Out)"
+        },
+        {
+          "label": "Fast Charging",
+          "value": "Up to 50% charge in 30 minutes with 20W adapter"
+        },
+        {
+          "label": "Wireless Charging",
+          "value": "MagSafe 15W & Qi Wireless Charging 7.5W"
+        }
+      ],
+      "Connectivity & Audio": [
+        {
+          "label": "Network & 5G",
+          "value": "5G NR (Sub-6 GHz) with 4x4 MIMO, Dual eSIM / Nano-SIM"
+        },
+        {
+          "label": "Wi-Fi & Bluetooth",
+          "value": "Wi-Fi 6 (802.11ax) + Bluetooth 5.3, Second-Gen Ultra Wideband (UWB)"
+        },
+        {
+          "label": "Audio System",
+          "value": "Spatial Audio Playback with Dolby Atmos Stereo Speakers"
+        }
+      ]
+    },
+    "variants": [
+      {
+        "name": "128GB / Blue",
+        "sku": "APL-IP15-128-BLU",
+        "price": 51999,
+        "compareAtPrice": 74900,
+        "stock": 10,
+        "attributes": {
+          "storage": "128GB",
+          "ram": "6GB",
+          "color": "Blue",
+          "colorCode": "#89a9c2",
+          "network": "5G"
+        },
+        "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80",
+        "_id": "6ae50001a151280001000011"
+      },
+      {
+        "name": "128GB / Black",
+        "sku": "APL-IP15-128-BLK",
+        "price": 51999,
+        "compareAtPrice": 74900,
+        "stock": 4,
+        "attributes": {
+          "storage": "128GB",
+          "ram": "6GB",
+          "color": "Black",
+          "colorCode": "#242526",
+          "network": "5G"
+        },
+        "image": "https://images.unsplash.com/photo-1695048133031-64d4a9ec85b2?auto=format&fit=crop&w=800&q=80",
+        "_id": "6ae50001a151280001000012"
+      }
+    ],
+    "warranty": "12 Months Comprehensive Doorstep Replacement Warranty",
+    "whatInTheBox": [
+      "Sellbar Certified Apple iPhone 15 (128GB) - Flawless Grade",
+      "Braided Fast Charging USB-C to USB-C Cable",
+      "20W USB-PD Fast Charging Power Adapter",
+      "SIM Tray Ejector Pin",
+      "Official 32-Point Quality Diagnostic Certificate",
+      "12-Month Doorstep Warranty Card"
+    ]
+  },
+  {
+    "_id": "6ae50001a175120001000002",
+    "vendor": {
+      "_id": "6ad87002d197dee4204dbf4c",
+      "storeName": "SELLBAR Demo Store"
+    },
+    "name": "Apple iPhone 17 Pro (512GB) - Refurbished Titanium Flagship",
+    "slug": "apple-iphone-17-pro-512gb",
+    "description": "Apple iPhone 17 Pro 512GB Titanium Edition. Equipped with the groundbreaking Apple A19 Pro chip with hardware ray tracing, stunning 6.3\" ProMotion 120Hz LTPO Super Retina XDR OLED with 3000 nits peak brightness, and 48MP Pro Fusion Triple Camera with 5x periscope telephoto. Next-gen Grade 5 Titanium framework built for Apple Intelligence with 12GB RAM and 512GB storage.",
+    "category": {
+      "_id": "6ae450ba17712f00f8a206ab",
+      "name": "Mobile Phones",
+      "slug": "mobile-phones"
+    },
+    "brand": "Apple",
+    "sku": "APL-IP17PRO-512GB-TIT",
+    "price": 129999,
+    "compareAtPrice": 154900,
+    "stock": 8,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/iphone-17-pro-front",
+        "alt": "Apple iPhone 17 Pro (512GB) - Front Display"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/iphone-17-pro-triple-cam",
+        "alt": "Apple iPhone 17 Pro (512GB) - Pro Fusion Triple Camera"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1512054502232-10a0a035d672?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/iphone-17-pro-angle",
+        "alt": "Apple iPhone 17 Pro (512GB) - Titanium Edge"
+      }
+    ],
+    "tags": [
+      "apple",
+      "iphone",
+      "iphone-17-pro",
+      "titanium",
+      "a19-pro",
+      "512gb",
+      "apple-intelligence",
+      "5g"
+    ],
+    "status": "active",
+    "isFeatured": true,
+    "featuredType": "trending",
+    "rating": 5,
+    "reviewsCount": 64,
+    "badge": "Sellbar Assured Flagship",
+    "condition": "Flawless",
+    "specs": "6.3\" 120Hz LTPO OLED • A19 Pro • Triple 48MP • 512GB NVMe • 12GB RAM",
+    "createdAt": "2026-11-10T10:00:00.000Z",
+    "updatedAt": "2026-11-10T10:00:00.000Z",
+    "customerReviews": [
+      {
+        "reviewerName": "Vikramaditya Roy",
+        "rating": 5,
+        "title": "Absolute powerhouse! 512GB storage and lightning fast A19 Pro",
+        "comment": "Received the 17 Pro in 100% flawless condition. The titanium feel is incredibly light yet rugged. Apple Intelligence features work instantly with 12GB RAM. Top notch inspection from Sellbar!",
+        "date": "09 Nov 2026",
+        "verifiedPurchase": true
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Is Apple Intelligence fully supported on this device?",
+        "a": "Yes! The Apple iPhone 17 Pro features 12GB unified RAM and A19 Pro Neural Engine specifically engineered for on-device Apple Intelligence."
+      },
+      {
+        "q": "What is the warranty coverage?",
+        "a": "Includes Sellbar 12-Month Comprehensive Replacement Warranty covering all hardware components and battery."
+      }
+    ],
+    "modelNumber": "A3295 / MT8K3HN/A",
+    "specifications": {
+      "Display & Build": [
+        {
+          "label": "Screen Size & Tech",
+          "value": "6.3-inch LTPO Super Retina XDR OLED (2622 x 1206 at 460 ppi)"
+        },
+        {
+          "label": "Refresh Rate",
+          "value": "120Hz ProMotion Adaptive Refresh Rate with Always-On Display"
+        },
+        {
+          "label": "Brightness",
+          "value": "1000 nits Typical, 1600 nits HDR, 3000 nits Peak Outdoor Brightness"
+        },
+        {
+          "label": "Build",
+          "value": "Grade 5 Aerospace Titanium with Next-Gen Matte Textured Glass Back"
+        }
+      ],
+      "Performance & Storage": [
+        {
+          "label": "Processor",
+          "value": "Apple A19 Pro (2nm Architecture, 6-Core CPU + 6-Core GPU with Ray Tracing)"
+        },
+        {
+          "label": "RAM",
+          "value": "12GB LPDDR5X (Built for Apple Intelligence)"
+        },
+        {
+          "label": "Internal Storage",
+          "value": "512GB NVMe High-Speed Solid-State Storage"
+        }
+      ],
+      "Camera System": [
+        {
+          "label": "Main Camera",
+          "value": "48MP Fusion (24mm, f/1.78, 2nd-gen Sensor-shift OIS, 100% Focus Pixels)"
+        },
+        {
+          "label": "Ultra-Wide",
+          "value": "48MP Ultra-Wide (13mm, f/2.2, 120-degree FOV, Macro Photography)"
+        },
+        {
+          "label": "Telephoto",
+          "value": "48MP Telephoto (120mm, f/2.8, 5x Optical Zoom, 3D Sensor-shift OIS)"
+        },
+        {
+          "label": "Front Camera",
+          "value": "24MP TrueDepth with Center Stage Autofocus"
+        }
+      ],
+      "Battery & Charging": [
+        {
+          "label": "Battery",
+          "value": "3,988 mAh (Up to 27 hours video playback)"
+        },
+        {
+          "label": "Charging",
+          "value": "40W USB-C Fast Charging (50% in 20 minutes) + 25W MagSafe / Qi2 Wireless"
+        }
+      ]
+    },
+    "variants": [
+      {
+        "name": "512GB / Natural Titanium",
+        "sku": "APL-IP17PRO-512-NAT",
+        "price": 129999,
+        "compareAtPrice": 154900,
+        "stock": 8,
+        "attributes": {
+          "storage": "512GB",
+          "ram": "12GB",
+          "color": "Natural Titanium",
+          "colorCode": "#9b9a95",
+          "network": "5G"
+        },
+        "image": "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800&q=80",
+        "_id": "6ae50001a175120001000021"
+      }
+    ],
+    "warranty": "12 Months Comprehensive Doorstep Replacement Warranty",
+    "whatInTheBox": [
+      "Apple iPhone 17 Pro (512GB) - Titanium Flawless Grade",
+      "High-Speed Braided USB-C 3.2 Cable",
+      "40W USB-PD Fast Power Adapter",
+      "SIM Ejector Pin",
+      "Official 32-Point Quality Diagnostic Certificate",
+      "12-Month Sellbar Premium Warranty Card"
+    ]
+  },
+  {
+    "_id": "6ae50001v302560001000003",
+    "vendor": {
+      "_id": "6ad87002d197dee4204dbf4c",
+      "storeName": "SELLBAR Demo Store"
+    },
+    "name": "Vivo V30 Pro 5G (256GB) - ZEISS Triple 50MP Camera",
+    "slug": "vivo-v300-pro-256gb",
+    "description": "Certified Refurbished Vivo V30 Pro 5G with flagship co-engineered ZEISS optics. Packed with a breathtaking 6.78\" 1.5K 120Hz 3D Curved AMOLED display (2800 nits peak), high-speed MediaTek Dimensity 8200 4nm processor, and Studio-Quality Smart Aura Light Portrait system. Equipped with 256GB storage, 12GB RAM, 5000mAh battery, and blistering 80W FlashCharge.",
+    "category": {
+      "_id": "6ae450ba17712f00f8a206ab",
+      "name": "Mobile Phones",
+      "slug": "mobile-phones"
+    },
+    "brand": "Vivo",
+    "sku": "VIV-V30PRO-256GB-BLU",
+    "price": 32999,
+    "compareAtPrice": 46999,
+    "stock": 3,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/vivo-v30-pro-front",
+        "alt": "Vivo V30 Pro 5G (256GB) - 3D Curved Display"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/vivo-v30-pro-back",
+        "alt": "Vivo V30 Pro 5G (256GB) - ZEISS Triple Camera & Aura Light"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/vivo-v30-pro-curve",
+        "alt": "Vivo V30 Pro 5G (256GB) - Ultra Slim 7.45mm Profile"
+      }
+    ],
+    "tags": [
+      "vivo",
+      "vivo-v30-pro",
+      "zeiss",
+      "aura-light",
+      "dimensity-8200",
+      "256gb",
+      "5g",
+      "curved-amoled"
+    ],
+    "status": "active",
+    "isFeatured": true,
+    "featuredType": "bestseller",
+    "rating": 4.8,
+    "reviewsCount": 112,
+    "badge": "Sellbar Assured ZEISS",
+    "condition": "Flawless",
+    "specs": "6.78\" 1.5K 120Hz Curved AMOLED • Dimensity 8200 • ZEISS 50MP Triple Cam • 80W Charge",
+    "createdAt": "2026-11-10T10:00:00.000Z",
+    "updatedAt": "2026-11-10T10:00:00.000Z",
+    "customerReviews": [
+      {
+        "reviewerName": "Deepak Patel",
+        "rating": 5,
+        "title": "Camera quality is unmatched! Pure ZEISS magic",
+        "comment": "The portrait photos with Aura Light look studio grade. 80W charging is insane - charges from 10% to 100% in around 40 minutes. Phone looks 100% spotless, no scratches anywhere.",
+        "date": "07 Nov 2026",
+        "verifiedPurchase": true
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Does this model come with the original ZEISS portrait camera features?",
+        "a": "Yes! All ZEISS portrait styles (Biotar, Sonnar, Planar, Distagon, Cine-flare) and Smart Aura Light Portrait are 100% functional and tested."
+      },
+      {
+        "q": "What is the charging speed?",
+        "a": "Comes with an 80W FlashCharge adapter in the box that charges the 5000mAh battery to full in approx 43 minutes."
+      }
+    ],
+    "modelNumber": "V2319 / Vivo V30 Pro 5G",
+    "specifications": {
+      "Display & Build": [
+        {
+          "label": "Screen Size & Resolution",
+          "value": "6.78-inch 1.5K 3D Curved AMOLED (2800 x 1260 at 452 ppi)"
+        },
+        {
+          "label": "Refresh Rate & Brightness",
+          "value": "120Hz Refresh Rate, 2800 nits Local Peak Brightness, HDR10+"
+        },
+        {
+          "label": "Dimensions & Weight",
+          "value": "164.36 × 75.1 × 7.45 mm, Ultralight 188 grams"
+        },
+        {
+          "label": "Glass Finish",
+          "value": "Fluorite AG 3D Curved Glass Back with Petal Water Wave Texture"
+        }
+      ],
+      "Performance & Hardware": [
+        {
+          "label": "Processor",
+          "value": "MediaTek Dimensity 8200 (4nm Octa-Core up to 3.1 GHz)"
+        },
+        {
+          "label": "GPU",
+          "value": "Mali-G610 MC6"
+        },
+        {
+          "label": "RAM",
+          "value": "12GB LPDDR5 (+ 8GB Virtual Extended RAM)"
+        },
+        {
+          "label": "Internal Storage",
+          "value": "256GB UFS 3.1 High-Speed Storage"
+        }
+      ],
+      "ZEISS Camera System": [
+        {
+          "label": "Main Camera",
+          "value": "50MP Sony IMX920 VCS True Color (1/1.49\", f/1.88, OIS)"
+        },
+        {
+          "label": "Telephoto Portrait",
+          "value": "50MP Sony IMX816 Professional Portrait (f/1.85, 2x Optical Zoom)"
+        },
+        {
+          "label": "Ultra-Wide Camera",
+          "value": "50MP Ultra Wide-Angle (119-degree FOV, f/2.0, Auto-Focus)"
+        },
+        {
+          "label": "Front Selfie Camera",
+          "value": "50MP Eye AF Group Selfie (92-degree FOV, f/2.0)"
+        },
+        {
+          "label": "Aura Light Flash",
+          "value": "Smart Color Temperature Adjustable Aura Light Portrait 2.0"
+        }
+      ],
+      "Battery & Charging": [
+        {
+          "label": "Battery Capacity",
+          "value": "5,000 mAh Ultra-Thin High-Density Battery"
+        },
+        {
+          "label": "Charging Speed",
+          "value": "80W FlashCharge (0 to 100% in ~43 minutes)"
+        },
+        {
+          "label": "Battery Health Durability",
+          "value": "4-Year Durable Battery Health Promise"
+        }
+      ]
+    },
+    "variants": [
+      {
+        "name": "256GB / Andaman Blue",
+        "sku": "VIV-V30PRO-256-BLU",
+        "price": 32999,
+        "compareAtPrice": 46999,
+        "stock": 3,
+        "attributes": {
+          "storage": "256GB",
+          "ram": "12GB",
+          "color": "Andaman Blue",
+          "colorCode": "#48a9a6",
+          "network": "5G"
+        },
+        "image": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
+        "_id": "6ae50001v302560001000031"
+      }
+    ],
+    "warranty": "12 Months Comprehensive Doorstep Replacement Warranty",
+    "whatInTheBox": [
+      "Vivo V30 Pro 5G (256GB) - Flawless Condition",
+      "80W FlashCharge Power Adapter",
+      "USB Type-C to Type-C Cable",
+      "Protective Silicone Case",
+      "SIM Ejector Pin",
+      "Official 32-Point Quality Diagnostic Certificate",
+      "12-Month Sellbar Doorstep Warranty Card"
+    ]
+  },
+  {
+    "_id": "6ae50001v302560001000004",
+    "vendor": {
+      "_id": "6ad87002d197dee4204dbf4c",
+      "storeName": "SELLBAR Demo Store"
+    },
+    "name": "Vivo V30 Pro 5G (256GB) - ZEISS Triple 50MP Camera",
+    "slug": "vivo-v30-pro-5g-256gb",
+    "description": "Certified Refurbished Vivo V30 Pro 5G with flagship co-engineered ZEISS optics. Packed with a breathtaking 6.78\" 1.5K 120Hz 3D Curved AMOLED display (2800 nits peak), high-speed MediaTek Dimensity 8200 4nm processor, and Studio-Quality Smart Aura Light Portrait system. Equipped with 256GB storage, 12GB RAM, 5000mAh battery, and blistering 80W FlashCharge.",
+    "category": {
+      "_id": "6ae450ba17712f00f8a206ab",
+      "name": "Mobile Phones",
+      "slug": "mobile-phones"
+    },
+    "brand": "Vivo",
+    "sku": "VIV-V30PRO-256GB-BLU",
+    "price": 32999,
+    "compareAtPrice": 46999,
+    "stock": 3,
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/vivo-v30-pro-front",
+        "alt": "Vivo V30 Pro 5G (256GB) - 3D Curved Display"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/vivo-v30-pro-back",
+        "alt": "Vivo V30 Pro 5G (256GB) - ZEISS Triple Camera & Aura Light"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=800&q=80",
+        "publicId": "sellbar/products/vivo-v30-pro-curve",
+        "alt": "Vivo V30 Pro 5G (256GB) - Ultra Slim 7.45mm Profile"
+      }
+    ],
+    "tags": [
+      "vivo",
+      "vivo-v30-pro",
+      "zeiss",
+      "aura-light",
+      "dimensity-8200",
+      "256gb",
+      "5g",
+      "curved-amoled"
+    ],
+    "status": "active",
+    "isFeatured": true,
+    "featuredType": "bestseller",
+    "rating": 4.8,
+    "reviewsCount": 112,
+    "badge": "Sellbar Assured ZEISS",
+    "condition": "Flawless",
+    "specs": "6.78\" 1.5K 120Hz Curved AMOLED • Dimensity 8200 • ZEISS 50MP Triple Cam • 80W Charge",
+    "createdAt": "2026-11-10T10:00:00.000Z",
+    "updatedAt": "2026-11-10T10:00:00.000Z",
+    "customerReviews": [
+      {
+        "reviewerName": "Deepak Patel",
+        "rating": 5,
+        "title": "Camera quality is unmatched! Pure ZEISS magic",
+        "comment": "The portrait photos with Aura Light look studio grade. 80W charging is insane - charges from 10% to 100% in around 40 minutes. Phone looks 100% spotless, no scratches anywhere.",
+        "date": "07 Nov 2026",
+        "verifiedPurchase": true
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Does this model come with the original ZEISS portrait camera features?",
+        "a": "Yes! All ZEISS portrait styles (Biotar, Sonnar, Planar, Distagon, Cine-flare) and Smart Aura Light Portrait are 100% functional and tested."
+      },
+      {
+        "q": "What is the charging speed?",
+        "a": "Comes with an 80W FlashCharge adapter in the box that charges the 5000mAh battery to full in approx 43 minutes."
+      }
+    ],
+    "modelNumber": "V2319 / Vivo V30 Pro 5G",
+    "specifications": {
+      "Display & Build": [
+        {
+          "label": "Screen Size & Resolution",
+          "value": "6.78-inch 1.5K 3D Curved AMOLED (2800 x 1260 at 452 ppi)"
+        },
+        {
+          "label": "Refresh Rate & Brightness",
+          "value": "120Hz Refresh Rate, 2800 nits Local Peak Brightness, HDR10+"
+        },
+        {
+          "label": "Dimensions & Weight",
+          "value": "164.36 × 75.1 × 7.45 mm, Ultralight 188 grams"
+        },
+        {
+          "label": "Glass Finish",
+          "value": "Fluorite AG 3D Curved Glass Back with Petal Water Wave Texture"
+        }
+      ],
+      "Performance & Hardware": [
+        {
+          "label": "Processor",
+          "value": "MediaTek Dimensity 8200 (4nm Octa-Core up to 3.1 GHz)"
+        },
+        {
+          "label": "GPU",
+          "value": "Mali-G610 MC6"
+        },
+        {
+          "label": "RAM",
+          "value": "12GB LPDDR5 (+ 8GB Virtual Extended RAM)"
+        },
+        {
+          "label": "Internal Storage",
+          "value": "256GB UFS 3.1 High-Speed Storage"
+        }
+      ],
+      "ZEISS Camera System": [
+        {
+          "label": "Main Camera",
+          "value": "50MP Sony IMX920 VCS True Color (1/1.49\", f/1.88, OIS)"
+        },
+        {
+          "label": "Telephoto Portrait",
+          "value": "50MP Sony IMX816 Professional Portrait (f/1.85, 2x Optical Zoom)"
+        },
+        {
+          "label": "Ultra-Wide Camera",
+          "value": "50MP Ultra Wide-Angle (119-degree FOV, f/2.0, Auto-Focus)"
+        },
+        {
+          "label": "Front Selfie Camera",
+          "value": "50MP Eye AF Group Selfie (92-degree FOV, f/2.0)"
+        },
+        {
+          "label": "Aura Light Flash",
+          "value": "Smart Color Temperature Adjustable Aura Light Portrait 2.0"
+        }
+      ],
+      "Battery & Charging": [
+        {
+          "label": "Battery Capacity",
+          "value": "5,000 mAh Ultra-Thin High-Density Battery"
+        },
+        {
+          "label": "Charging Speed",
+          "value": "80W FlashCharge (0 to 100% in ~43 minutes)"
+        },
+        {
+          "label": "Battery Health Durability",
+          "value": "4-Year Durable Battery Health Promise"
+        }
+      ]
+    },
+    "variants": [
+      {
+        "name": "256GB / Andaman Blue",
+        "sku": "VIV-V30PRO-256-BLU",
+        "price": 32999,
+        "compareAtPrice": 46999,
+        "stock": 3,
+        "attributes": {
+          "storage": "256GB",
+          "ram": "12GB",
+          "color": "Andaman Blue",
+          "colorCode": "#48a9a6",
+          "network": "5G"
+        },
+        "image": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80",
+        "_id": "6ae50001v302560001000031"
+      }
+    ],
+    "warranty": "12 Months Comprehensive Doorstep Replacement Warranty",
+    "whatInTheBox": [
+      "Vivo V30 Pro 5G (256GB) - Flawless Condition",
+      "80W FlashCharge Power Adapter",
+      "USB Type-C to Type-C Cable",
+      "Protective Silicone Case",
+      "SIM Ejector Pin",
+      "Official 32-Point Quality Diagnostic Certificate",
+      "12-Month Sellbar Doorstep Warranty Card"
+    ]
+  },
+  {
     "_id": "6ae452b717712f00f8a206ac",
     "vendor": {
       "_id": "6ad87002d197dee4204dbf4c",
