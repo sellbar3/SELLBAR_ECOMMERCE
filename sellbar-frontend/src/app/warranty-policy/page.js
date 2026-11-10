@@ -204,7 +204,7 @@ export default function WarrantyPolicyPage() {
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1">
                   <strong className="text-slate-900 block font-bold">Battery &amp; Power</strong>
-                  <p className="text-slate-600">Rapid power drain (>20% drop per hour on standby), failure to accept charge, or abnormal thermal shutdown.</p>
+                  <p className="text-slate-600">Rapid power drain (&gt;20% drop per hour on standby), failure to accept charge, or abnormal thermal shutdown.</p>
                 </div>
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-1">
                   <strong className="text-slate-900 block font-bold">Cameras &amp; Sensors</strong>
