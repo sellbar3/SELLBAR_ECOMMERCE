@@ -5,12 +5,6 @@ const backendUrl = process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_A
 
 const nextConfig = {
   /* config options here */
-  experimental: {
-    agentFeedback: true,
-  },
-  cacheComponents: true,
-  partialPrefetching: true,
-  reactCompiler: true,
   turbopack: {
     rules: {
       "*.css": {

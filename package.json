@@ -5,7 +5,7 @@
   "description": "SELLBAR Refurbished E-Commerce Platform (Frontend + Backend)",
   "scripts": {
     "postinstall": "npm --prefix sellbar-frontend install",
-    "build": "npm --prefix sellbar-frontend run build && node scripts/copy-build.js",
+    "build": "npm --prefix sellbar-frontend run build",
     "start": "npm --prefix sellbar-frontend start",
     "dev": "npm --prefix sellbar-frontend run dev",
     "dev:backend": "npm --prefix backend run dev",
