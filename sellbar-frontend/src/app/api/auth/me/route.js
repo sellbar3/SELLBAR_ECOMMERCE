@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { verifyJwtSession } from "@/lib/authCrypto";
 
 export async function GET(request) {
   try {
@@ -18,48 +19,23 @@ export async function GET(request) {
         const parsed = JSON.parse(decodeURIComponent(sessionCookie.value));
         user = parsed.user || parsed;
       } catch {
-        // If not JSON, it might be raw token
+        // Fall through
       }
     }
 
     if (!user && bearerToken) {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
-      try {
-        const backendRes = await fetch(`${API_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${bearerToken}` },
-        });
-        const data = await backendRes.json();
-        if (backendRes.ok && data.success && (data.data?.user || data.user)) {
-          return NextResponse.json({
-            success: true,
-            authenticated: true,
-            user: data.data?.user || data.user,
-          });
-        }
-      } catch {
-        // Fallback to local parsing
-      }
-
-      try {
-        const parts = bearerToken.split(".");
-        if (parts.length === 3) {
-          const payload = JSON.parse(
-            Buffer.from(parts[1], "base64").toString("utf-8")
-          );
-          user = {
-            id: payload.id || payload.sub,
-            name: payload.name || "Sellbar User",
-            email: payload.email,
-            phone: payload.phone,
-            role: payload.role || "CUSTOMER",
-          };
-        }
-      } catch {
-        // invalid token
+      const decoded = verifyJwtSession(bearerToken);
+      if (decoded) {
+        user = {
+          id: decoded.id || decoded.sub,
+          name: decoded.name || "Sellbar User",
+          email: decoded.email,
+          phone: decoded.phone,
+          role: decoded.role || "customer",
+        };
       }
     }
 
-    // Always return HTTP 200 (never 404)
     if (user) {
       return NextResponse.json({
         success: true,

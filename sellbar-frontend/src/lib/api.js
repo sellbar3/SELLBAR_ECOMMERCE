@@ -1,6 +1,8 @@
 
 const API = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"
+  process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost:5000")
+    ? process.env.NEXT_PUBLIC_API_URL
+    : "/api"
 ).replace(/\/+$/, "");
 
 export async function apiRequest(path, options = {}) {
