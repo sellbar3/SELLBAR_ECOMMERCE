@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
-const backendUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api").replace(/\/+$/, "");
+const backendUrl = process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost:5000")
+  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, "")
+  : "";
 
 const nextConfig = {
   /* config options here */
@@ -40,6 +42,7 @@ const nextConfig = {
     ];
   },
   async rewrites() {
+    if (!backendUrl) return [];
     return [
       {
         source: "/api/products/:path*",
