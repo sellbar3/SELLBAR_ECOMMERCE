@@ -91,8 +91,28 @@ sellbar-frontend/
 │   │   ├── cart/                     # Shopping cart page with quantity controls
 │   │   ├── checkout/                 # Secure multi-step checkout
 │   │   ├── account/                  # Customer profile, orders, addresses
-│   │   ├── vendor/                   # Merchant partner portal (login, signup, catalog)
-│   │   ├── admin/                    # Platform control center (users, vendors, catalog)
+│   │   ├── admin/                    # Platform Master Control Center
+│   │   │   ├── page.js               # Executive Admin Dashboard (KPIs, GMV, analytics charts)
+│   │   │   ├── brands/               # Brand taxonomy management (Apple, Samsung, Dell, etc.)
+│   │   │   ├── categories/           # Product category & subcategory management
+│   │   │   ├── login/                # Dedicated Administrator authentication & session guard
+│   │   │   ├── products/             # Platform-wide product catalog moderation & inventory control
+│   │   │   ├── sell-models/          # Recommerce trade-in catalog & model specifications
+│   │   │   ├── sell-orders/          # Customer trade-in pickup orders & doorstep QC management
+│   │   │   ├── users/                # User accounts moderation (Customers, Vendors, Admins, KYC)
+│   │   │   ├── valuation/            # Dynamic valuation algorithm rules & condition deductions
+│   │   │   └── [...slug]/            # Dynamic fallback router for nested admin sub-views
+│   │   │
+│   │   ├── vendor/                   # Merchant Partner Portal
+│   │   │   ├── page.js               # Vendor business summary & sales analytics dashboard
+│   │   │   ├── login/                # Merchant sign-in & session management
+│   │   │   ├── signup/               # Merchant registration, GST/KYC onboarding & store setup
+│   │   │   ├── orders/               # Order fulfillment, shipment packing & courier dispatch
+│   │   │   ├── products/             # Merchant product inventory management
+│   │   │   │   ├── page.js           # Live product inventory table with stock toggles
+│   │   │   │   ├── new/              # Add product wizard with Cloudinary uploads & variant matrix
+│   │   │   │   └── [id]/             # Edit product specifications, pricing & grading
+│   │   │   └── profile/              # Store branding, warehouse address & bank payout details
 │   │   ├── api/                      # Next.js API route handlers:
 │   │   │   ├── auth/                 # Proxy auth routes (`login`, `me`, `otp`, `register`)
 │   │   │   └── public/[...slug]/     # Resilient route handler with live proxy & offline fallback
@@ -174,22 +194,38 @@ sellbar-frontend/
 | `/recycle-old-mobile-phone` | Eco-friendly electronics recycling |
 | `/repair` | Doorstep screen & battery repair service |
 
-### Partner & Control Portals
-| Route Path | Purpose |
-|---|---|
-| `/vendor` | Vendor portal landing page |
-| `/vendor/login` | Vendor partner authentication |
-| `/vendor/signup` | Merchant registration & KYC onboarding |
-| `/vendor/products` | Inventory & catalog management |
-| `/vendor/products/new` | Add new product with Cloudinary uploads |
-| `/vendor/orders` | Order dispatch & shipping management |
-| `/vendor/profile` | Store profile & bank settlement settings |
-| `/panel-login` | Unified entry point for vendors & admins |
-| `/admin` | Admin master control center |
-| `/admin/login` | Secure administrator login |
-| `/admin/products` | Platform-wide catalog oversight |
-| `/admin/categories` | Global category taxonomy management |
-| `/admin/users` | Customer & vendor user account moderation |
+### 🏢 Admin Master Control Portal (`src/app/admin/`)
+The Admin Portal provides platform owners with complete control over inventory, merchants, trade-in valuations, orders, and customer accounts.
+
+| Folder / Route Path | File Location | Key Capabilities & Features |
+|---|---|---|
+| `/admin` | `src/app/admin/page.js` | **Executive Overview**: Total GMV, active users, orders count, revenue charts, recent transactions table |
+| `/admin/brands` | `src/app/admin/brands/page.js` | **Brand Management**: Add/edit manufacturers (Apple, Samsung, OnePlus, Dell, HP, Lenovo) |
+| `/admin/categories` | `src/app/admin/categories/page.js` | **Taxonomy Control**: Global categories, commission rates, banner associations, and SEO slugs |
+| `/admin/products` | `src/app/admin/products/page.js` | **Catalog Oversight**: Platform-wide product moderation, approvals, price audit, and inventory toggles |
+| `/admin/sell-models` | `src/app/admin/sell-models/page.js` | **Trade-in Catalog**: Master database of sellable electronic models, base valuation prices, and variants |
+| `/admin/sell-orders` | `src/app/admin/sell-orders/page.js` | **Buyback Pipeline**: Customer device selling orders, technician doorstep pickup dispatch, and QC status |
+| `/admin/valuation` | `src/app/admin/valuation/page.js` | **Pricing Algorithm**: Configure deduction rules for cosmetic scratches, battery health, and functional defects |
+| `/admin/users` | `src/app/admin/users/page.js` | **User Accounts**: Customer & merchant account moderation, role assignment, and status toggles |
+| `/admin/login` | `src/app/admin/login/page.js` | **Admin Auth**: Protected administrator login with secure JWT session validation |
+| `/admin/[...slug]` | `src/app/admin/[...slug]/page.js` | **Dynamic Sub-Views**: Unified router fallback for deep admin sub-modules |
+
+---
+
+### 🏪 Vendor / Merchant Partner Portal (`src/app/vendor/`)
+The Vendor Portal is designed for certified refurbishment partners and sellers to manage their listings, stock, and customer orders.
+
+| Folder / Route Path | File Location | Key Capabilities & Features |
+|---|---|---|
+| `/vendor` | `src/app/vendor/page.js` | **Merchant Dashboard**: Daily sales metrics, pending dispatches, revenue summary, low stock alerts |
+| `/vendor/login` | `src/app/vendor/login/page.js` | **Partner Sign-in**: Secure authentication for verified merchant partners |
+| `/vendor/signup` | `src/app/vendor/signup/page.js` | **Merchant Registration**: Business registration, GST/PAN KYC upload, warehouse address submission |
+| `/vendor/products` | `src/app/vendor/products/page.js` | **Inventory List**: Table of all vendor products with live stock toggles, price updates, and status filters |
+| `/vendor/products/new` | `src/app/vendor/products/new/page.js` | **Product Creation Wizard**: Multi-image Cloudinary upload, condition grading (A++/A+/A), variant matrix |
+| `/vendor/products/[id]` | `src/app/vendor/products/[id]/page.js` | **Product Editor**: Modify specifications, update pricing, restock hardware variants, and adjust descriptions |
+| `/vendor/orders` | `src/app/vendor/orders/page.js` | **Order Fulfillment**: Track new orders, download invoices, mark orders packed, generate shipping labels |
+| `/vendor/profile` | `src/app/vendor/profile/page.js` | **Store Settings**: Business profile, pickup warehouse location, bank account details for settlements |
+| `/panel-login` | `src/app/panel-login/page.js` | **Unified Entry**: Smart redirection gateway routing users to either Admin or Vendor portal |
 
 ---
 
