@@ -6,7 +6,9 @@ const backendUrl = (
 ).replace(/\/+$/, "");
 
 const nextConfig = {
-  output: 'standalone',
+  // Standalone mode is disabled for Hostinger Node.js hosting to prevent the
+  // platform publishing crash during the "Syncing public_html" rsync step.
+  // Next.js standard production server (next start / server.js) is used instead.
   experimental: {
     cpus: 1,
   },
