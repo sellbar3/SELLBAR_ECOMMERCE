@@ -39,6 +39,24 @@ app.use(cookieParser());
 
 app.use("/api", rateLimit);
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    service: "sellbar-api",
+    domain: "app.sellbar.in",
+    frontend: "https://sellbar.in",
+    message: "SELLBAR API Gateway is running",
+    endpoints: {
+      health: "/api/health",
+      public: "/api/public",
+      auth: "/api/auth",
+      products: "/api/products",
+      orders: "/api/orders",
+    },
+    time: new Date().toISOString(),
+  });
+});
+
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,

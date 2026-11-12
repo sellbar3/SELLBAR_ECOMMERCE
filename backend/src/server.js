@@ -88,6 +88,7 @@ async function startServer() {
 
   const server = app.listen(port, "0.0.0.0", () => {
     logger.info(`SELLBAR API running on port ${port} (0.0.0.0)`);
+    logger.info(`Gateway: ${process.env.API_URL || "https://app.sellbar.in/api"} | Client: ${process.env.CLIENT_URL || "https://sellbar.in"}`);
   });
 
   async function shutdown(signal) {
