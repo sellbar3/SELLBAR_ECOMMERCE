@@ -7,6 +7,9 @@ const backendUrl = (
 
 const nextConfig = {
   output: 'standalone',
+  experimental: {
+    cpus: 1,
+  },
   turbopack: {
     rules: {
       "*.css": {
