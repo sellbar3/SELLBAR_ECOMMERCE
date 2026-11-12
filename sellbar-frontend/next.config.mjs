@@ -4,7 +4,7 @@ const backendUrl = process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_A
   : "";
 
 const nextConfig = {
-  /* config options here */
+  output: 'standalone',
   turbopack: {
     rules: {
       "*.css": {
@@ -20,7 +20,7 @@ const nextConfig = {
     return [
       {
         source: "/about",
-        destination: "/about-us",
+        destination: "/community",
         permanent: true,
       },
       {
