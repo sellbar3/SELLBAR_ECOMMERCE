@@ -36,6 +36,8 @@ export function createJwtSession(user) {
   return `${header}.${payload}.${signature}`;
 }
 
+export const signJwt = createJwtSession;
+
 export function verifyJwtSession(token) {
   try {
     if (!token) return null;
