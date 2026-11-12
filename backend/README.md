@@ -327,4 +327,3 @@ Current live deployment configuration for `app.sellbar.in`:
 ## 👥 Maintained & License
 
 - **Maintained by**: [Maajanki Web Tech](https://maajankiwebtech.com)
-- **License**: MIT
