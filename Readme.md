@@ -390,23 +390,34 @@ Contributors can reference the table below when adding or modifying pages:
 │ /repair                      │ Doorstep screen & battery repair service  │
 └──────────────────────────────┴───────────────────────────────────────────┘
 
-┌──────────────────────────────────────────────────────────────────────────┐
-│ Partner & Control Portals                                                │
-├──────────────────────────────┬───────────────────────────────────────────┤
-│ /vendor                      │ Vendor portal landing page                │
-│ /vendor/login                │ Vendor partner authentication             │
-│ /vendor/signup               │ Merchant registration & KYC onboarding    │
-│ /vendor/products             │ Inventory & catalog management            │
-│ /vendor/products/new         │ Add new product with Cloudinary uploads   │
-│ /vendor/orders               │ Order dispatch & shipping management      │
-│ /vendor/profile              │ Store profile & bank settlement settings  │
-│ /panel-login                 │ Unified entry point for vendors & admins  │
-│ /admin                       │ Admin master control center               │
-│ /admin/login                 │ Secure administrator login                │
-│ /admin/products              │ Platform-wide catalog oversight           │
-│ /admin/categories            │ Global category taxonomy management       │
-│ /admin/users                 │ Customer & vendor user account moderation │
-└──────────────────────────────┴───────────────────────────────────────────┘
+```
+
+#### 🏢 Admin Master Control Portal (`src/app/admin/`)
+| Folder / Route Path | File Location | Key Capabilities & Features |
+|---|---|---|
+| `/admin` | `src/app/admin/page.js` | **Executive Overview**: Total GMV, active users, orders count, revenue charts, recent transactions table |
+| `/admin/brands` | `src/app/admin/brands/page.js` | **Brand Management**: Add/edit manufacturers (Apple, Samsung, OnePlus, Dell, HP, Lenovo) |
+| `/admin/categories` | `src/app/admin/categories/page.js` | **Taxonomy Control**: Global categories, commission rates, banner associations, and SEO slugs |
+| `/admin/products` | `src/app/admin/products/page.js` | **Catalog Oversight**: Platform-wide product moderation, approvals, price audit, and inventory toggles |
+| `/admin/sell-models` | `src/app/admin/sell-models/page.js` | **Trade-in Catalog**: Master database of sellable electronic models, base valuation prices, and variants |
+| `/admin/sell-orders` | `src/app/admin/sell-orders/page.js` | **Buyback Pipeline**: Customer device selling orders, technician doorstep pickup dispatch, and QC status |
+| `/admin/valuation` | `src/app/admin/valuation/page.js` | **Pricing Algorithm**: Configure deduction rules for cosmetic scratches, battery health, and functional defects |
+| `/admin/users` | `src/app/admin/users/page.js` | **User Accounts**: Customer & merchant account moderation, role assignment, and status toggles |
+| `/admin/login` | `src/app/admin/login/page.js` | **Admin Auth**: Protected administrator login with secure JWT session validation |
+| `/admin/[...slug]` | `src/app/admin/[...slug]/page.js` | **Dynamic Sub-Views**: Unified router fallback for deep admin sub-modules |
+
+#### 🏪 Vendor / Merchant Partner Portal (`src/app/vendor/`)
+| Folder / Route Path | File Location | Key Capabilities & Features |
+|---|---|---|
+| `/vendor` | `src/app/vendor/page.js` | **Merchant Dashboard**: Daily sales metrics, pending dispatches, revenue summary, low stock alerts |
+| `/vendor/login` | `src/app/vendor/login/page.js` | **Partner Sign-in**: Secure authentication for verified merchant partners |
+| `/vendor/signup` | `src/app/vendor/signup/page.js` | **Merchant Registration**: Business registration, GST/PAN KYC upload, warehouse address submission |
+| `/vendor/products` | `src/app/vendor/products/page.js` | **Inventory List**: Table of all vendor products with live stock toggles, price updates, and status filters |
+| `/vendor/products/new` | `src/app/vendor/products/new/page.js` | **Product Creation Wizard**: Multi-image Cloudinary upload, condition grading (A++/A+/A), variant matrix |
+| `/vendor/products/[id]` | `src/app/vendor/products/[id]/page.js` | **Product Editor**: Modify specifications, update pricing, restock hardware variants, and adjust descriptions |
+| `/vendor/orders` | `src/app/vendor/orders/page.js` | **Order Fulfillment**: Track new orders, download invoices, mark orders packed, generate shipping labels |
+| `/vendor/profile` | `src/app/vendor/profile/page.js` | **Store Settings**: Business profile, pickup warehouse location, bank account details for settlements |
+| `/panel-login` | `src/app/panel-login/page.js` | **Unified Entry**: Smart redirection gateway routing users to either Admin or Vendor portal |
 ```
 
 ---
