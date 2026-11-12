@@ -10,6 +10,26 @@ const nextConfig = {
   experimental: {
     cpus: 1,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'sellbar.in',
+      },
+      {
+        protocol: 'https',
+        hostname: 'app.sellbar.in',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
   turbopack: {
     rules: {
       "*.css": {
