@@ -86,6 +86,9 @@ export default function HeroCarousel() {
             suppressHydrationWarning
             src={HERO_BANNERS[currentSlide].image}
             alt={HERO_BANNERS[currentSlide].alt}
+            fetchPriority={currentSlide === 0 ? "high" : "auto"}
+            decoding="async"
+            loading={currentSlide === 0 ? "eager" : "lazy"}
             className="w-full h-full object-cover object-center transition-all duration-500 hover:scale-[1.01]"
           />
         </Link>

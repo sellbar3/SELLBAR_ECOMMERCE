@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import PanelShell from "../../components/PanelShell";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Package,
   DollarSign,
@@ -23,14 +24,23 @@ import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-import { money, panelRequest } from "../../lib/panel";
+import { money, panelRequest, getPanelSession } from "../../lib/panel";
 
 export default function VendorDashboardPage() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
+
+  useEffect(() => {
+    const s = getPanelSession("vendor");
+    if (!s) {
+      router.replace("/vendor/login");
+      return;
+    }
+  }, [router]);
 
   useEffect(() => {
     setMounted(true);

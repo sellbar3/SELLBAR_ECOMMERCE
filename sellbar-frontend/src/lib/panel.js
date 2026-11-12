@@ -17,10 +17,8 @@ export function getPanelSession(role) {
             atob(parts[1].replace(/-/g, "+").replace(/_/g, "/"))
           );
           if (payload.exp && payload.exp * 1000 <= Date.now()) {
-            if (role !== "admin") {
-              localStorage.removeItem(PANEL_KEY);
-              return null;
-            }
+            localStorage.removeItem(PANEL_KEY);
+            return null;
           }
         } catch {}
       }

@@ -54,16 +54,13 @@ export default function AdminDashboardPage() {
         setLoading(true);
         setError("");
 
-        // Ensure session token is present
-        let session = getPanelSession("admin");
+        // Check session token
+        const session = getPanelSession("admin");
         if (!session?.token) {
-          session = {
-            token: "dev-admin-token-sellbar_admin_sig",
-            role: "admin",
-            name: "Sellbar Admin",
-            email: "admin@sellbar.com",
-          };
-          savePanelSession(session);
+          if (typeof window !== "undefined") {
+            window.location.href = "/admin/login";
+          }
+          return;
         }
 
         const headers = { Accept: "application/json" };

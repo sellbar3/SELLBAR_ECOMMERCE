@@ -7,6 +7,9 @@ import cachedProducts from "@/config/products-cache.json";
 
 // In-flight request deduplication map to prevent redundant concurrent fetches
 const inFlightRequests = new Map();
+// Client-side memory cache with SWR for instant (0ms) render
+const clientMemoryCache = new Map();
+const CACHE_TTL_MS = 60 * 1000;
 
 function normalizeCategory(cat) {
   if (!cat) return "";
@@ -152,6 +155,13 @@ export async function fetchProducts(params = {}) {
   if (params.limit) query.set("limit", String(params.limit));
 
   const cacheKey = `products_${query.toString()}`;
+
+  // 1. Instant Cache Hit Check
+  const cachedEntry = clientMemoryCache.get(cacheKey);
+  if (cachedEntry && Date.now() - cachedEntry.timestamp < CACHE_TTL_MS) {
+    return cachedEntry.data;
+  }
+
   if (inFlightRequests.has(cacheKey)) {
     return inFlightRequests.get(cacheKey);
   }
@@ -164,18 +174,22 @@ export async function fetchProducts(params = {}) {
       const res = await fetch(url, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-        cache: "no-store",
       });
 
       if (res.ok) {
         const json = await res.json();
         if (json?.data?.products) {
+          clientMemoryCache.set(cacheKey, { data: json.data, timestamp: Date.now() });
           return json.data;
         }
       }
-      return getFallbackFiltered(params);
+      const fallback = getFallbackFiltered(params);
+      clientMemoryCache.set(cacheKey, { data: fallback, timestamp: Date.now() });
+      return fallback;
     } catch {
-      return getFallbackFiltered(params);
+      const fallback = getFallbackFiltered(params);
+      clientMemoryCache.set(cacheKey, { data: fallback, timestamp: Date.now() });
+      return fallback;
     } finally {
       setTimeout(() => inFlightRequests.delete(cacheKey), 800);
     }

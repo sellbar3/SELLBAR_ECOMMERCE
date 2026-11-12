@@ -20,17 +20,9 @@ export default function PanelShell({ role, title, children }) {
   const router = useRouter();
   const path = usePathname();
 
-  // Instant initial session for admin to prevent layout shift & blank reload screens
+  // Initial session from localStorage for authenticated role
   const [session, setSession] = useState(() => {
-    if (role === "admin") {
-      return {
-        token: "dev-admin-token-sellbar_admin_sig",
-        role: "admin",
-        name: "Sellbar Admin",
-        email: "admin@sellbar.com",
-      };
-    }
-    return null;
+    return getPanelSession(role);
   });
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -75,16 +67,7 @@ export default function PanelShell({ role, title, children }) {
   };
 
   useEffect(() => {
-    let s = getPanelSession(role);
-    if (!s && role === "admin") {
-      s = {
-        token: "dev-admin-token-sellbar_admin_sig",
-        role: "admin",
-        name: "Sellbar Admin",
-        email: "admin@sellbar.com",
-      };
-      savePanelSession(s);
-    }
+    const s = getPanelSession(role);
     if (!s) {
       router.replace(role === "admin" ? "/admin/login" : "/vendor/login");
       return;
