@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack && node -e \"const fs=require('fs'),path=require('path');function cp(src,dest){if(!fs.existsSync(src))return;fs.mkdirSync(dest,{recursive:true});fs.readdirSync(src).forEach(f=>{const s=path.join(src,f),d=path.join(dest,f);fs.statSync(s).isDirectory()?cp(s,d):fs.copyFileSync(s,d);})}cp('.next/static','.next/standalone/.next/static');cp('public','.next/standalone/public');console.log('Static assets copied to standalone')\"",
-    "start": "node .next/standalone/server.js",
+    "build": "next build --webpack && node -e \"const fs=require('fs'),path=require('path');function cp(src,dest){if(!fs.existsSync(src))return;fs.mkdirSync(dest,{recursive:true});fs.readdirSync(src).forEach(f=>{const s=path.join(src,f),d=path.join(dest,f);fs.statSync(s).isDirectory()?cp(s,d):fs.copyFileSync(s,d);})}cp('.next/static','.next/standalone/.next/static');cp('.next/static','.next/standalone/sellbar-frontend/.next/static');cp('public','.next/standalone/public');cp('public','.next/standalone/sellbar-frontend/public');console.log('Static assets copied to standalone')\"",
+    "start": "node run-server.js",
     "lint": "eslint"
   },
   "dependencies": {

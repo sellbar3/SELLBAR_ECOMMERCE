@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
-const backendUrl = process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost:5000")
-  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, "")
-  : "";
+const backendUrl = (
+  process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes("localhost:5000")
+    ? process.env.NEXT_PUBLIC_API_URL
+    : "https://app.sellbar.in/api"
+).replace(/\/+$/, "");
 
 const nextConfig = {
   output: 'standalone',
@@ -38,6 +40,22 @@ const nextConfig = {
   async rewrites() {
     if (!backendUrl) return [];
     return [
+      {
+        source: "/api/auth/:path*",
+        destination: `${backendUrl}/auth/:path*`,
+      },
+      {
+        source: "/api/admin/:path*",
+        destination: `${backendUrl}/admin/:path*`,
+      },
+      {
+        source: "/api/sell-orders/:path*",
+        destination: `${backendUrl}/sell-orders/:path*`,
+      },
+      {
+        source: "/api/sell-models/:path*",
+        destination: `${backendUrl}/sell-models/:path*`,
+      },
       {
         source: "/api/products/:path*",
         destination: `${backendUrl}/products/:path*`,

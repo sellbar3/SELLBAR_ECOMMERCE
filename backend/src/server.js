@@ -86,8 +86,8 @@ async function startServer() {
     }, 10000);
   }
 
-  const server = app.listen(port, () => {
-    logger.info(`SELLBAR API running on port ${port}`);
+  const server = app.listen(port, "0.0.0.0", () => {
+    logger.info(`SELLBAR API running on port ${port} (0.0.0.0)`);
   });
 
   async function shutdown(signal) {
