@@ -105,7 +105,7 @@ export async function GET(request) {
 export async function PATCH(request) {
   try {
     const body = await request.json();
-    const { orderId, status, finalOffer, note, updatedBy } = body;
+    const { orderId, status, finalOffer, note, updatedBy, technician, utrNumber } = body;
 
     if (!orderId) {
       return NextResponse.json(
@@ -126,6 +126,7 @@ export async function PATCH(request) {
 
     if (status) {
       order.status = status;
+      order.statusHistory = order.statusHistory || [];
       order.statusHistory.push({
         status,
         timestamp: new Date(),
@@ -136,6 +137,16 @@ export async function PATCH(request) {
 
     if (finalOffer !== undefined && !isNaN(finalOffer)) {
       order.finalOffer = Number(finalOffer);
+    }
+
+    if (technician) {
+      order.technician = technician;
+    }
+
+    if (utrNumber) {
+      if (!order.payout) order.payout = {};
+      order.payout.utrNumber = utrNumber;
+      order.payout.paymentStatus = "paid";
     }
 
     await order.save();

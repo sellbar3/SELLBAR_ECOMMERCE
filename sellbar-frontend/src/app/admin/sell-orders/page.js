@@ -47,6 +47,9 @@ export default function AdminSellOrdersPage() {
   const [newStatus, setNewStatus] = useState('');
   const [revisedPrice, setRevisedPrice] = useState('');
   const [adminNote, setAdminNote] = useState('');
+  const [technicianName, setTechnicianName] = useState('');
+  const [technicianPhone, setTechnicianPhone] = useState('');
+  const [utrNumber, setUtrNumber] = useState('');
   const [updating, setUpdating] = useState(false);
 
   const fetchOrders = async () => {
@@ -88,6 +91,9 @@ export default function AdminSellOrdersPage() {
     setNewStatus(order.status);
     setRevisedPrice(String(order.finalOffer || order.estimatedPrice));
     setAdminNote('');
+    setTechnicianName(order.technician?.name || '');
+    setTechnicianPhone(order.technician?.phone || '');
+    setUtrNumber(order.payout?.utrNumber || '');
     setUpdateModalOpen(true);
   };
 
@@ -104,6 +110,10 @@ export default function AdminSellOrdersPage() {
           status: newStatus,
           finalOffer: Number(revisedPrice),
           note: adminNote,
+          technician: technicianName.trim()
+            ? { name: technicianName.trim(), phone: technicianPhone.trim() }
+            : undefined,
+          utrNumber: utrNumber.trim() || undefined,
           updatedBy: 'Admin Desk',
         }),
       });
@@ -356,6 +366,47 @@ export default function AdminSellOrdersPage() {
                   />
                   <span className="text-[11px] text-slate-400 mt-0.5 block">
                     Initial estimated quote: {money(selectedOrder.estimatedPrice)}
+                  </span>
+                </div>
+
+                {/* Technician Assignment */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Assigned Field Agent</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Ramesh Kumar"
+                      value={technicianName}
+                      onChange={(e) => setTechnicianName(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#13b59b]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Agent Contact Phone</label>
+                    <input
+                      type="tel"
+                      placeholder="e.g. 9876543210"
+                      value={technicianPhone}
+                      onChange={(e) => setTechnicianPhone(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#13b59b]"
+                    />
+                  </div>
+                </div>
+
+                {/* Bank / UPI Payout UTR */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Payout Transaction UTR / Ref No
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. UPI/420194829103 or IMPS-291048291"
+                    value={utrNumber}
+                    onChange={(e) => setUtrNumber(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-semibold text-slate-800 focus:outline-none focus:border-[#13b59b]"
+                  />
+                  <span className="text-[11px] text-slate-400 mt-0.5 block">
+                    Customer can see this UTR on their dashboard to confirm payout credit.
                   </span>
                 </div>
 

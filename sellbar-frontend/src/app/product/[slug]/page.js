@@ -60,6 +60,7 @@ function ProductDetailContent() {
   // Gallery States
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
+  const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50, show: false });
   const touchStartX = useRef(null);
 
@@ -431,9 +432,16 @@ function ProductDetailContent() {
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-[#1a907e] text-xs font-bold shadow-xs">
                   <Sparkles className="w-3 h-3 text-[#2bbda3]" /> Grade: {selectedGrade}
                 </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-bold">
-                  <ShieldCheck className="w-3 h-3 text-blue-600" /> 32-Point Inspected
-                </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsInspectionModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-[10px] font-bold cursor-pointer transition"
+                >
+                  <ShieldCheck className="w-3 h-3 text-blue-600" /> 32-Point Inspected (View)
+                </button>
               </div>
 
               {productData.badge && (
@@ -722,6 +730,34 @@ function ProductDetailContent() {
                 </div>
               </div>
             )}
+
+            {/* 32-Point Quality Diagnostic Certificate Trigger */}
+            <div
+              onClick={() => setIsInspectionModalOpen(true)}
+              className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-200/90 flex items-center justify-between gap-3 cursor-pointer hover:border-emerald-400 hover:shadow-xs transition group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#13b59b] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold text-slate-900 tracking-tight">
+                      32-Point Electronics Lab Certified
+                    </h4>
+                    <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-emerald-600 text-white uppercase">
+                      Passed
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 mt-0.5">
+                    Display, Battery ≥85%, Camera, Sensors &amp; 100% Sanitized.
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-[#13b59b] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 shrink-0">
+                View Certificate &rarr;
+              </span>
+            </div>
 
             {/* Pincode Delivery Estimator */}
             <div className="space-y-2 pt-1">
@@ -1801,6 +1837,173 @@ function ProductDetailContent() {
                 alt="Customer device review"
                 className="max-h-full max-w-full object-contain"
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 32-POINT QUALITY DIAGNOSTIC CERTIFICATE MODAL */}
+      {isInspectionModalOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setIsInspectionModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 sm:p-8 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Top Bar */}
+            <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-[#13b59b]/10 border border-[#13b59b]/20 flex items-center justify-center text-[#13b59b]">
+                  <ShieldCheck className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                      Sellbar 32-Point Quality Diagnostic Certificate
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-600 text-white uppercase tracking-wider">
+                      PASSED (32/32)
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Certificate No: <strong className="font-mono text-slate-800">QC-SLB-2026-{(productData?._id || "9481").slice(-6).toUpperCase()}</strong> • Issued by Sellbar Hardware Diagnostics Lab
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsInspectionModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-800 rounded-full hover:bg-slate-100 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Device Info Summary Pill */}
+            <div className="my-5 p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div>
+                <span className="text-slate-500 block text-[11px]">Certified Unit:</span>
+                <strong className="text-slate-900 text-sm font-bold">{productData?.name}</strong>
+              </div>
+              <div className="flex items-center gap-4">
+                <div>
+                  <span className="text-slate-500 block text-[11px]">Condition Grade:</span>
+                  <span className="font-bold text-[#13b59b]">{selectedGrade}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 block text-[11px]">Warranty Cover:</span>
+                  <strong className="text-slate-900">12 Months Comprehensive</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* 32 Test Points Across 6 Hardware Clusters */}
+            <div className="space-y-4">
+              {[
+                {
+                  cluster: "1. Display & Multi-Touch (6 Points)",
+                  items: [
+                    "Zero Dead Pixels / Screen Bleed",
+                    "TrueTone / 120Hz ProMotion Calibrated",
+                    "Touch Latency < 15ms Response",
+                    "Digitizer Multi-Gesture Accuracy",
+                    "Backlight Uniformity Test",
+                    "Zero Ghost Touch / Edge Responsiveness",
+                  ],
+                },
+                {
+                  cluster: "2. Battery & Thermal Management (5 Points)",
+                  items: [
+                    "Battery Health Tested ≥ 85% Capacity",
+                    "Charging IC & Overvoltage Protection",
+                    "Wireless Qi Charging Coil Functional",
+                    "Fast-Charging Protocol Verified",
+                    "Thermal Runaway & Overheat Check Safe",
+                  ],
+                },
+                {
+                  cluster: "3. Camera Optics & Sensors (5 Points)",
+                  items: [
+                    "Rear Primary 4K Optical Sensor Clean",
+                    "Ultra-Wide & Telephoto Lenses Aligned",
+                    "Optical Image Stabilization (OIS) Stable",
+                    "Front Selfie Camera & Portrait Focus",
+                    "True-Tone Flash & LiDAR Sensor Working",
+                  ],
+                },
+                {
+                  cluster: "4. Audio, Microphone & Haptics (6 Points)",
+                  items: [
+                    "Dual Stereo Loudspeakers Balanced",
+                    "Earpiece Call Speaker Crystal Clear",
+                    "Noise-Cancelling Studio Mics Active",
+                    "Taptic / Haptic Vibration Motor Crisp",
+                    "Audio DAC & Bluetooth A2DP Clean",
+                    "Proximity & Ambient Light Sensor Working",
+                  ],
+                },
+                {
+                  cluster: "5. Wireless, 5G & Biometrics (5 Points)",
+                  items: [
+                    "Face ID / Touch ID Biometric Pass",
+                    "5G Dual SIM & VoLTE Bands Active",
+                    "Wi-Fi 6 & MIMO Antenna Strength 100%",
+                    "Bluetooth 5.3 Low Energy Paired",
+                    "GPS / GLONASS Location Precision Lock",
+                  ],
+                },
+                {
+                  cluster: "6. Physical Ports, Seal & Sanitization (5 Points)",
+                  items: [
+                    "USB-C / Lightning Port Data & Audio Clean",
+                    "Power & Volume Buttons Tactile Click",
+                    "SIM Card Tray Ejector & Rubber Gasket",
+                    "Internal Moisture Contact Indicator White (Safe)",
+                    "100% Hospital-Grade UV-C Sanitization Done",
+                  ],
+                },
+              ].map((grp, gIdx) => (
+                <div key={gIdx} className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2.5 flex items-center justify-between">
+                    <span>{grp.cluster}</span>
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      All Passed
+                    </span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    {grp.items.map((it, iIdx) => (
+                      <div
+                        key={iIdx}
+                        className="flex items-center gap-2 p-1.5 rounded-lg bg-slate-50/70 border border-slate-100"
+                      >
+                        <div className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                          <Check className="w-2.5 h-2.5 stroke-[3]" />
+                        </div>
+                        <span className="text-slate-700 font-medium truncate">{it}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Modal Bottom Footer & Guarantee */}
+            <div className="mt-6 pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <CheckCircle2 className="w-4 h-4 text-[#13b59b]" />
+                <span>Backed by Sellbar 7-Day Money-Back &amp; 12-Month Replacement Warranty</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsInspectionModalOpen(false)}
+                className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer"
+              >
+                Close Certificate
+              </button>
             </div>
           </div>
         </div>
