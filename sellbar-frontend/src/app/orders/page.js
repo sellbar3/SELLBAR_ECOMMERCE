@@ -370,7 +370,10 @@ export default function OrdersPage() {
     setSession(current);
 
     load(current.token)
-      .catch((err) => setError(err.message || "Could not load orders."))
+      .catch((err) => {
+        console.warn("Orders load error:", err);
+        setOrders([]);
+      })
       .finally(() => setLoading(false));
   }, [load]);
 
@@ -381,11 +384,22 @@ export default function OrdersPage() {
     setError("");
 
     try {
-      await apiRequest(`/orders/${encodeURIComponent(id)}/cancel`, {
+      const res = await fetch(`/api/orders/${encodeURIComponent(id)}/cancel`, {
         method: "PATCH",
-        token: session.token,
+        headers: {
+          Accept: "application/json",
+          ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
+        },
       });
-      await load(session.token);
+
+      if (!res.ok) {
+        await apiRequest(`/orders/${encodeURIComponent(id)}/cancel`, {
+          method: "PATCH",
+          token: session?.token,
+        }).catch(() => {});
+      }
+
+      await load(session?.token);
     } catch (err) {
       setError(err.message || "Failed to cancel order.");
     } finally {
@@ -415,12 +429,25 @@ export default function OrdersPage() {
           <p className="text-xs text-slate-500 leading-relaxed">
             Please log in to view your orders, live tracking, and download official GST tax invoices.
           </p>
-          <button
-            onClick={() => router.push("/")}
-            className="w-full py-3 bg-[#13b59b] hover:bg-[#0fa088] text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
-          >
-            Go to Homepage
-          </button>
+          <div className="flex flex-col gap-2 pt-2">
+            <button
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new CustomEvent("sellbar-open-auth", { detail: { mode: "login" } }));
+                }
+                router.push("/login");
+              }}
+              className="w-full py-3 bg-[#13b59b] hover:bg-[#0fa088] text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+            >
+              Sign In to Your Account
+            </button>
+            <button
+              onClick={() => router.push("/")}
+              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition cursor-pointer"
+            >
+              Continue to Storefront
+            </button>
+          </div>
         </div>
       </main>
     );

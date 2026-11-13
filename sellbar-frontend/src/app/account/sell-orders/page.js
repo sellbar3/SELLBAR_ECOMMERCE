@@ -48,7 +48,10 @@ export default function CustomerSellOrdersHistoryPage() {
     async function loadSellHistory() {
       try {
         setLoading(true);
-        const res = await fetch('/api/sell-orders');
+        const session = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('sellbar_session') || '{}') : {};
+        const phone = session?.user?.phone;
+        const url = phone ? `/api/sell-orders?phone=${encodeURIComponent(phone)}` : '/api/sell-orders';
+        const res = await fetch(url);
         const json = await res.json();
         if (json.success && json.data) {
           setOrders(json.data);

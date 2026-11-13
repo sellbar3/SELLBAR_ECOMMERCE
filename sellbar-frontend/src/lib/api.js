@@ -18,7 +18,13 @@ export async function apiRequest(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API}${path}`, {
+  // Use internal Next.js API routes when available in the browser (e.g. /orders)
+  const isInternal = typeof window !== "undefined" && (path.startsWith("/orders") || path.startsWith("/api/orders"));
+  const requestUrl = isInternal
+    ? (path.startsWith("/api") ? path : `/api${path}`)
+    : `${API}${path}`;
+
+  const response = await fetch(requestUrl, {
     method,
     headers,
     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
@@ -28,6 +34,11 @@ export async function apiRequest(path, options = {}) {
   const result = await response.json().catch(() => ({}));
 
   if (!response.ok || result.success === false) {
+    // Graceful handling for 401 token invalid/expired
+    if (response.status === 401) {
+      console.warn(`[Sellbar API 401] ${path}: ${result.message || "Unauthorized"}`);
+      return { success: false, unauthorized: true, message: result.message || "Session expired", orders: [] };
+    }
     throw new Error(result.message || `Request failed (${response.status})`);
   }
 
