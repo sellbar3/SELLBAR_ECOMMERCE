@@ -22,6 +22,9 @@ export default function AppShellWrapper({ children }) {
     pathname.startsWith('/vendor') ||
     pathname.startsWith('/panel-login');
 
+  const isAccountPortal = pathname.startsWith('/account');
+
+  // Enterprise Portals (Admin & Vendor) - Enforce desktop constraint
   if (isPortal) {
     const portalTitle = pathname.startsWith('/vendor') ? 'Vendor Dashboard' : 'Admin Dashboard';
     return (
@@ -30,6 +33,15 @@ export default function AppShellWrapper({ children }) {
           {children}
         </main>
       </DesktopOnlyGuard>
+    );
+  }
+
+  // Customer Account Portal - Standalone sidebar dashboard (No public Navbar/Footer/MobileBottomNav)
+  if (isAccountPortal) {
+    return (
+      <main className="flex-1 flex flex-col min-h-screen w-full" suppressHydrationWarning>
+        {children}
+      </main>
     );
   }
 

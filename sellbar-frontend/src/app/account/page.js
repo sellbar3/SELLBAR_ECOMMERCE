@@ -315,23 +315,9 @@ export default function AccountDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800">
-      {/* 1. Breadcrumb Bar */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-            <Link href="/" className="hover:text-[#13b59b] transition">
-              Home
-            </Link>
-            <ChevronRight size={14} className="text-slate-400" />
-            <span className="text-slate-900 font-bold">Your Account</span>
-          </nav>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
-        {/* 2. Top Profile Hero Card */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <div className="space-y-8">
+      {/* 1. Top Profile Hero Card */}
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-4 sm:gap-5">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-[#13b59b] to-[#2bbda3] text-white flex items-center justify-center text-2xl sm:text-3xl font-black shadow-md shrink-0">
               {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
@@ -632,7 +618,6 @@ export default function AccountDashboardPage() {
             </Link>
           </div>
         </div>
-      </div>
 
       {/* ======================================================== */}
       {/* MODAL 1: EDIT PROFILE MODAL                               */}
