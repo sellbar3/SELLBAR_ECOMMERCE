@@ -239,13 +239,13 @@ export default function RegisterPage() {
               <span>Sign up with Google</span>
             </button>
 
-            {/* Divider */}
-            <div className="relative my-5 flex items-center justify-center">
-              <div className="border-t border-gray-200 w-full" />
-              <span className="bg-white px-3 text-[10px] font-bold text-gray-400 tracking-wider uppercase">
-                OR SIGN UP WITH EMAIL
+            {/* Divider - Clean Single Horizontal Row */}
+            <div className="my-5 flex items-center justify-center gap-3 w-full">
+              <div className="h-px bg-gray-200 flex-1 min-w-[20px]" />
+              <span className="text-[11px] font-bold text-gray-400 tracking-wider uppercase whitespace-nowrap shrink-0 px-1 select-none">
+                OR FILL IN DETAILS
               </span>
-              <div className="border-t border-gray-200 w-full" />
+              <div className="h-px bg-gray-200 flex-1 min-w-[20px]" />
             </div>
 
             {/* Registration Form */}
