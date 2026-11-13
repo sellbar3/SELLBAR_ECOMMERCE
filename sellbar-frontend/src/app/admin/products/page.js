@@ -23,6 +23,13 @@ function AdminProductsList({ session }) {
   const [editingProduct, setEditingProduct] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Bulk Import state
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [bulkRows, setBulkRows] = useState([]);
+  const [bulkFileName, setBulkFileName] = useState("");
+  const [bulkUploading, setBulkUploading] = useState(false);
+  const [bulkStatus, setBulkStatus] = useState(null);
+
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -184,6 +191,119 @@ function AdminProductsList({ session }) {
       }
     } catch (err) {
       setError("Failed to change status: " + err.message);
+    }
+  };
+
+  // Helper to parse CSV string into array of objects
+  const parseCSVText = (text) => {
+    const lines = text.trim().split(/\r?\n/).filter(Boolean);
+    if (lines.length < 2) return [];
+    const header = lines[0].split(",").map((h) => h.trim().toLowerCase().replace(/^["']|["']$/g, ""));
+
+    return lines.slice(1).map((line) => {
+      const values = [];
+      let insideQuote = false;
+      let entry = "";
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"' || char === "'") {
+          insideQuote = !insideQuote;
+        } else if (char === "," && !insideQuote) {
+          values.push(entry.trim());
+          entry = "";
+        } else {
+          entry += char;
+        }
+      }
+      values.push(entry.trim());
+
+      const row = {};
+      header.forEach((key, i) => {
+        row[key] = (values[i] || "").replace(/^["']|["']$/g, "");
+      });
+      return row;
+    });
+  };
+
+  // Download Sample CSV Template
+  const handleDownloadSampleCSV = () => {
+    const sample =
+      "name,brand,category,price,compareAtPrice,stock,condition,warranty,badge,imageUrl,description\n" +
+      '"Apple iPhone 14 (128GB - Blue)","Apple","mobile-phones",41999,69900,8,"Flawless","12 Months Doorstep Warranty","Lowest Price","https://images.unsplash.com/photo-1592750475338-74b7b21085ab","Certified pre-owned iPhone 14 with original box."\n' +
+      '"Samsung Galaxy S23 5G (256GB - Phantom Black)","Samsung","mobile-phones",44999,74999,5,"Flawless","12 Months Doorstep Warranty","Top Rated","https://images.unsplash.com/photo-1610945415295-d9bbf067e59c","Premium flagship with Snapdragon 8 Gen 2."\n' +
+      '"OnePlus 11 5G (16GB RAM / 256GB)","OnePlus","mobile-phones",36999,56999,12,"Good","12 Months Doorstep Warranty","Best Seller","https://images.unsplash.com/photo-1580910051074-3eb694886505","Superfast 100W SuperVOOC charger included."\n' +
+      '"Apple MacBook Air M1 (8GB / 256GB SSD)","Apple","laptops",49999,92900,4,"Flawless","12 Months Doorstep Warranty","Apple Silicon","https://images.unsplash.com/photo-1611186871348-b1ce696e52c9","All-day battery life with 100% battery health."\n';
+
+    const blob = new Blob([sample], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "sellbar_products_sample_template.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Handle CSV file selection
+  const handleCSVFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setBulkFileName(file.name);
+    setBulkStatus(null);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result;
+      if (typeof content === "string") {
+        const parsed = parseCSVText(content);
+        setBulkRows(parsed);
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Submit bulk products
+  const handleBulkSubmit = async () => {
+    if (!bulkRows || bulkRows.length === 0) {
+      setBulkStatus({ type: "error", message: "No product rows loaded to import." });
+      return;
+    }
+
+    try {
+      setBulkUploading(true);
+      setBulkStatus(null);
+
+      const res = await fetch("/api/admin/products/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ products: bulkRows }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to batch import products");
+      }
+
+      setBulkStatus({
+        type: "success",
+        message: `✓ Successfully imported ${data.count} products!${data.skippedCount ? ` (${data.skippedCount} skipped due to invalid data)` : ""}`,
+      });
+
+      setSuccessMsg(`Imported ${data.count} products from ${bulkFileName || "CSV"} successfully!`);
+      setTimeout(() => setSuccessMsg(""), 5000);
+
+      // Reload products list
+      await loadProducts();
+      setTimeout(() => {
+        setIsBulkModalOpen(false);
+        setBulkRows([]);
+        setBulkFileName("");
+        setBulkStatus(null);
+      }, 1500);
+    } catch (err) {
+      setBulkStatus({ type: "error", message: err.message || "Bulk upload failed" });
+    } finally {
+      setBulkUploading(false);
     }
   };
 
@@ -378,25 +498,47 @@ function AdminProductsList({ session }) {
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsAddModalOpen(true)}
-          style={{
-            background: "#13b59b",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            padding: "8px 16px",
-            fontWeight: "700",
-            fontSize: 13,
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
-          <span>➕</span> Add New Product
-        </button>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          <button
+            type="button"
+            onClick={() => setIsBulkModalOpen(true)}
+            style={{
+              background: "#0284c7",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "8px 16px",
+              fontWeight: "700",
+              fontSize: 13,
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <span>📥</span> Bulk CSV Import
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsAddModalOpen(true)}
+            style={{
+              background: "#13b59b",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "8px 16px",
+              fontWeight: "700",
+              fontSize: 13,
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <span>➕</span> Add New Product
+          </button>
+        </div>
       </div>
 
       {/* Search and Filters Bar */}
@@ -1095,6 +1237,331 @@ function AdminProductsList({ session }) {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk CSV Import Modal */}
+      {isBulkModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15, 23, 42, 0.7)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 16,
+              maxWidth: 820,
+              width: "100%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.2)",
+              padding: 24,
+            }}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #e2e8f0",
+                paddingBottom: 16,
+                marginBottom: 20,
+              }}
+            >
+              <div>
+                <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#0f172a" }}>
+                  📥 Bulk Import Products via CSV / Excel
+                </h3>
+                <p style={{ margin: "4px 0 0", fontSize: 12, color: "#64748b" }}>
+                  Upload a batch of refurbished inventory listings directly into your MongoDB catalog.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsBulkModalOpen(false);
+                  setBulkStatus(null);
+                }}
+                style={{
+                  background: "#f1f5f9",
+                  border: "none",
+                  borderRadius: "50%",
+                  width: 32,
+                  height: 32,
+                  fontSize: 16,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#64748b",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Template Download & File Picker Box */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: 16,
+                marginBottom: 20,
+              }}
+            >
+              <div
+                style={{
+                  background: "#f8fafc",
+                  border: "1px dashed #cbd5e1",
+                  borderRadius: 12,
+                  padding: 16,
+                }}
+              >
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>
+                  1. Get Sample Template
+                </div>
+                <p style={{ fontSize: 12, color: "#64748b", margin: "0 0 12px" }}>
+                  Download the formatted CSV file with required columns (name, brand, category, price, stock, etc.).
+                </p>
+                <button
+                  type="button"
+                  onClick={handleDownloadSampleCSV}
+                  style={{
+                    padding: "8px 14px",
+                    background: "#0284c7",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 8,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  📄 Download Sample CSV Template
+                </button>
+              </div>
+
+              <div
+                style={{
+                  background: "#f8fafc",
+                  border: "1px dashed #cbd5e1",
+                  borderRadius: 12,
+                  padding: 16,
+                }}
+              >
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#1e293b", marginBottom: 6 }}>
+                  2. Select / Upload Your CSV File
+                </div>
+                <input
+                  type="file"
+                  accept=".csv,.txt"
+                  onChange={handleCSVFileChange}
+                  style={{
+                    fontSize: 12,
+                    display: "block",
+                    width: "100%",
+                    padding: "6px 0",
+                    cursor: "pointer",
+                  }}
+                />
+                {bulkFileName && (
+                  <div style={{ marginTop: 8, fontSize: 11, color: "#0284c7", fontWeight: 600 }}>
+                    Selected: {bulkFileName} ({bulkRows.length} rows parsed)
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Status alerts */}
+            {bulkStatus && (
+              <div
+                style={{
+                  padding: "10px 14px",
+                  borderRadius: 8,
+                  marginBottom: 16,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  background: bulkStatus.type === "success" ? "#dcfce7" : "#fee2e2",
+                  color: bulkStatus.type === "success" ? "#15803d" : "#b91c1c",
+                  border: `1px solid ${bulkStatus.type === "success" ? "#bbf7d0" : "#fca5a5"}`,
+                }}
+              >
+                {bulkStatus.message}
+              </div>
+            )}
+
+            {/* Preview of Parsed Rows */}
+            {bulkRows.length > 0 && (
+              <div style={{ marginBottom: 20 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 10,
+                  }}
+                >
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>
+                    File Preview ({bulkRows.length} Items Detected)
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      background: "#e0f2fe",
+                      color: "#0369a1",
+                      padding: "2px 8px",
+                      borderRadius: 10,
+                      fontWeight: 700,
+                    }}
+                  >
+                    Ready for Validation
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    maxHeight: 260,
+                    overflowY: "auto",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: 8,
+                  }}
+                >
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+                    <thead>
+                      <tr style={{ background: "#f1f5f9", textAlign: "left", color: "#475569" }}>
+                        <th style={{ padding: "8px 10px" }}>#</th>
+                        <th style={{ padding: "8px 10px" }}>Product Name</th>
+                        <th style={{ padding: "8px 10px" }}>Brand</th>
+                        <th style={{ padding: "8px 10px" }}>Category</th>
+                        <th style={{ padding: "8px 10px" }}>Price (₹)</th>
+                        <th style={{ padding: "8px 10px" }}>Stock</th>
+                        <th style={{ padding: "8px 10px" }}>Condition</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bulkRows.slice(0, 30).map((r, idx) => {
+                        const name = r.name || r.Name || r.title || "";
+                        const price = r.price !== undefined ? r.price : r.Price;
+                        const isValid = name.trim() && !isNaN(Number(price));
+
+                        return (
+                          <tr
+                            key={idx}
+                            style={{
+                              borderBottom: "1px solid #f1f5f9",
+                              background: isValid ? "#fff" : "#fff1f2",
+                            }}
+                          >
+                            <td style={{ padding: "6px 10px", color: "#94a3b8" }}>{idx + 1}</td>
+                            <td style={{ padding: "6px 10px", fontWeight: 600, color: "#1e293b" }}>
+                              {name || <span style={{ color: "#e11d48" }}>[Missing Name]</span>}
+                            </td>
+                            <td style={{ padding: "6px 10px", color: "#64748b" }}>{r.brand || r.Brand || "-"}</td>
+                            <td style={{ padding: "6px 10px", color: "#64748b" }}>{r.category || r.Category || "default"}</td>
+                            <td style={{ padding: "6px 10px", fontWeight: 700, color: "#0f172a" }}>
+                              {price !== undefined && !isNaN(Number(price)) ? (
+                                `₹${Number(price).toLocaleString("en-IN")}`
+                              ) : (
+                                <span style={{ color: "#e11d48" }}>[Invalid]</span>
+                              )}
+                            </td>
+                            <td style={{ padding: "6px 10px", color: "#64748b" }}>{r.stock || r.Stock || 10}</td>
+                            <td style={{ padding: "6px 10px" }}>
+                              <span
+                                style={{
+                                  background: "#f0fdf4",
+                                  color: "#166534",
+                                  padding: "2px 6px",
+                                  borderRadius: 4,
+                                  fontSize: 10,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {r.condition || r.Condition || "Flawless"}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                  {bulkRows.length > 30 && (
+                    <div style={{ textAlign: "center", padding: 8, fontSize: 11, color: "#64748b", background: "#f8fafc" }}>
+                      ...and {bulkRows.length - 30} more products
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Modal Actions */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 12,
+                borderTop: "1px solid #e2e8f0",
+                paddingTop: 16,
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setIsBulkModalOpen(false);
+                  setBulkStatus(null);
+                }}
+                style={{
+                  padding: "8px 18px",
+                  background: "#f1f5f9",
+                  border: "none",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  color: "#475569",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleBulkSubmit}
+                disabled={bulkUploading || bulkRows.length === 0}
+                style={{
+                  padding: "8px 22px",
+                  background: bulkRows.length > 0 ? "#13b59b" : "#94a3b8",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 8,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: bulkRows.length > 0 ? "pointer" : "not-allowed",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                {bulkUploading ? (
+                  <span>⏳ Importing {bulkRows.length} Products...</span>
+                ) : (
+                  <span>🚀 Import {bulkRows.length} Products to Catalog</span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -86,6 +86,13 @@ export default function Checkout({ initialItems }) {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
 
+  // UPI payment state
+  const [showUpiModal, setShowUpiModal] = useState(false);
+  const [upiUtr, setUpiUtr] = useState("");
+  const [upiTimeLeft, setUpiTimeLeft] = useState(300);
+  const [upiCopied, setUpiCopied] = useState(false);
+  const [upiVpaInput, setUpiVpaInput] = useState("");
+
   const sampleOrderItems = [
     {
       id: "1",
@@ -135,6 +142,16 @@ export default function Checkout({ initialItems }) {
   ];
 
   const [selectedShipping, setSelectedShipping] = useState("standard");
+
+  useEffect(() => {
+    let timer;
+    if (showUpiModal && upiTimeLeft > 0) {
+      timer = setInterval(() => {
+        setUpiTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [showUpiModal, upiTimeLeft]);
 
   useEffect(() => {
     const loadCheckout = async () => {
@@ -995,20 +1012,51 @@ export default function Checkout({ initialItems }) {
                   </div>
                 )}
 
-                {/* UPI Info */}
+                {/* UPI Info & Selection */}
                 {selectedPaymentType === "upi" && (
-                  <div className="border-t pt-4">
+                  <div className="border-t pt-4 space-y-4">
                     <div className="bg-teal-50/60 border border-teal-200 rounded-ele p-4">
                       <div className="flex items-start gap-3">
                         <Smartphone className="h-5 w-5 text-[#2bbda3] mt-0.5" />
-                        <div>
+                        <div className="flex-1">
                           <h4 className="font-bold text-gray-900 text-sm">
-                            UPI QR &amp; App Redirect
+                            Instant UPI Payment (QR Code &amp; Apps)
                           </h4>
                           <p className="text-xs text-gray-600 mt-1">
-                            You will be prompted to approve the payment on Google Pay, PhonePe, or Paytm securely.
+                            Pay directly via Google Pay, PhonePe, Paytm, BHIM, or any UPI app with 0% extra convenience fee.
                           </p>
                         </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="upiVpa" className="text-xs font-bold text-gray-700">
+                        Enter Your UPI ID (Optional / Auto-verify)
+                      </Label>
+                      <Input
+                        id="upiVpa"
+                        size="lg"
+                        placeholder="e.g. mobileNumber@upi or name@okhdfcbank"
+                        value={upiVpaInput}
+                        onChange={(e) => setUpiVpaInput(e.target.value)}
+                        className="text-xs"
+                      />
+                      <span className="text-[11px] text-gray-400">
+                        Leave blank to scan dynamic QR code or open UPI apps in the final step.
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      <span className="text-[11px] font-semibold text-gray-500">Supported Apps:</span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {["Google Pay", "PhonePe", "Paytm", "BHIM UPI", "CRED"].map((app) => (
+                          <span
+                            key={app}
+                            className="text-[10px] font-bold px-2 py-0.5 bg-gray-100 text-gray-700 rounded-md border border-gray-200"
+                          >
+                            {app}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -1112,10 +1160,16 @@ export default function Checkout({ initialItems }) {
                   Back
                 </Button>
                 <Button
-                  onClick={() => setOrderPlaced(true)}
+                  onClick={() => {
+                    if (selectedPaymentType === "upi") {
+                      setShowUpiModal(true);
+                    } else {
+                      setOrderPlaced(true);
+                    }
+                  }}
                   disabled={!validateStep(3)}
                   size="lg"
-                  className="bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold flex items-center gap-2 shadow-md"
+                  className="bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold flex items-center gap-2 shadow-md cursor-pointer"
                 >
                   <Lock className="h-4 w-4" />
                   Pay ₹{summary.total.toLocaleString("en-IN")} &amp; Confirm Order
@@ -1144,6 +1198,129 @@ export default function Checkout({ initialItems }) {
           </Card>
         </div>
       </div>
+
+      {/* Sellbar Instant UPI Payment Gateway Modal */}
+      {showUpiModal && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 text-center shadow-2xl relative space-y-5 animate-in fade-in zoom-in duration-200">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowUpiModal(false)}
+              className="absolute right-4 top-4 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Header & Amount */}
+            <div className="space-y-1">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-0.5 bg-emerald-50 text-[#2bbda3] rounded-full border border-emerald-200">
+                Sellbar Instant UPI Gateway
+              </span>
+              <h3 className="text-xl font-black text-slate-900 pt-1">
+                Scan QR or Pay via UPI
+              </h3>
+              <div className="text-3xl font-black text-[#2bbda3] font-mono pt-1">
+                ₹{summary.total.toLocaleString("en-IN")}
+              </div>
+              <div className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5 pt-0.5">
+                <Clock className="w-3.5 h-3.5 text-amber-500" />
+                <span>
+                  QR valid for:{" "}
+                  <strong className="text-slate-800 font-mono">
+                    {String(Math.floor(upiTimeLeft / 60)).padStart(2, "0")}:
+                    {String(upiTimeLeft % 60).padStart(2, "0")}
+                  </strong>
+                </span>
+              </div>
+            </div>
+
+            {/* QR Code Container */}
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 inline-block shadow-inner mx-auto">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(
+                  `upi://pay?pa=sellbar@icici&pn=Sellbar%20Technologies&am=${summary.total}&cu=INR&tn=SB-ORDER-${Math.floor(100000 + Math.random() * 900000)}`
+                )}`}
+                alt="Sellbar UPI QR Code"
+                className="w-48 h-48 rounded-xl object-contain mx-auto"
+              />
+              <p className="text-[11px] text-slate-500 font-semibold mt-2">
+                Scan using Google Pay, PhonePe, Paytm, or CRED
+              </p>
+            </div>
+
+            {/* Copyable UPI ID Box */}
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between gap-2 text-left">
+              <div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase">Sellbar Official UPI ID</div>
+                <div className="text-xs font-mono font-bold text-slate-800">sellbar@icici</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText("sellbar@icici");
+                  setUpiCopied(true);
+                  setTimeout(() => setUpiCopied(false), 3000);
+                }}
+                className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg transition cursor-pointer"
+              >
+                {upiCopied ? "✓ Copied" : "Copy VPA"}
+              </button>
+            </div>
+
+            {/* Direct App Deep Links (for Mobile devices) */}
+            <div className="space-y-1.5 pt-1">
+              <div className="text-[11px] font-bold text-slate-500">Or Open Installed UPI App:</div>
+              <div className="grid grid-cols-3 gap-2">
+                <a
+                  href={`upi://pay?pa=sellbar@icici&pn=Sellbar%20Technologies&am=${summary.total}&cu=INR`}
+                  className="py-2 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold border border-emerald-200 transition block text-center"
+                >
+                  Google Pay
+                </a>
+                <a
+                  href={`upi://pay?pa=sellbar@icici&pn=Sellbar%20Technologies&am=${summary.total}&cu=INR`}
+                  className="py-2 px-2 bg-purple-50 hover:bg-purple-100 text-purple-800 rounded-xl text-xs font-bold border border-purple-200 transition block text-center"
+                >
+                  PhonePe
+                </a>
+                <a
+                  href={`upi://pay?pa=sellbar@icici&pn=Sellbar%20Technologies&am=${summary.total}&cu=INR`}
+                  className="py-2 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-xl text-xs font-bold border border-blue-200 transition block text-center"
+                >
+                  Paytm
+                </a>
+              </div>
+            </div>
+
+            {/* UTR Input & Confirmation */}
+            <div className="space-y-3 pt-2 border-t border-slate-100">
+              <div className="text-left space-y-1">
+                <label className="text-[11px] font-bold text-slate-700">
+                  Payment Reference / UTR Number (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 431209876543 (12 digits)"
+                  value={upiUtr}
+                  onChange={(e) => setUpiUtr(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-semibold focus:outline-none focus:border-[#2bbda3]"
+                />
+              </div>
+
+              <Button
+                onClick={() => {
+                  setShowUpiModal(false);
+                  setOrderPlaced(true);
+                }}
+                className="w-full py-3.5 bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Check className="w-4 h-4" />
+                <span>I Have Completed UPI Payment</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
