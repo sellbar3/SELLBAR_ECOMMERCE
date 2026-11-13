@@ -83,13 +83,13 @@ export default function AccountLayout({ children }) {
     router.refresh();
   };
 
-  // Nav Groups & Subpages
+  // Nav Groups & Subpages (Account-only, no public pages)
   const navSections = [
     {
-      group: 'OVERVIEW',
+      group: 'MAIN',
       items: [
         {
-          label: 'Dashboard Home',
+          label: 'Dashboard Overview',
           href: '/account',
           icon: LayoutDashboard,
           exact: true,
@@ -100,12 +100,12 @@ export default function AccountLayout({ children }) {
       group: 'ORDERS & PURCHASES',
       items: [
         {
-          label: 'Your Orders',
+          label: 'My Orders',
           href: '/account/orders',
           icon: Package,
           subpages: [
             { label: 'All Orders', href: '/account/orders' },
-            { label: 'Live Tracking', href: '/account/orders' },
+            { label: 'Order Tracking', href: '/account/orders' },
             { label: 'GST Tax Invoices', href: '/account/orders' },
           ],
         },
@@ -115,14 +115,14 @@ export default function AccountLayout({ children }) {
           icon: Heart,
         },
         {
-          label: 'Reviews & Feedback',
+          label: 'My Reviews',
           href: '/account/reviews',
           icon: Star,
         },
       ],
     },
     {
-      group: 'DEVICE BUYBACK (SELL)',
+      group: 'SELL & BUYBACK',
       items: [
         {
           label: 'Sell Orders & Pickups',
@@ -134,22 +134,10 @@ export default function AccountLayout({ children }) {
             { label: 'Payout UTR Proofs', href: '/account/sell-orders' },
           ],
         },
-        {
-          label: 'Sell Another Gadget',
-          href: '/sell',
-          icon: RefreshCw,
-          external: false,
-        },
-        {
-          label: 'Price Calculator',
-          href: '/sell-old-mobile-phone',
-          icon: Calculator,
-          external: false,
-        },
       ],
     },
     {
-      group: 'PROFILE & PREFERENCES',
+      group: 'SETTINGS & PREFERENCES',
       items: [
         {
           label: 'Personal Profile',
@@ -167,31 +155,21 @@ export default function AccountLayout({ children }) {
           icon: CreditCard,
         },
         {
-          label: '12-Month Warranty Hub',
+          label: 'Warranty Protection',
           href: '/account/warranty',
           icon: Award,
         },
       ],
     },
     {
-      group: 'HELP & SUPPORT',
+      group: 'SUPPORT',
       items: [
         {
-          label: 'WhatsApp Support',
+          label: 'Customer Support',
           href: 'https://wa.me/917717517777',
           icon: MessageCircle,
           external: true,
           badge: '+91 77175 17777',
-        },
-        {
-          label: '7-Day Return Policy',
-          href: '/return-policy',
-          icon: RotateCcw,
-        },
-        {
-          label: 'Help & FAQs',
-          href: '/faq',
-          icon: HelpCircle,
         },
       ],
     },
@@ -395,21 +373,13 @@ export default function AccountLayout({ children }) {
           </div>
 
           {/* Top Bar Quick Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <Link
-              href="/sell"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-[#13b59b] border border-emerald-200 text-xs font-bold rounded-xl transition"
-            >
-              <Smartphone size={13} />
-              <span>Sell a Device</span>
-            </Link>
-
-            <Link
-              href="/shop"
+              href="/"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
             >
-              <ShoppingBag size={13} />
-              <span className="hidden sm:inline">Store</span>
+              <ArrowLeft size={13} className="text-slate-500" />
+              <span>Back to Store</span>
             </Link>
 
             {/* User Avatar Pill */}
@@ -421,7 +391,7 @@ export default function AccountLayout({ children }) {
                 onClick={handleLogout}
                 className="text-xs font-semibold text-slate-500 hover:text-rose-600 hidden md:inline transition cursor-pointer"
               >
-                Logout
+                Sign Out
               </button>
             </div>
           </div>
