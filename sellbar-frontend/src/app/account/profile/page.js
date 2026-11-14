@@ -1,106 +1,107 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { User, ChevronRight, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { getSession } from '@/lib/auth';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FiChevronRight, FiHome, FiUser } from "react-icons/fi";
+import { getSession, saveSession, clearSession } from "@/lib/auth";
+import UserProfileWidget from "@/components/UserProfileWidget";
 
 export default function CustomerProfilePage() {
-  const [user, setUser] = useState({ name: 'Aman Verma', email: 'aman@example.com', phone: '+91 98765 43210' });
-  const [savedMsg, setSavedMsg] = useState(false);
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const s = getSession();
-    if (s?.user) {
-      setUser((prev) => ({
-        ...prev,
-        name: s.user.name || prev.name,
-        email: s.user.email || prev.email,
-        phone: s.user.phone || prev.phone,
-      }));
+    async function loadUser() {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data.authenticated && data.user) {
+          setCurrentUser(data.user);
+          setLoading(false);
+          return;
+        }
+      } catch {
+        // ignore
+      }
+
+      const s = getSession();
+      if (s?.user) {
+        setCurrentUser(s.user);
+      } else {
+        setCurrentUser({
+          name: "Sellbar Customer",
+          email: "customer@sellbar.in",
+          phone: "9876543210",
+        });
+      }
+      setLoading(false);
     }
+    loadUser();
   }, []);
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    setSavedMsg(true);
-    setTimeout(() => setSavedMsg(false), 3000);
+  const handleSaveProfile = (updatedData) => {
+    const existing = getSession() || {};
+    const updated = {
+      ...(existing.user || {}),
+      ...updatedData,
+    };
+    saveSession({
+      ...existing,
+      user: updated,
+    });
+    setCurrentUser(updated);
+
+    // Notify other components (Navbar, Account Dashboard)
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("sellbar-user-logged-in"));
+    }
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // ignore
+    }
+    clearSession();
+    router.push("/");
+    router.refresh();
+  };
+
+  if (loading) {
+    return (
+      <div className="py-20 flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-3 border-[#13b59b] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs text-slate-500 font-semibold">Loading profile...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center gap-2 text-xs font-medium text-slate-500">
-            <Link href="/" className="hover:text-[#13b59b] transition">Home</Link>
-            <ChevronRight size={14} />
-            <Link href="/account" className="hover:text-[#13b59b] transition">Account</Link>
-            <ChevronRight size={14} />
-            <span className="text-slate-900 font-semibold">Personal Profile</span>
-          </nav>
-        </div>
+    <div className="max-w-4xl space-y-6">
+      {/* Breadcrumb Header */}
+      <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 pb-2 border-b border-slate-100">
+        <Link href="/" className="hover:text-[#13b59b] transition flex items-center gap-1">
+          <FiHome /> Home
+        </Link>
+        <FiChevronRight className="text-slate-400" />
+        <Link href="/account" className="hover:text-[#13b59b] transition">
+          Account
+        </Link>
+        <FiChevronRight className="text-slate-400" />
+        <span className="text-slate-900 font-bold flex items-center gap-1">
+          <FiUser className="text-[#13b59b]" /> User Profile &amp; Settings
+        </span>
       </div>
 
-      <section className="max-w-2xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-6">
-          <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-[#13b59b] flex items-center justify-center font-bold">
-              <User size={24} />
-            </div>
-            <div>
-              <h1 className="text-xl font-black text-slate-900">Personal Information</h1>
-              <p className="text-xs text-slate-500">Manage your contact details and communication preferences.</p>
-            </div>
-          </div>
-
-          {savedMsg && (
-            <div className="p-3 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold flex items-center gap-2">
-              <CheckCircle2 size={16} /> Profile changes saved successfully!
-            </div>
-          )}
-
-          <form onSubmit={handleSave} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
-              <input
-                type="text"
-                value={user.name}
-                onChange={(e) => setUser({ ...user, name: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#13b59b]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
-              <input
-                type="email"
-                value={user.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#13b59b]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Registered Phone Number</label>
-              <input
-                type="tel"
-                value={user.phone}
-                onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-[#13b59b]"
-              />
-            </div>
-
-            <div className="pt-2">
-              <button
-                type="submit"
-                className="px-6 py-2.5 bg-[#13b59b] hover:bg-[#0fa088] text-white rounded-xl text-xs font-bold shadow transition cursor-pointer"
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
-        </div>
-      </section>
+      {/* Main User Profile Component using HeroUI User, React Icons, and Descope Widget */}
+      <UserProfileWidget
+        user={currentUser}
+        onSaveProfile={handleSaveProfile}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }
