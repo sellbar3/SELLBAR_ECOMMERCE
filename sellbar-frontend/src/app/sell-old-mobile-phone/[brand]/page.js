@@ -21,10 +21,29 @@ import SellFiltersSidebar from '@/components/sell/SellFiltersSidebar';
 function SellBrandContent() {
   const params = useParams();
   const router = useRouter();
-  const brandSlug = params?.brand ? String(params.brand).toLowerCase() : '';
+  const rawBrand = params?.brand ? String(params.brand).toLowerCase() : '';
+  const brandSlug = rawBrand.replace(/^sell-/, '').trim();
+
+  // If visitor navigated directly to a model slug under /sell-old-mobile-phone/[slug]
+  React.useEffect(() => {
+    if (!brandSlug) return;
+    const directModel = MOBILE_MODELS.find(
+      (m) =>
+        m.slug.toLowerCase() === brandSlug ||
+        m.id.toLowerCase() === brandSlug ||
+        rawBrand.includes(m.slug.toLowerCase()) ||
+        m.slug.toLowerCase().includes(brandSlug.replace(/^used-/, ''))
+    );
+    if (directModel) {
+      router.replace(`/sell-old-mobile-phone/${directModel.brandSlug}/${directModel.slug}`);
+    }
+  }, [brandSlug, rawBrand, router]);
 
   const brandInfo = POPULAR_BRANDS.find(
-    (b) => b.slug.toLowerCase() === brandSlug || b.name.toLowerCase() === brandSlug
+    (b) =>
+      b.slug.toLowerCase() === brandSlug ||
+      b.name.toLowerCase() === brandSlug ||
+      b.slug.toLowerCase() === rawBrand
   ) || {
     name: brandSlug ? brandSlug.toUpperCase() : 'Brand',
     slug: brandSlug,

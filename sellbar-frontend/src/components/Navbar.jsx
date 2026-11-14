@@ -875,24 +875,24 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Brands</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-mobile-phone/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-xiaomi" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-oneplus" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Oneplus</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-nokia" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Nokia</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-poco" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Poco</Link>
-                                    <Link href="/sell-old-mobile-phone?brand=1" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More Phone Brands →</Link>
+                                    <Link href="/sell-old-mobile-phone/apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
+                                    <Link href="/sell-old-mobile-phone/xiaomi" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi</Link>
+                                    <Link href="/sell-old-mobile-phone/samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
+                                    <Link href="/sell-old-mobile-phone/oneplus" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">OnePlus</Link>
+                                    <Link href="/sell-old-mobile-phone/motorola" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Motorola</Link>
+                                    <Link href="/sell-old-mobile-phone/vivo" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Vivo</Link>
+                                    <Link href="/sell-old-mobile-phone" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More Phone Brands →</Link>
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Selling Phones</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-mobile-phone/used-apple-iphone-12" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 12</Link>
-                                    <Link href="/sell-old-mobile-phone/used-apple-iphone-11" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 11</Link>
-                                    <Link href="/sell-old-mobile-phone/used-samsung-galaxy-note-20-8-gb-256-gb" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy Note 20</Link>
-                                    <Link href="/sell-old-mobile-phone/used-oneplus-9-pro-5g" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">One Plus 9 Pro</Link>
-                                    <Link href="/sell-old-mobile-phone/used-redmi-note-4" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi Redmi Note 4</Link>
-                                    <Link href="/sell-old-mobile-phone/used-iphone-6" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 6</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-12" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 12</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-11" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 11</Link>
+                                    <Link href="/sell-old-mobile-phone/samsung/galaxy-s24-ultra" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy S24 Ultra</Link>
+                                    <Link href="/sell-old-mobile-phone/oneplus/oneplus-12" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">OnePlus 12</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-13" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 13</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-14" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 14</Link>
                                   </div>
                                 </div>
                               </div>
@@ -909,23 +909,23 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Brands</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-laptop/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
-                                    <Link href="/sell-old-laptop/sell-hp-compaq" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">HP</Link>
-                                    <Link href="/sell-old-laptop/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
-                                    <Link href="/sell-old-laptop/sell-lenovo" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Lenovo</Link>
-                                    <Link href="/sell-old-laptop/sell-dell" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Dell</Link>
-                                    <Link href="/sell-old-laptop/sell-honor" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Honor</Link>
-                                    <Link href="/sell-old-laptop?brand=1" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More Laptop Brands →</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">HP</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Lenovo</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Dell</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Honor</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More Laptop Brands →</Link>
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Selling Models</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-laptop/used-pavilion-series" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Pavilion Series</Link>
-                                    <Link href="/sell-old-laptop/used-vostro-series" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Vostro Series</Link>
-                                    <Link href="/sell-old-laptop/used-inspiron-series" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Inspiron Series</Link>
-                                    <Link href="/sell-old-laptop/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">MacBook Air M1 / M2</Link>
-                                    <Link href="/sell-old-laptop/sell-lenovo" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">ThinkPad Series</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Pavilion Series</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Vostro Series</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Inspiron Series</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">MacBook Air M1 / M2</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">ThinkPad Series</Link>
                                   </div>
                                 </div>
                               </div>
@@ -942,20 +942,20 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Brands</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-smart-watch/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch</Link>
-                                    <Link href="/sell-old-smart-watch/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy Watch</Link>
-                                    <Link href="/sell-old-smart-watch/sell-oneplus" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">OnePlus Watch</Link>
-                                    <Link href="/sell-old-smart-watch/sell-xiaomi" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi / Amazfit</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy Watch</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">OnePlus Watch</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi / Amazfit</Link>
                                     <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More Smartwatch Brands →</Link>
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Popular Models</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-smart-watch/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch Series 9</Link>
-                                    <Link href="/sell-old-smart-watch/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch Ultra</Link>
-                                    <Link href="/sell-old-smart-watch/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Galaxy Watch 6</Link>
-                                    <Link href="/sell-old-smart-watch/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch SE 2</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch Series 9</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch Ultra</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Galaxy Watch 6</Link>
+                                    <Link href="/sell-old-smart-watch" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple Watch SE 2</Link>
                                   </div>
                                 </div>
                               </div>
@@ -972,20 +972,20 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Brands</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-tablet/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad</Link>
-                                    <Link href="/sell-old-tablet/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Tab</Link>
-                                    <Link href="/sell-old-tablet/sell-lenovo" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Lenovo Tab</Link>
-                                    <Link href="/sell-old-tablet/sell-honor" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Honor Pad</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Tab</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Lenovo Tab</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Honor Pad</Link>
                                     <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More Tablet Brands →</Link>
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Popular Tablets</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-tablet/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad Air 5th Gen</Link>
-                                    <Link href="/sell-old-tablet/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad 10th Gen</Link>
-                                    <Link href="/sell-old-tablet/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy Tab S9</Link>
-                                    <Link href="/sell-old-tablet/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad Pro 11</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad Air 5th Gen</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad 10th Gen</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy Tab S9</Link>
+                                    <Link href="/sell-old-tablet" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPad Pro 11</Link>
                                   </div>
                                 </div>
                               </div>
@@ -1006,7 +1006,7 @@ export default function Navbar() {
                                   { title: 'Earbuds', href: '/sell-old-earbuds' },
                                   { title: 'iMac', href: '/sell-old-imac' },
                                   { title: 'Gaming Consoles', href: '/sell-old-gaming-consoles' },
-                                  { title: 'Air Conditioner', href: '/sell-old-air-conditioner' },
+                                  { title: 'All Other Gadgets', href: '/sell' },
                                 ].map((item, idx) => (
                                   <Link
                                     key={idx}
@@ -1032,11 +1032,12 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Repair Services</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/screen-repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Screen Replacement</Link>
-                                    <Link href="/battery-repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Battery Replacement</Link>
-                                    <Link href="/mic-repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Mic &amp; Speaker Repair</Link>
-                                    <Link href="/back-panel-repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Back Panel Replacement</Link>
-                                    <Link href="/charging-jack-repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Charging Port Repair</Link>
+                                    <Link href="/repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Screen Replacement</Link>
+                                    <Link href="/repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Battery Replacement</Link>
+                                    <Link href="/repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Mic &amp; Speaker Repair</Link>
+                                    <Link href="/repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Back Panel Replacement</Link>
+                                    <Link href="/repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Charging Port Repair</Link>
+                                    <Link href="/laptop-repair" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Laptop &amp; MacBook Repair</Link>
                                     <Link href="/repair" onClick={() => setActiveDropdown(null)} className="block text-[#12a38c] font-semibold hover:underline pt-1.5">More in Repair →</Link>
                                   </div>
                                 </div>
@@ -1191,7 +1192,7 @@ export default function Navbar() {
                                 ].map((city, i) => (
                                   <Link
                                     key={i}
-                                    href="/about-us"
+                                    href="/offline-stores"
                                     onClick={() => setActiveDropdown(null)}
                                     className="p-2.5 rounded-xl border border-gray-100 hover:bg-[#e8f7f4] hover:text-[#12a38c] hover:border-[#12a38c]/20 transition flex items-center gap-2"
                                   >
@@ -1211,7 +1212,7 @@ export default function Navbar() {
                             <span>Free doorstep pickup &amp; instant cash in West Champaran</span>
                           </div>
                           <Link
-                            href="/about-us"
+                            href="/offline-stores"
                             onClick={() => setActiveDropdown(null)}
                             className="font-semibold text-[#12a38c] hover:underline"
                           >
@@ -1253,13 +1254,13 @@ export default function Navbar() {
                           <div>
                             <div className="text-sm font-bold text-gray-900 mb-3">Top Brands</div>
                             <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                              <Link href="/sell-old-mobile-phone/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple</Link>
-                              <Link href="/sell-old-mobile-phone/sell-xiaomi" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Xiaomi</Link>
-                              <Link href="/sell-old-mobile-phone/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Samsung</Link>
-                              <Link href="/sell-old-mobile-phone/sell-oneplus" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Oneplus</Link>
-                              <Link href="/sell-old-mobile-phone/sell-nokia" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Nokia</Link>
-                              <Link href="/sell-old-mobile-phone/sell-poco" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Poco</Link>
-                              <Link href="/sell-old-mobile-phone?brand=1" onClick={() => setActiveDropdown(null)} className="block text-xs font-semibold text-[#12a38c] hover:underline pt-2">
+                              <Link href="/sell-old-mobile-phone/apple" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple</Link>
+                              <Link href="/sell-old-mobile-phone/xiaomi" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Xiaomi</Link>
+                              <Link href="/sell-old-mobile-phone/samsung" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Samsung</Link>
+                              <Link href="/sell-old-mobile-phone/oneplus" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">OnePlus</Link>
+                              <Link href="/sell-old-mobile-phone/vivo" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Vivo</Link>
+                              <Link href="/sell-old-mobile-phone/motorola" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Motorola</Link>
+                              <Link href="/sell-old-mobile-phone" onClick={() => setActiveDropdown(null)} className="block text-xs font-semibold text-[#12a38c] hover:underline pt-2">
                                 More Phone Brands →
                               </Link>
                             </div>
@@ -1267,12 +1268,12 @@ export default function Navbar() {
                           <div>
                             <div className="text-sm font-bold text-gray-900 mb-3">Top Selling Phones</div>
                             <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                              <Link href="/sell-old-mobile-phone/used-apple-iphone-12" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 12</Link>
-                              <Link href="/sell-old-mobile-phone/used-apple-iphone-11" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 11</Link>
-                              <Link href="/sell-old-mobile-phone/used-samsung-galaxy-note-20-8-gb-256-gb" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Samsung Galaxy Note 20</Link>
-                              <Link href="/sell-old-mobile-phone/used-oneplus-9-pro-5g" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">One Plus 9 Pro</Link>
-                              <Link href="/sell-old-mobile-phone/used-redmi-note-4" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Xiaomi Redmi Note 4</Link>
-                              <Link href="/sell-old-mobile-phone/used-iphone-6" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 6</Link>
+                              <Link href="/sell-old-mobile-phone/apple/iphone-12" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 12</Link>
+                              <Link href="/sell-old-mobile-phone/apple/iphone-11" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 11</Link>
+                              <Link href="/sell-old-mobile-phone/apple/iphone-13" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 13</Link>
+                              <Link href="/sell-old-mobile-phone/apple/iphone-14" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Apple iPhone 14</Link>
+                              <Link href="/sell-old-mobile-phone/samsung/galaxy-s24-ultra" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">Samsung Galaxy S24 Ultra</Link>
+                              <Link href="/sell-old-mobile-phone/oneplus/oneplus-12" onClick={() => setActiveDropdown(null)} className="block py-1 hover:text-[#12a38c] transition">OnePlus 12</Link>
                             </div>
                           </div>
                         </div>
@@ -1282,7 +1283,7 @@ export default function Navbar() {
                           <Sparkles className="w-3.5 h-3.5 text-[#12a38c]" />
                           <span>Free doorstep pickup &amp; instant cash in West Champaran</span>
                         </div>
-                        <Link href="/about-us" onClick={() => setActiveDropdown(null)} className="font-semibold text-[#12a38c] hover:underline">
+                        <Link href="/offline-stores" onClick={() => setActiveDropdown(null)} className="font-semibold text-[#12a38c] hover:underline">
                           Find Nearest Store →
                         </Link>
                       </div>
@@ -1324,7 +1325,7 @@ export default function Navbar() {
                           { id: 'imac', label: 'iMac', hasArrow: false, href: '/sell-old-imac' },
                           { id: 'smartwatch', label: 'Smartwatch', hasArrow: false, href: '/sell-old-smart-watch' },
                           { id: 'dslr-camera', label: 'DSLR Camera', hasArrow: false, href: '/sell-old-dslr-camera' },
-                          { id: 'ac', label: 'AC', hasArrow: false, href: '/sell-old-air-conditioner' },
+                          { id: 'all-gadgets', label: 'All Gadgets', hasArrow: false, href: '/sell' },
                         ].map((cat) => {
                           const isSelected = gadgetActiveSub === cat.id;
                           return (
@@ -1360,24 +1361,24 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Brands</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-mobile-phone/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-xiaomi" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-oneplus" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Oneplus</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-nokia" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Nokia</Link>
-                                    <Link href="/sell-old-mobile-phone/sell-poco" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Poco</Link>
-                                    <Link href="/sell-old-mobile-phone?brand=1" onClick={() => setActiveDropdown(null)} className="block text-xs font-semibold text-[#12a38c] hover:underline pt-1.5">More Phone Brands →</Link>
+                                    <Link href="/sell-old-mobile-phone/apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
+                                    <Link href="/sell-old-mobile-phone/xiaomi" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi</Link>
+                                    <Link href="/sell-old-mobile-phone/samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
+                                    <Link href="/sell-old-mobile-phone/oneplus" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">OnePlus</Link>
+                                    <Link href="/sell-old-mobile-phone/vivo" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Vivo</Link>
+                                    <Link href="/sell-old-mobile-phone/motorola" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Motorola</Link>
+                                    <Link href="/sell-old-mobile-phone" onClick={() => setActiveDropdown(null)} className="block text-xs font-semibold text-[#12a38c] hover:underline pt-1.5">More Phone Brands →</Link>
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Selling Phones</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-mobile-phone/used-apple-iphone-12" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 12</Link>
-                                    <Link href="/sell-old-mobile-phone/used-apple-iphone-11" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 11</Link>
-                                    <Link href="/sell-old-mobile-phone/used-samsung-galaxy-note-20-8-gb-256-gb" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy Note 20</Link>
-                                    <Link href="/sell-old-mobile-phone/used-oneplus-9-pro-5g" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">One Plus 9 Pro</Link>
-                                    <Link href="/sell-old-mobile-phone/used-redmi-note-4" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Xiaomi Redmi Note 4</Link>
-                                    <Link href="/sell-old-mobile-phone/used-iphone-6" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 6</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-12" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 12</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-11" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 11</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-13" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 13</Link>
+                                    <Link href="/sell-old-mobile-phone/apple/iphone-14" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple iPhone 14</Link>
+                                    <Link href="/sell-old-mobile-phone/samsung/galaxy-s24-ultra" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung Galaxy S24 Ultra</Link>
+                                    <Link href="/sell-old-mobile-phone/oneplus/oneplus-12" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">OnePlus 12</Link>
                                   </div>
                                 </div>
                               </div>
@@ -1391,23 +1392,23 @@ export default function Navbar() {
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Laptop Brands</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-laptop/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple</Link>
-                                    <Link href="/sell-old-laptop/sell-hp-compaq" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">HP</Link>
-                                    <Link href="/sell-old-laptop/sell-samsung" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
-                                    <Link href="/sell-old-laptop/sell-lenovo" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Lenovo</Link>
-                                    <Link href="/sell-old-laptop/sell-dell" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Dell</Link>
-                                    <Link href="/sell-old-laptop/sell-honor" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Honor</Link>
-                                    <Link href="/sell-old-laptop?brand=1" onClick={() => setActiveDropdown(null)} className="block text-xs font-semibold text-[#12a38c] hover:underline pt-1.5">More Laptop Brands →</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Apple MacBook</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">HP</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Samsung</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Lenovo ThinkPad</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Dell Inspiron</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Asus &amp; Acer</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block text-xs font-semibold text-[#12a38c] hover:underline pt-1.5">More Laptop Brands →</Link>
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-sm font-bold text-gray-900 mb-3">Top Selling Models</div>
                                   <div className="space-y-1.5 text-xs font-medium text-gray-700">
-                                    <Link href="/sell-old-laptop/used-pavilion-series" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Pavilion Series</Link>
-                                    <Link href="/sell-old-laptop/used-vostro-series" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Vostro Series</Link>
-                                    <Link href="/sell-old-laptop/used-inspiron-series" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Inspiron Series</Link>
-                                    <Link href="/sell-old-laptop/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">MacBook Air</Link>
-                                    <Link href="/sell-old-laptop/sell-apple" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">MacBook Pro</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">HP Pavilion &amp; Envy</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Dell Vostro &amp; Latitude</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">Dell Inspiron 15</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">MacBook Air M1 / M2</Link>
+                                    <Link href="/sell-old-laptop" onClick={() => setActiveDropdown(null)} className="block py-0.5 hover:text-[#12a38c] transition">MacBook Pro 14 &amp; 16</Link>
                                   </div>
                                 </div>
                               </div>
@@ -1421,7 +1422,7 @@ export default function Navbar() {
                                 Get the highest guaranteed resale valuation and complimentary doorstep pickup across West Champaran.
                               </p>
                               <Link
-                                href={`/sell-old-${gadgetActiveSub}`}
+                                href={gadgetActiveSub === 'all-gadgets' ? '/sell' : `/sell-old-${gadgetActiveSub}`}
                                 onClick={() => setActiveDropdown(null)}
                                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#12a38c] text-white rounded-xl text-xs font-semibold hover:bg-[#0e8a76] transition shadow-sm"
                               >
@@ -1436,7 +1437,7 @@ export default function Navbar() {
                             <Sparkles className="w-3.5 h-3.5 text-[#12a38c]" />
                             <span>Free doorstep pickup &amp; instant cash in West Champaran</span>
                           </div>
-                          <Link href="/about-us" onClick={() => setActiveDropdown(null)} className="font-semibold text-[#12a38c] hover:underline">
+                          <Link href="/offline-stores" onClick={() => setActiveDropdown(null)} className="font-semibold text-[#12a38c] hover:underline">
                             Find Nearest Store →
                           </Link>
                         </div>
@@ -1713,7 +1714,7 @@ export default function Navbar() {
                       </div>
                       <div className="pt-3.5 mt-6 border-t border-gray-100 flex items-center justify-between text-xs">
                         <span className="text-gray-500">Visit for live testing, instant cash &amp; free diagnostics</span>
-                        <Link href="/about-us" onClick={() => setActiveDropdown(null)} className="font-semibold text-[#12a38c] hover:underline">
+                        <Link href="/offline-stores" onClick={() => setActiveDropdown(null)} className="font-semibold text-[#12a38c] hover:underline">
                           View All Outlets →
                         </Link>
                       </div>

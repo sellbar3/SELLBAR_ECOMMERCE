@@ -323,7 +323,7 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about" className="hover:text-[#13b59b] transition-colors">
+                  <Link href="/community" className="hover:text-[#13b59b] transition-colors">
                     Sellbar Community
                   </Link>
                 </li>

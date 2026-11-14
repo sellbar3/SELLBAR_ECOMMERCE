@@ -60,6 +60,41 @@ const nextConfig = {
         destination: "/articles",
         permanent: true,
       },
+      {
+        source: "/screen-repair",
+        destination: "/repair",
+        permanent: true,
+      },
+      {
+        source: "/battery-repair",
+        destination: "/repair",
+        permanent: true,
+      },
+      {
+        source: "/mic-repair",
+        destination: "/repair",
+        permanent: true,
+      },
+      {
+        source: "/back-panel-repair",
+        destination: "/repair",
+        permanent: true,
+      },
+      {
+        source: "/charging-jack-repair",
+        destination: "/repair",
+        permanent: true,
+      },
+      {
+        source: "/sell-old-air-conditioner",
+        destination: "/sell",
+        permanent: true,
+      },
+      {
+        source: "/stores",
+        destination: "/offline-stores",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

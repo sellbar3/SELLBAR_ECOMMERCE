@@ -40,13 +40,24 @@ function IndividualSellMobileContent() {
 
   useEffect(() => {
     if (brandSlug && modelSlug) {
-      const found = getMobileModelBySlug(brandSlug, modelSlug);
+      const cleanBrand = brandSlug.replace(/^sell-/, '').trim();
+      const cleanModel = modelSlug.replace(/^used-/, '').trim();
+
+      const found =
+        getMobileModelBySlug(cleanBrand, cleanModel) ||
+        getMobileModelBySlug(cleanBrand, modelSlug) ||
+        getMobileModelBySlug(brandSlug, modelSlug);
+
       if (found) {
         setModel(found);
       } else {
-        // Fallback: try finding by model slug alone
+        // Fallback: try finding by model slug alone or partial match
         const fallback = MOBILE_MODELS.find(
-          (m) => m.slug.toLowerCase() === modelSlug.toLowerCase()
+          (m) =>
+            m.slug.toLowerCase() === cleanModel.toLowerCase() ||
+            m.slug.toLowerCase() === modelSlug.toLowerCase() ||
+            modelSlug.toLowerCase().includes(m.slug.toLowerCase()) ||
+            cleanModel.toLowerCase().includes(m.slug.toLowerCase())
         );
         setModel(fallback || null);
       }
