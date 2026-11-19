@@ -58,6 +58,7 @@ export const metadata = {
     verification: {
         google: 'google-site-verification-sellbar-e651337b',
     },
+    manifest: '/manifest.json',
 };
 const jsonLd = {
     '@context': 'https://schema.org',

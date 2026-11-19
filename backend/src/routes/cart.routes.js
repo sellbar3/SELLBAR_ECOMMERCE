@@ -6,6 +6,10 @@ const requireCustomer = require("../middlewares/customer.middleware");
 
 const cartController = require("../controllers/cart/cart.controller");
 
+// Public / Guest abandoned cart tracking
+router.post("/abandoned", cartController.trackAbandoned);
+router.get("/abandoned", cartController.getAbandoned);
+
 // Every cart route requires an authenticated, active Customer.
 router.use(authenticate, requireCustomer);
 

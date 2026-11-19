@@ -13,6 +13,7 @@ export async function POST(request) {
       technicianName = "Sellbar Field Agent",
       pickupTime = "Today, 3 PM - 6 PM",
       utr = "",
+      customMessage = "",
     } = body;
 
     const cleanPhone = String(phone || "").replace(/\D/g, "");
@@ -20,7 +21,10 @@ export async function POST(request) {
 
     let messageText = "";
 
-    switch (type) {
+    if (customMessage) {
+      messageText = customMessage;
+    } else {
+      switch (type) {
       case "order_placed":
         messageText = `🎉 *Sellbar Order Confirmed!*\\n\\nHello *${customerName}*, your refurbished gadget order *#${orderId}* for *${deviceName}* (Total: ₹${Number(amount).toLocaleString("en-IN")}) is successfully confirmed.\\n\\n📍 Live Tracking: https://sellbar.in/track-order?id=${orderId}\\n\\n📞 Helpdesk: +91 77175 17777\\nSellbar Recommerce Pvt Ltd.`;
         break;

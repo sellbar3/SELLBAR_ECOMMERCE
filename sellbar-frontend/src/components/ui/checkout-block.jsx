@@ -157,6 +157,11 @@ export default function Checkout({ initialItems }) {
           }
 
           setConfirmedOrderRef(response.razorpay_payment_id || `SB-${Date.now().toString().slice(-6)}`);
+          fetch("/api/cart/abandoned", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone: shippingAddress.phone, email: shippingAddress.email, action: "recovered" }),
+          }).catch(() => {});
           setOrderPlaced(true);
         },
         prefill: {
@@ -285,6 +290,41 @@ export default function Checkout({ initialItems }) {
 
     loadCheckout();
   }, [initialItems]);
+
+  // Track abandoned cart activity when customer enters contact details
+  useEffect(() => {
+    if (!shippingAddress.phone && !shippingAddress.email) return;
+    if (!orderItems || orderItems.length === 0) return;
+    if (orderPlaced) return;
+
+    const timer = setTimeout(() => {
+      fetch("/api/cart/abandoned", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: shippingAddress.phone,
+          email: shippingAddress.email,
+          customerName: `${shippingAddress.firstName} ${shippingAddress.lastName}`.trim(),
+          items: orderItems.map((i) => ({
+            title: i.name,
+            price: i.price,
+            quantity: i.quantity || 1,
+            image: i.image,
+          })),
+          total: summary.total,
+          subtotal: summary.subtotal,
+          shippingAddress: {
+            addressLine1: shippingAddress.address,
+            city: shippingAddress.city,
+            state: shippingAddress.state,
+            postalCode: shippingAddress.zipCode,
+          },
+        }),
+      }).catch(() => {});
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [shippingAddress.phone, shippingAddress.email, shippingAddress.address, orderItems, summary.total, orderPlaced]);
 
   const calculateSummary = () => {
     const subtotal = orderItems.reduce(
@@ -1254,6 +1294,11 @@ export default function Checkout({ initialItems }) {
                       triggerRazorpayPayment();
                     } else {
                       setConfirmedOrderRef(`SB-${Math.floor(100000 + Math.random() * 900000)}`);
+                      fetch("/api/cart/abandoned", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ phone: shippingAddress.phone, email: shippingAddress.email, action: "recovered" }),
+                      }).catch(() => {});
                       setOrderPlaced(true);
                     }
                   }}

@@ -24,6 +24,11 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { clearPanelSession } from "../lib/panel";
+import {
+  registerServiceWorker,
+  requestPushPermission,
+  sendLocalPushNotification,
+} from "../lib/pushNotifications";
 
 // Synthesizes a crisp, crystal-clear 2-tone audio chime bell (No external MP3 required)
 function playAdminAudioChime() {
@@ -84,6 +89,7 @@ export default function AdminHeader({
 
   // Audio Notification System for Admin
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [pushPermission, setPushPermission] = useState("default");
   const [liveToast, setLiveToast] = useState(null);
   const [unreadCount, setUnreadCount] = useState(3);
   const lastPollRef = useRef(Date.now());
@@ -92,12 +98,17 @@ export default function AdminHeader({
   const profileRef = useRef(null);
   const quickRef = useRef(null);
 
-  // Load sound preference
+  // Load sound & push notification registration
   useEffect(() => {
     try {
       const saved = localStorage.getItem("sellbar_admin_sound_enabled");
       if (saved !== null) setSoundEnabled(saved === "true");
     } catch {}
+
+    registerServiceWorker();
+    if (typeof window !== "undefined" && "Notification" in window) {
+      setPushPermission(Notification.permission);
+    }
   }, []);
 
   const toggleSound = () => {
@@ -109,6 +120,18 @@ export default function AdminHeader({
       if (next) playAdminAudioChime();
       return next;
     });
+  };
+
+  const togglePushPermission = async () => {
+    const res = await requestPushPermission();
+    setPushPermission(res);
+    if (res === "granted") {
+      sendLocalPushNotification({
+        title: "🔔 Mobile Push Notifications Active!",
+        body: "Aapko naye orders aur device trade-in requests ke real-time pop-ups milte rahenge.",
+        url: "/admin/orders",
+      });
+    }
   };
 
   // Real-time Order Monitoring: Polls for new Sell Orders & Purchase Orders every 7 seconds
@@ -140,6 +163,13 @@ export default function AdminHeader({
               link: "/admin/orders",
             });
             setUnreadCount((c) => c + purchaseOrders.length);
+
+            // Native Mobile & Desktop Web Push Notification
+            sendLocalPushNotification({
+              title: `🛍️ New Order: ${first.orderNumber}`,
+              body: `Total: ₹${Number(first.total).toLocaleString("en-IN")} • ${first.customer} • ${first.itemsCount} item(s)`,
+              url: "/admin/orders",
+            });
           } else if (sellOrders.length > 0) {
             const first = sellOrders[0];
             setLiveToast({
@@ -150,6 +180,13 @@ export default function AdminHeader({
               link: "/admin/sell-orders",
             });
             setUnreadCount((c) => c + sellOrders.length);
+
+            // Native Mobile & Desktop Web Push Notification
+            sendLocalPushNotification({
+              title: `📱 Nayi Sell Request: ${first.orderNumber}`,
+              body: `${first.device} • ₹${Number(first.estimatedPrice).toLocaleString("en-IN")} • ${first.customer}`,
+              url: "/admin/sell-orders",
+            });
           }
         }
       } catch (err) {
@@ -487,7 +524,33 @@ export default function AdminHeader({
           }}
         >
           {soundEnabled ? <Volume2 size={14} className="text-emerald-600 animate-pulse" /> : <VolumeX size={14} />}
-          <span className="hidden md:inline">{soundEnabled ? "Sound Alert ON" : "Sound Muted"}</span>
+          <span className="hidden md:inline">{soundEnabled ? "Sound ON" : "Muted"}</span>
+        </button>
+
+        {/* Real-Time Mobile & Desktop Web Push Notification Button */}
+        <button
+          type="button"
+          onClick={togglePushPermission}
+          title={pushPermission === "granted" ? "Push Notifications Active on this device" : "Click to enable Mobile Pop-Up Notifications on new orders"}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            fontSize: 11,
+            fontWeight: 700,
+            padding: "6px 10px",
+            borderRadius: 8,
+            cursor: "pointer",
+            background: pushPermission === "granted" ? "#f0fdf4" : "#eff6ff",
+            border: pushPermission === "granted" ? "1px solid #22c55e" : "1px solid #3b82f6",
+            color: pushPermission === "granted" ? "#15803d" : "#1d4ed8",
+            transition: "all 0.15s ease",
+          }}
+        >
+          <Bell size={13} className={pushPermission === "granted" ? "text-emerald-600" : "animate-bounce text-blue-600"} />
+          <span className="hidden sm:inline">
+            {pushPermission === "granted" ? "Push Active" : "Enable Push"}
+          </span>
         </button>
 
         {/* Notifications Icon & Drawer */}

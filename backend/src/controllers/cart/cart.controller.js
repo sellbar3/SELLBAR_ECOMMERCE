@@ -345,3 +345,67 @@ exports.clearCart = async (req, res, next) => {
     next(error);
   }
 };
+
+// POST /api/cart/abandoned
+exports.trackAbandoned = async (req, res, next) => {
+  try {
+    const AbandonedCart = require("../../models/AbandonedCart");
+    const { cartId, phone, email, customerName, items, total, subtotal, shippingAddress, action } = req.body;
+
+    if (action === "recovered") {
+      const query = cartId ? { cartId } : phone ? { phone } : null;
+      if (query) {
+        await AbandonedCart.updateMany(query, {
+          $set: { status: "recovered", recoveredAt: new Date() },
+        });
+      }
+      return res.status(200).json({ success: true, message: "Cart marked as recovered" });
+    }
+
+    if (!phone && !email && !cartId) {
+      return res.status(400).json({ success: false, message: "Missing phone, email or cartId" });
+    }
+
+    const filter = cartId ? { cartId } : phone ? { phone, status: { $ne: "recovered" } } : { email };
+    const updateDoc = {
+      $set: {
+        customerName: customerName || "Valued Customer",
+        phone: phone || "",
+        email: email || "",
+        items: items || [],
+        total: Number(total) || 0,
+        subtotal: Number(subtotal) || 0,
+        shippingAddress: shippingAddress || {},
+        lastActivity: new Date(),
+      },
+      $setOnInsert: {
+        cartId: cartId || `CART-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        status: "active",
+        recoveryDiscountCode: "RECOVER5",
+        recoveryCount: 0,
+      },
+    };
+
+    const cart = await AbandonedCart.findOneAndUpdate(filter, updateDoc, { upsert: true, new: true });
+    return res.status(200).json({ success: true, cartId: cart.cartId });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/cart/abandoned
+exports.getAbandoned = async (req, res, next) => {
+  try {
+    const AbandonedCart = require("../../models/AbandonedCart");
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    await AbandonedCart.updateMany(
+      { status: "active", lastActivity: { $lt: twoHoursAgo } },
+      { $set: { status: "abandoned" } }
+    );
+
+    const carts = await AbandonedCart.find({}).sort({ lastActivity: -1 }).limit(100).lean();
+    return res.status(200).json({ success: true, data: carts });
+  } catch (error) {
+    next(error);
+  }
+};

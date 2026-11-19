@@ -1,0 +1,23 @@
+{
+  "name": "Sellbar Recommerce & E-Commerce",
+  "short_name": "Sellbar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#13b59b",
+  "description": "India's Trusted Refurbished Tech & Gadget Recommerce Platform",
+  "icons": [
+    {
+      "src": "/sellbar-assured.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/sellbar-assured.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

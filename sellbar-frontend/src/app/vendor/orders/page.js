@@ -24,8 +24,14 @@ import {
   Receipt,
   Eye,
   ShieldCheck,
+  Bell,
 } from "lucide-react";
 import { getProductImageUrl, getCategoryFallbackImage } from "@/lib/productImageHelper";
+import {
+  registerServiceWorker,
+  requestPushPermission,
+  sendLocalPushNotification,
+} from "@/lib/pushNotifications";
 
 const STATUSES = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
 
@@ -49,6 +55,26 @@ function OrdersList({ session }) {
   const [trackingModal, setTrackingModal] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [pushPermission, setPushPermission] = useState("default");
+
+  useEffect(() => {
+    registerServiceWorker();
+    if (typeof window !== "undefined" && "Notification" in window) {
+      setPushPermission(Notification.permission);
+    }
+  }, []);
+
+  const togglePush = async () => {
+    const res = await requestPushPermission();
+    setPushPermission(res);
+    if (res === "granted") {
+      sendLocalPushNotification({
+        title: "🔔 Vendor Push Notifications Active!",
+        body: "Aapke store par naye orders aane par real-time mobile notifications milte rahenge.",
+        url: "/vendor/orders",
+      });
+    }
+  };
 
   const load = useCallback(async () => {
     try {
@@ -151,15 +177,31 @@ function OrdersList({ session }) {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={load}
-          disabled={loading}
-          className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition cursor-pointer"
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#13b59b]" : ""}`} />
-          <span>Refresh Orders</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={togglePush}
+            title={pushPermission === "granted" ? "Push Notifications Active" : "Click to enable Mobile Push Notifications"}
+            className={`inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl border text-xs font-bold transition cursor-pointer ${
+              pushPermission === "granted"
+                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                : "bg-blue-50 text-blue-700 border-blue-300"
+            }`}
+          >
+            <Bell className={`w-3.5 h-3.5 ${pushPermission === "granted" ? "text-emerald-600" : "animate-bounce text-blue-600"}`} />
+            <span>{pushPermission === "granted" ? "Push Active" : "Enable Mobile Push"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={load}
+            disabled={loading}
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition cursor-pointer"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#13b59b]" : ""}`} />
+            <span>Refresh Orders</span>
+          </button>
+        </div>
       </div>
 
       {successMsg && (
