@@ -16,8 +16,57 @@ import {
   ChevronDown,
   PanelLeftClose,
   PanelLeftOpen,
+  Volume2,
+  VolumeX,
+  Smartphone,
+  ShoppingBag,
+  X,
+  CheckCircle,
 } from "lucide-react";
 import { clearPanelSession } from "../lib/panel";
+
+// Synthesizes a crisp, crystal-clear 2-tone audio chime bell (No external MP3 required)
+function playAdminAudioChime() {
+  if (typeof window === "undefined") return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+
+    if (ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+
+    const now = ctx.currentTime;
+
+    // High strike tone (880 Hz - A5)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(880, now);
+    osc1.frequency.exponentialRampToValueAtTime(1760, now + 0.08);
+    gain1.gain.setValueAtTime(0.35, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.65);
+
+    // Harmonic bell chime (1318.5 Hz - E6)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "triangle";
+    osc2.frequency.setValueAtTime(1318.51, now + 0.05);
+    gain2.gain.setValueAtTime(0.4, now + 0.05);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.05);
+    osc2.stop(now + 0.95);
+  } catch (err) {
+    console.warn("Audio chime play error:", err);
+  }
+}
 
 export default function AdminHeader({
   onToggleMobileSidebar,
@@ -33,9 +82,93 @@ export default function AdminHeader({
   const [quickActionOpen, setQuickActionOpen] = useState(false);
   const [globalSearch, setGlobalSearch] = useState("");
 
+  // Audio Notification System for Admin
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [liveToast, setLiveToast] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(3);
+  const lastPollRef = useRef(Date.now());
+
   const notifRef = useRef(null);
   const profileRef = useRef(null);
   const quickRef = useRef(null);
+
+  // Load sound preference
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("sellbar_admin_sound_enabled");
+      if (saved !== null) setSoundEnabled(saved === "true");
+    } catch {}
+  }, []);
+
+  const toggleSound = () => {
+    setSoundEnabled((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("sellbar_admin_sound_enabled", String(next));
+      } catch {}
+      if (next) playAdminAudioChime();
+      return next;
+    });
+  };
+
+  // Real-time Order Monitoring: Polls for new Sell Orders & Purchase Orders every 7 seconds
+  useEffect(() => {
+    let active = true;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/admin/live-alerts?since=${lastPollRef.current}`, {
+          cache: "no-store",
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!active || !json?.success || !json?.data) return;
+
+        const { hasNew, purchaseOrders = [], sellOrders = [], serverTime } = json.data;
+        if (serverTime) lastPollRef.current = serverTime;
+
+        if (hasNew) {
+          if (soundEnabled) {
+            playAdminAudioChime();
+          }
+
+          if (purchaseOrders.length > 0) {
+            const first = purchaseOrders[0];
+            setLiveToast({
+              id: first.id,
+              type: "purchase",
+              title: `🛍️ New Purchase Order ${first.orderNumber}`,
+              subtitle: `₹${Number(first.total).toLocaleString("en-IN")} • ${first.customer}`,
+              link: "/admin/orders",
+            });
+            setUnreadCount((c) => c + purchaseOrders.length);
+          } else if (sellOrders.length > 0) {
+            const first = sellOrders[0];
+            setLiveToast({
+              id: first.id,
+              type: "sell",
+              title: `📱 New Sell Old Phone Request`,
+              subtitle: `${first.device} • ₹${Number(first.estimatedPrice).toLocaleString("en-IN")} (${first.city})`,
+              link: "/admin/sell-orders",
+            });
+            setUnreadCount((c) => c + sellOrders.length);
+          }
+        }
+      } catch (err) {
+        // silent fallback
+      }
+    }, 7000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, [soundEnabled]);
+
+  // Auto-dismiss live toast after 6 seconds
+  useEffect(() => {
+    if (!liveToast) return;
+    const timer = setTimeout(() => setLiveToast(null), 6000);
+    return () => clearTimeout(timer);
+  }, [liveToast]);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -333,6 +466,30 @@ export default function AdminHeader({
           )}
         </div>
 
+        {/* Audio Alert Bell Sound Toggle */}
+        <button
+          type="button"
+          onClick={toggleSound}
+          title={soundEnabled ? "Audio Bell Alert is Active (Click to mute)" : "Audio Bell Alert is Muted (Click to enable)"}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            fontSize: 11,
+            fontWeight: 700,
+            padding: "6px 10px",
+            borderRadius: 8,
+            cursor: "pointer",
+            background: soundEnabled ? "#ecfdf5" : "#f1f5f9",
+            border: soundEnabled ? "1px solid #10b981" : "1px solid #cbd5e1",
+            color: soundEnabled ? "#047857" : "#64748b",
+            transition: "all 0.15s ease",
+          }}
+        >
+          {soundEnabled ? <Volume2 size={14} className="text-emerald-600 animate-pulse" /> : <VolumeX size={14} />}
+          <span className="hidden md:inline">{soundEnabled ? "Sound Alert ON" : "Sound Muted"}</span>
+        </button>
+
         {/* Notifications Icon & Drawer */}
         <div style={{ position: "relative" }} ref={notifRef}>
           <button
@@ -391,10 +548,30 @@ export default function AdminHeader({
                   color: "#0f172a",
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
                 <span>Live Admin Alerts</span>
-                <span style={{ fontSize: 11, color: "#10b981" }}>Realtime</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => playAdminAudioChime()}
+                    title="Play test audio chime"
+                    style={{
+                      fontSize: 10,
+                      color: "#059669",
+                      fontWeight: 700,
+                      background: "#ecfdf5",
+                      border: "1px solid #a7f3d0",
+                      borderRadius: 6,
+                      padding: "2px 8px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    🔔 Test Sound
+                  </button>
+                  <span style={{ fontSize: 11, color: "#10b981", fontWeight: 700 }}>Realtime</span>
+                </div>
               </div>
               <div style={{ maxHeight: 260, overflowY: "auto" }}>
                 <div style={{ padding: "10px 16px", borderBottom: "1px solid #f8fafc", fontSize: 12 }}>
@@ -546,6 +723,80 @@ export default function AdminHeader({
           )}
         </div>
       </div>
+
+      {/* Real-time Order Audio Notification Toast */}
+      {liveToast && (
+        <div
+          style={{
+            position: "fixed",
+            top: 76,
+            right: 20,
+            zIndex: 9999,
+            background: "#ffffff",
+            border: "2px solid #DC2564",
+            borderRadius: 12,
+            boxShadow: "0 12px 30px rgba(220, 37, 100, 0.25)",
+            padding: "12px 16px",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            maxWidth: 400,
+          }}
+        >
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: "50%",
+              background: "#DC2564",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            {liveToast.type === "sell" ? <Smartphone size={18} /> : <ShoppingBag size={18} />}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a" }}>
+              {liveToast.title}
+            </div>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {liveToast.subtitle}
+            </div>
+          </div>
+          <Link
+            href={liveToast.link}
+            onClick={() => setLiveToast(null)}
+            style={{
+              fontSize: 11,
+              fontWeight: 800,
+              background: "#DC2564",
+              color: "#ffffff",
+              padding: "6px 12px",
+              borderRadius: 8,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            View
+          </Link>
+          <button
+            type="button"
+            onClick={() => setLiveToast(null)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#94a3b8",
+              cursor: "pointer",
+              padding: 2,
+            }}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
     </header>
   );
 }

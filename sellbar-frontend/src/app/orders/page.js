@@ -353,6 +353,49 @@ export default function OrdersPage() {
   const [busyId, setBusyId] = useState(null);
   const [trackId, setTrackId] = useState(null);
   const [selectedInvoiceOrder, setSelectedInvoiceOrder] = useState(null);
+  const [selectedReturnOrder, setSelectedReturnOrder] = useState(null);
+  const [returnReason, setReturnReason] = useState("Hardware / Screen defect");
+  const [returnNotes, setReturnNotes] = useState("");
+  const [submittingReturn, setSubmittingReturn] = useState(false);
+  const [returnSuccessMsg, setReturnSuccessMsg] = useState("");
+
+  const handleRequestReturn = async (e) => {
+    e.preventDefault();
+    if (!selectedReturnOrder) return;
+    setSubmittingReturn(true);
+    try {
+      const res = await fetch(`/api/orders/${selectedReturnOrder._id}/return`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reason: returnReason,
+          notes: returnNotes,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setReturnSuccessMsg("Replacement request confirmed! Our inspection technician will contact you for doorstep exchange.");
+        setOrders((prev) =>
+          prev.map((o) =>
+            o._id === selectedReturnOrder._id
+              ? { ...o, returnStatus: "replacement_requested" }
+              : o
+          )
+        );
+        setTimeout(() => {
+          setSelectedReturnOrder(null);
+          setReturnSuccessMsg("");
+          setReturnNotes("");
+        }, 2500);
+      } else {
+        alert(data.message || "Failed to raise replacement request");
+      }
+    } catch (err) {
+      alert("Return error: " + err.message);
+    } finally {
+      setSubmittingReturn(false);
+    }
+  };
 
   const load = useCallback(async (token) => {
     const data = await getMyOrders(token);
@@ -614,6 +657,23 @@ export default function OrdersPage() {
                       <span>{trackId === order._id ? "Hide Tracking" : "Track Order"}</span>
                     </button>
 
+                    {/* 7-Day Replacement / Return */}
+                    {order.orderStatus === "delivered" && (
+                      <button
+                        onClick={() => setSelectedReturnOrder(order)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer border ${
+                          order.returnStatus
+                            ? "bg-amber-50 text-amber-800 border-amber-300"
+                            : "bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200"
+                        }`}
+                      >
+                        <RotateCcw size={14} className={order.returnStatus ? "text-amber-600" : "text-emerald-600"} />
+                        <span>
+                          {order.returnStatus ? "Replacement Requested" : "7-Day Replacement"}
+                        </span>
+                      </button>
+                    )}
+
                     {/* Cancel Order (if pending) */}
                     {canCancel && (
                       <button
@@ -632,6 +692,102 @@ export default function OrdersPage() {
           })}
         </div>
       </div>
+
+      {/* 7-Day Replacement / Return Modal */}
+      {selectedReturnOrder && (
+        <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <RotateCcw size={18} className="text-[#13b59b]" />
+                <h3 className="text-base font-bold text-slate-900">
+                  Request 7-Day Replacement
+                </h3>
+              </div>
+              <button
+                onClick={() => setSelectedReturnOrder(null)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {returnSuccessMsg ? (
+              <div className="py-6 text-center space-y-2">
+                <div className="w-12 h-12 bg-emerald-50 text-[#13b59b] rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle2 size={24} />
+                </div>
+                <h4 className="text-sm font-bold text-slate-900">Request Confirmed!</h4>
+                <p className="text-xs text-slate-600">{returnSuccessMsg}</p>
+              </div>
+            ) : (
+              <form onSubmit={handleRequestReturn} className="space-y-4 text-xs text-slate-700">
+                <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <div className="font-bold text-slate-900">
+                    Order #{String(selectedReturnOrder._id).slice(-8).toUpperCase()}
+                  </div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">
+                    {(selectedReturnOrder.items || []).map((i) => i.productName).join(", ")}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">
+                    Select Issue Reason *
+                  </label>
+                  <select
+                    value={returnReason}
+                    onChange={(e) => setReturnReason(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#13b59b]"
+                  >
+                    <option value="Hardware / Screen defect">Hardware / Screen defect</option>
+                    <option value="Battery draining faster than expected">Battery draining fast</option>
+                    <option value="Audio / Speaker / Mic issue">Audio / Speaker / Mic issue</option>
+                    <option value="Charging port or adapter not working">Charging port issue</option>
+                    <option value="Cosmetic condition different from grade">Condition not as expected</option>
+                    <option value="Other functional defect">Other functional defect</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">
+                    Describe the Problem in Detail
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Provide details so our technician can prepare the replacement unit..."
+                    value={returnNotes}
+                    onChange={(e) => setReturnNotes(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:border-[#13b59b] resize-none"
+                  />
+                </div>
+
+                <div className="p-3 bg-teal-50 border border-teal-100 rounded-xl text-[11px] text-teal-800 space-y-1">
+                  <strong className="block font-bold">Doorstep Pickup &amp; Replacement:</strong>
+                  <span>Our field agent in West Champaran will visit your address, verify the issue, and provide a replacement device or initiate refund.</span>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedReturnOrder(null)}
+                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingReturn}
+                    className="px-5 py-2 bg-[#13b59b] hover:bg-[#0fa088] text-white rounded-xl font-bold transition shadow-xs cursor-pointer"
+                  >
+                    {submittingReturn ? "Submitting..." : "Confirm Replacement"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Invoice Modal */}
       {selectedInvoiceOrder && (

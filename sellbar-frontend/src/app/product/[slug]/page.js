@@ -90,6 +90,58 @@ function ProductDetailContent() {
   const [reviewSearchQuery, setReviewSearchQuery] = useState("");
   const [reviewSort, setReviewSort] = useState("recent");
 
+  // Customer Review Submission State
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewForm, setReviewForm] = useState({
+    name: "",
+    rating: 5,
+    title: "",
+    comment: "",
+    photoUrl: "",
+  });
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewSuccessMsg, setReviewSuccessMsg] = useState("");
+  const [customReviews, setCustomReviews] = useState([]);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!reviewForm.name || !reviewForm.comment) {
+      alert("Please enter your name and review comments.");
+      return;
+    }
+    setSubmittingReview(true);
+    try {
+      const res = await fetch(`/api/products/${productData?._id || slug}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: reviewForm.name,
+          rating: reviewForm.rating,
+          title: reviewForm.title,
+          comment: reviewForm.comment,
+          photos: reviewForm.photoUrl ? [reviewForm.photoUrl] : [],
+          verified: true,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCustomReviews((prev) => [data.data, ...prev]);
+        setReviewSuccessMsg("Thank you! Your verified review has been posted successfully.");
+        setReviewForm({ name: "", rating: 5, title: "", comment: "", photoUrl: "" });
+        setTimeout(() => {
+          setIsReviewModalOpen(false);
+          setReviewSuccessMsg("");
+        }, 2000);
+      } else {
+        alert(data.message || "Failed to submit review");
+      }
+    } catch (err) {
+      alert("Review error: " + err.message);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   // Compatible Accessories Add-on State
   const [selectedAddons, setSelectedAddons] = useState(["charger", "glass"]);
   const [addonCategoryFilter, setAddonCategoryFilter] = useState("all");
@@ -1071,11 +1123,21 @@ function ProductDetailContent() {
             {/* TAB 5: Customer Reviews & Verified Buyer Photos */}
             {activeTab === "reviews" && (
               <div className="space-y-8">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">Customer Ratings &amp; Reviews</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Verified feedback from real customers who purchased this refurbished device
-                  </p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">Customer Ratings &amp; Reviews</h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Verified feedback from real customers who purchased this refurbished device
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewModalOpen(true)}
+                    className="px-4 py-2.5 bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold text-xs rounded-xl transition shadow-xs cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
+                  >
+                    <Star className="w-3.5 h-3.5 fill-current" />
+                    <span>Write a Customer Review</span>
+                  </button>
                 </div>
 
                 {/* Rating Overview Matrix */}
@@ -1256,8 +1318,17 @@ function ProductDetailContent() {
                 {/* Filtered Verified Customer Reviews List */}
                 <div className="space-y-4 pt-2">
                   {(() => {
-                    const rawList =
-                      productData.customerReviews && productData.customerReviews.length > 0
+                    const rawList = [
+                      ...customReviews.map((r) => ({
+                        reviewerName: r.userName,
+                        rating: r.rating,
+                        title: r.title,
+                        comment: r.comment,
+                        date: "Just now",
+                        verifiedBuyer: true,
+                        hasPhoto: r.photos?.length > 0,
+                      })),
+                      ...(productData.customerReviews && productData.customerReviews.length > 0
                         ? productData.customerReviews
                         : [
                             {
@@ -1842,6 +1913,138 @@ function ProductDetailContent() {
         </div>
       )}
 
+      {/* WRITE A CUSTOMER REVIEW MODAL */}
+      {isReviewModalOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setIsReviewModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5 text-amber-500 fill-current" />
+                <h3 className="text-base font-bold text-slate-900">
+                  Write a Verified Product Review
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsReviewModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-800 rounded-full hover:bg-slate-100 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {reviewSuccessMsg ? (
+              <div className="py-8 text-center space-y-3">
+                <div className="w-12 h-12 bg-emerald-50 text-[#13b59b] rounded-full flex items-center justify-center mx-auto">
+                  <Check className="w-6 h-6 stroke-[3]" />
+                </div>
+                <h4 className="text-sm font-bold text-slate-900">Review Submitted!</h4>
+                <p className="text-xs text-slate-500">{reviewSuccessMsg}</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitReview} className="space-y-4 pt-4 text-xs text-slate-700">
+                {/* Rating Stars Picker */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1.5">Overall Rating *</label>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setReviewForm((f) => ({ ...f, rating: s }))}
+                        className="p-1 text-amber-400 hover:scale-110 transition cursor-pointer"
+                      >
+                        <Star
+                          className={`w-6 h-6 ${
+                            s <= reviewForm.rating ? "fill-current text-amber-400" : "text-slate-200"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    <span className="text-xs font-bold text-slate-800 ml-2">
+                      {reviewForm.rating} / 5 Stars
+                    </span>
+                  </div>
+                </div>
+
+                {/* Name */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Your Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Rahul Sharma"
+                    value={reviewForm.name}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, name: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium"
+                  />
+                </div>
+
+                {/* Title */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Review Headline</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Excellent phone, condition looks brand new!"
+                    value={reviewForm.title}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, title: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium"
+                  />
+                </div>
+
+                {/* Comment */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Detailed Review *</label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder="Tell other buyers about packaging, battery life, condition grade, camera performance..."
+                    value={reviewForm.comment}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, comment: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium resize-none"
+                  />
+                </div>
+
+                {/* Photo URL */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Unbox Photo URL (Optional)</label>
+                  <input
+                    type="url"
+                    placeholder="e.g. https://images.unsplash.com/... or device photo link"
+                    value={reviewForm.photoUrl}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, photoUrl: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium"
+                  />
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewModalOpen(false)}
+                    className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-bold transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingReview}
+                    className="px-6 py-2.5 bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {submittingReview ? "Submitting..." : "Submit Review"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* 32-POINT QUALITY DIAGNOSTIC CERTIFICATE MODAL */}
       {isInspectionModalOpen && (
         <div
@@ -2005,6 +2208,138 @@ function ProductDetailContent() {
                 Close Certificate
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* WRITE A CUSTOMER REVIEW MODAL */}
+      {isReviewModalOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+          onClick={() => setIsReviewModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5 text-amber-500 fill-current" />
+                <h3 className="text-base font-bold text-slate-900">
+                  Write a Verified Product Review
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsReviewModalOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-800 rounded-full hover:bg-slate-100 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {reviewSuccessMsg ? (
+              <div className="py-8 text-center space-y-3">
+                <div className="w-12 h-12 bg-emerald-50 text-[#13b59b] rounded-full flex items-center justify-center mx-auto">
+                  <Check className="w-6 h-6 stroke-[3]" />
+                </div>
+                <h4 className="text-sm font-bold text-slate-900">Review Submitted!</h4>
+                <p className="text-xs text-slate-500">{reviewSuccessMsg}</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitReview} className="space-y-4 pt-4 text-xs text-slate-700">
+                {/* Rating Stars Picker */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1.5">Overall Rating *</label>
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setReviewForm((f) => ({ ...f, rating: s }))}
+                        className="p-1 text-amber-400 hover:scale-110 transition cursor-pointer"
+                      >
+                        <Star
+                          className={`w-6 h-6 ${
+                            s <= reviewForm.rating ? "fill-current text-amber-400" : "text-slate-200"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    <span className="text-xs font-bold text-slate-800 ml-2">
+                      {reviewForm.rating} / 5 Stars
+                    </span>
+                  </div>
+                </div>
+
+                {/* Name */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Your Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Rahul Sharma"
+                    value={reviewForm.name}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, name: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium"
+                  />
+                </div>
+
+                {/* Title */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Review Headline</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Excellent phone, condition looks brand new!"
+                    value={reviewForm.title}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, title: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium"
+                  />
+                </div>
+
+                {/* Comment */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Detailed Review *</label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder="Tell other buyers about packaging, battery life, condition grade, camera performance..."
+                    value={reviewForm.comment}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, comment: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium resize-none"
+                  />
+                </div>
+
+                {/* Photo URL */}
+                <div>
+                  <label className="block font-bold text-slate-900 mb-1">Unbox Photo URL (Optional)</label>
+                  <input
+                    type="url"
+                    placeholder="e.g. https://images.unsplash.com/... or device photo link"
+                    value={reviewForm.photoUrl}
+                    onChange={(e) => setReviewForm((f) => ({ ...f, photoUrl: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:border-[#2bbda3] text-xs font-medium"
+                  />
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewModalOpen(false)}
+                    className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-bold transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingReview}
+                    className="px-6 py-2.5 bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {submittingReview ? "Submitting..." : "Submit Review"}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

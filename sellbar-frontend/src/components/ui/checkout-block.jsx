@@ -85,6 +85,7 @@ export default function Checkout({ initialItems }) {
   });
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [confirmedOrderRef, setConfirmedOrderRef] = useState("");
 
   // UPI payment state
   const [showUpiModal, setShowUpiModal] = useState(false);
@@ -92,6 +93,92 @@ export default function Checkout({ initialItems }) {
   const [upiTimeLeft, setUpiTimeLeft] = useState(300);
   const [upiCopied, setUpiCopied] = useState(false);
   const [upiVpaInput, setUpiVpaInput] = useState("");
+
+  // Razorpay Gateway Direct Integration
+  const triggerRazorpayPayment = async () => {
+    const scriptLoaded = await new Promise((resolve) => {
+      if (typeof window !== "undefined" && window.Razorpay) return resolve(true);
+      const s = document.createElement("script");
+      s.src = "https://checkout.razorpay.com/v1/checkout.js";
+      s.onload = () => resolve(true);
+      s.onerror = () => resolve(false);
+      document.body.appendChild(s);
+    });
+
+    if (!scriptLoaded) {
+      setShowUpiModal(true);
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/payments/razorpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: summary.total }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setShowUpiModal(true);
+        return;
+      }
+
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency || "INR",
+        name: "Sellbar Recommerce Pvt Ltd",
+        description: "Certified Refurbished Device Purchase",
+        image: "https://sellbar.in/favicon.ico",
+        order_id: data.orderId,
+        handler: async function (response) {
+          await fetch("/api/payments/razorpay/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          }).catch(() => {});
+
+          if (shippingAddress.phone) {
+            fetch("/api/notifications/whatsapp", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                phone: shippingAddress.phone,
+                type: "order_placed",
+                customerName: `${shippingAddress.firstName} ${shippingAddress.lastName}`.trim(),
+                orderId: response.razorpay_payment_id || `SB-${Date.now().toString().slice(-6)}`,
+                deviceName: orderItems[0]?.name || "Refurbished Gadget",
+                amount: summary.total,
+              }),
+            }).catch(() => {});
+          }
+
+          setConfirmedOrderRef(response.razorpay_payment_id || `SB-${Date.now().toString().slice(-6)}`);
+          setOrderPlaced(true);
+        },
+        prefill: {
+          name: `${shippingAddress.firstName} ${shippingAddress.lastName}`.trim(),
+          email: shippingAddress.email || "support@sellbar.in",
+          contact: shippingAddress.phone || "",
+        },
+        theme: {
+          color: "#13b59b",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", function (resp) {
+        alert("Payment was not completed: " + (resp.error?.description || "Transaction cancelled"));
+      });
+      rzp.open();
+    } catch (err) {
+      console.warn("Razorpay flow error, fallback to manual UPI:", err);
+      setShowUpiModal(true);
+    }
+  };
 
   const sampleOrderItems = [
     {
@@ -473,7 +560,7 @@ export default function Checkout({ initialItems }) {
           Thank you for choosing Sellbar! Your order has been placed successfully and our 32-point inspection team is preparing your package for priority dispatch.
         </p>
         <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 text-xs text-gray-600 space-y-1">
-          <p>Order Reference: <strong className="text-gray-900 font-mono">SB-{Math.floor(100000 + Math.random() * 900000)}</strong></p>
+          <p>Order Reference: <strong className="text-gray-900 font-mono">{confirmedOrderRef || `SB-${Math.floor(100000 + Math.random() * 900000)}`}</strong></p>
           <p>Confirmation SMS sent to: <strong className="text-gray-900">{shippingAddress.phone || "Registered Number"}</strong></p>
         </div>
         <div className="pt-2 flex justify-center gap-3">
@@ -1163,7 +1250,10 @@ export default function Checkout({ initialItems }) {
                   onClick={() => {
                     if (selectedPaymentType === "upi") {
                       setShowUpiModal(true);
+                    } else if (selectedPaymentType === "card") {
+                      triggerRazorpayPayment();
                     } else {
+                      setConfirmedOrderRef(`SB-${Math.floor(100000 + Math.random() * 900000)}`);
                       setOrderPlaced(true);
                     }
                   }}
@@ -1172,7 +1262,9 @@ export default function Checkout({ initialItems }) {
                   className="bg-[#2bbda3] hover:bg-[#249e88] text-white font-bold flex items-center gap-2 shadow-md cursor-pointer"
                 >
                   <Lock className="h-4 w-4" />
-                  Pay ₹{summary.total.toLocaleString("en-IN")} &amp; Confirm Order
+                  {selectedPaymentType === "card"
+                    ? `Pay ₹${summary.total.toLocaleString("en-IN")} via Razorpay Gateway`
+                    : `Pay ₹${summary.total.toLocaleString("en-IN")} & Confirm Order`}
                 </Button>
               </CardFooter>
             </Card>

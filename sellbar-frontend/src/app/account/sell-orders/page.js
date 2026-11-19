@@ -43,6 +43,37 @@ export default function CustomerSellOrdersHistoryPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
+  const [cancellingId, setCancellingId] = useState(null);
+
+  const handleCancelSellOrder = async (orderId) => {
+    if (!window.confirm(`Are you sure you want to cancel selling request #${orderId}?`)) {
+      return;
+    }
+    setCancellingId(orderId);
+    try {
+      const res = await fetch('/api/sell-orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          status: 'Cancelled',
+          note: 'Cancelled by customer from dashboard',
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setOrders((prev) =>
+          prev.map((o) => (o.orderId === orderId ? { ...o, status: 'Cancelled' } : o))
+        );
+      } else {
+        alert(data.message || 'Failed to cancel order');
+      }
+    } catch (err) {
+      alert('Cancel error: ' + err.message);
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   useEffect(() => {
     async function loadSellHistory() {
@@ -305,6 +336,19 @@ export default function CustomerSellOrdersHistoryPage() {
                           <span>Expected Payout Date:</span>
                           <span className="font-semibold text-slate-700">{o.pickupDetails?.pickupDate || 'Today'}</span>
                         </div>
+
+                        {/* Cancel Pickup Button (if eligible) */}
+                        {o.status !== 'Cancelled' && o.status !== 'Completed' && currentStep < 2 && (
+                          <div className="mt-3 pt-3 border-t border-slate-100 flex justify-end">
+                            <button
+                              onClick={() => handleCancelSellOrder(o.orderId)}
+                              disabled={cancellingId === o.orderId}
+                              className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold transition border border-rose-200 cursor-pointer"
+                            >
+                              {cancellingId === o.orderId ? 'Cancelling...' : 'Cancel Pickup Request'}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

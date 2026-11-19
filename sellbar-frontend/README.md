@@ -7,387 +7,447 @@
 [![Cloudinary](https://img.shields.io/badge/Cloudinary-CDN%20Integrated-blue?logo=cloudinary)](https://cloudinary.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**SELLBAR Frontend** is a modern, high-performance, enterprise-grade e-commerce & recommerce storefront built for **certified refurbished electronic gadgets** (Smartphones, Laptops, Tablets, Smartwatches, Cameras, Gaming Consoles, Audio, and Accessories).
+**SELLBAR Frontend** is an enterprise-grade e-commerce & recommerce platform built with **Next.js 16 (App Router) + React 19 + Tailwind CSS 4**, specifically engineered for **Certified Refurbished Electronics** (Smartphones, Laptops, Tablets, Smartwatches, Cameras, Gaming Consoles, Audio, and Accessories) and **Old Device Trade-In / Instant Cash Buyback**.
 
-This repository contains the standalone Next.js 16 web application powering:
-- **Customer Storefront** (Browse, dynamic filters, live deals, instant gadget valuation, 32-point inspection guarantees)
-- **Electronics Single Product Detail Page (PDP)** with real-time hardware variant switching
-- **Vendor Partner Portal** (`/vendor`) for merchant inventory and order fulfillment
-- **Platform Master Control Center** (`/admin`) for catalog, user, and partner approvals
-
-- **Live Production URL**: [https://sellbar.in](https://sellbar.in)
-- **Production API Gateway**: [https://app.sellbar.in/api](https://app.sellbar.in/api)
+- **Storefront URL**: [https://sellbar.in](https://sellbar.in)
+- **API Gateway URL**: [https://app.sellbar.in/api](https://app.sellbar.in/api)
+- **Local Dev URL**: [http://localhost:3000](http://localhost:3000)
 
 ---
 
 ## 📑 Table of Contents
-- [Architecture & Tech Stack](#-architecture--tech-stack)
-- [Folder Structure](#-folder-structure)
-- [App Router Sitemap (72+ Routes)](#-app-router-sitemap-72-routes)
-- [Electronics Single Product Detail Page](#-electronics-single-product-detail-page)
-- [Resilient API Layer & Offline Fallback](#-resilient-api-layer--offline-fallback)
-- [Cloudinary CDN Asset Pipeline](#-cloudinary-cdn-asset-pipeline)
-- [Cart, Session & Checkout Architecture](#-cart-session--checkout-architecture)
-- [Setup & Local Development](#-setup--local-development)
-- [Environment Variables Configuration](#-environment-variables-configuration)
-- [Deployment (Hostinger Node.js / VPS / Vercel)](#-deployment)
-- [How-To Guides & Contributing](#-how-to-guides--contributing)
-- [Maintained & License](#-maintained--license)
+1. [Architecture & Tech Stack](#-architecture--tech-stack)
+2. [Complete Directory & File Structure](#-complete-directory--file-structure)
+3. [Public Storefront Pages & Catalog](#1-public-storefront-pages--catalog)
+4. [Recommerce & Sell Old Device Pages](#2-recommerce--sell-old-device-pages)
+5. [Cart, Checkout & Order Confirmation](#3-cart-checkout--order-confirmation)
+6. [Customer / User Dashboard (`/account`)](#4-customer--user-dashboard-account)
+7. [Admin Master Control Center (`/admin`)](#5-admin-master-control-center-admin)
+   - [Real-time Audio Alert Notification Bell (Feature E)](#real-time-audio-alert-notification-bell-feature-e)
+   - [Pan-India Logistics & Barcode Shipping Labels (Feature C)](#pan-india-logistics--barcode-shipping-labels-feature-c)
+   - [Vendor Payouts & Commission Settlements (Feature D)](#vendor-payouts--commission-settlements-feature-d)
+8. [Vendor / Merchant Partner Portal (`/vendor`)](#6-vendor--merchant-partner-portal-vendor)
+   - [1-Click AWB Generation & Label Printing](#1-click-awb-generation--label-printing)
+   - [Vendor Commission & Payout Ledger Page](#vendor-commission--payout-ledger-page)
+9. [Next.js API Route Handlers (`src/app/api`)](#7-nextjs-api-route-handlers-srcappapi)
+10. [Key Components & Shared Libraries](#8-key-components--shared-libraries)
+11. [Setup, Environment Variables & Development](#9-setup-environment-variables--development)
 
 ---
 
 ## 🏛 Architecture & Tech Stack
 
-- **Framework**: Next.js 16.4.2 (App Router + React 19)
-- **Styling**: Tailwind CSS 4.x + Lucide Icons + Radix UI Primitives
-- **Image Optimization**: Cloudinary CDN (74+ pre-optimized responsive cloud assets)
-- **Persistence & State**: Reactive LocalStorage Cart synchronization across multi-tab sessions with custom window events
-- **API Communication**: Unified Axios client with automatic bearer token attachment and resilient fallback to bundled JSON snapshots
-- **Server Runtime**: Node.js 22 LTS with custom entry file `server.js` for standalone cloud hosting compatibility
+- **Framework**: Next.js 16.4.2 (App Router, Turbopack, React Server & Client Components)
+- **Runtime**: React 19.3.0 + Node.js 20+
+- **Styling**: Tailwind CSS 4.x + Lucide React + Material-UI (MUI & MUI X Charts/DataGrid)
+- **Image CDN**: Cloudinary CDN pipeline (`dbd4anwt`) with automated fallback mapping (`src/config/cloudinary-mapping.json`)
+- **State Management**: Reactive multi-tab synchronized `localStorage` cart with custom browser events
+- **Audio Synthesis**: Native Web Audio API synthesizer generating zero-latency crystal-clear bell chime ping (no external audio files required)
 
 ```
-┌────────────────────────────────────────────────────────┐
-│                   Sellbar Frontend                     │
-│               Next.js 16 (Port 3000)                   │
-├──────────────────────────┬─────────────────────────────┤
-│ Customer Storefront      │ Recommerce / Trade-In Hub   │
-│ • Catalog & Filtering    │ • 10 Device Valuation Tools │
-│ • Variant Re-calculator  │ • Doorstep Pickup & Payout  │
-├──────────────────────────┼─────────────────────────────┤
-│ Merchant Portal (/vendor)│ Admin Control (/admin)      │
-│ • Inventory & Listings   │ • Approvals, Catalog & KYC  │
-└──────────────────────────┴─────────────────────────────┘
-             │                                │
-             ▼                                ▼
-┌─────────────────────────┐      ┌─────────────────────────┐
-│ Cloudinary CDN Pipeline │      │ Backend REST API        │
-│ 74+ Cloud Hosted Assets │      │ (https://app.sellbar.in)│
-└─────────────────────────┘      └─────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│                        SELLBAR FRONTEND ARCHITECTURE                   │
+│                        Next.js 16 (Port 3000)                          │
+├──────────────────────────┬─────────────────────────┬───────────────────┤
+│ Customer Storefront      │ Recommerce Trade-In Hub │ User Dashboard    │
+│ • Catalog & Filtering    │ • 10 Device Calculators │ • Orders & Items  │
+│ • Electronics PDP        │ • Instant Doorstep Cash │ • Sell Requests   │
+│ • Cart & Multi-Step Pay  │ • 32-Point Diagnostics  │ • Device Warranty │
+├──────────────────────────┼─────────────────────────┼───────────────────┤
+│ Master Admin Portal      │ Merchant Partner Portal │ Next.js API Layer │
+│ (/admin)                 │ (/vendor)               │ (/api/...)        │
+│ • Audio Order Alerts 🔔  │ • 1-Click AWB Shipping  │ • Live Alerts     │
+│ • Pan-India Courier API  │ • Barcode Label Print   │ • Shipping Labels │
+│ • Vendor Payouts Ledger  │ • Commission Ledger 10% │ • Vendor Payouts  │
+└──────────────────────────┴─────────────────────────┴───────────────────┘
 ```
 
 ---
 
-## 🗂 Folder Structure
+## 🗂 Complete Directory & File Structure
 
 ```
 sellbar-frontend/
-├── public/                           # Static assets
-│   ├── assets/3d/                    # 3D models (smartphone.glb, sneaker.glb)
-│   ├── banners/                      # Local fallbacks (all backed by Cloudinary)
-│   ├── sellbar/                      # Guides & article thumbnails
-│   ├── products/                     # Product images
-│   ├── sell-icons/                   # Trade-in device category icons
-│   └── services/                     # Storefront services icons
+├── public/                                # Static images, icons, logos, and 3D models
+│   ├── assets/3d/                         # 3D models (smartphone.glb, sneaker.glb)
+│   ├── banners/                           # Storefront promotional banners
+│   ├── products/                          # Product thumbnail fallbacks
+│   ├── sell-icons/                        # Trade-in device category vector icons
+│   └── services/                          # Service guarantee badges
 │
 ├── src/
-│   ├── app/                          # Next.js 16 App Router (72+ Routes)
-│   │   ├── (Storefront)/             # Home `/`, `/buy-refurbished`, `/supersale`
-│   │   ├── buy-refurbished-gadgets/  # Multi-category certified gadget deals
-│   │   ├── buy-refurbished-laptops/  # Refurbished laptops with brand filters
-│   │   ├── buy-refurbished-mobile-phones/ # Refurbished smartphones catalog
-│   │   ├── product/[slug]/           # Premium Electronics Single Product Detail Page
-│   │   ├── sell/                     # Device trade-in category hub
-│   │   ├── sell-old-*/               # Dedicated trade-in calculators (10 device types)
-│   │   ├── cart/                     # Shopping cart page with quantity controls
-│   │   ├── checkout/                 # Secure multi-step checkout
-│   │   ├── account/                  # Customer profile, orders, addresses
-│   │   ├── admin/                    # Platform Master Control Center
-│   │   │   ├── page.js               # Executive Admin Dashboard (KPIs, GMV, analytics charts)
-│   │   │   ├── brands/               # Brand taxonomy management (Apple, Samsung, Dell, etc.)
-│   │   │   ├── categories/           # Product category & subcategory management
-│   │   │   ├── login/                # Dedicated Administrator authentication & session guard
-│   │   │   ├── products/             # Platform-wide product catalog moderation & inventory control
-│   │   │   ├── sell-models/          # Recommerce trade-in catalog & model specifications
-│   │   │   ├── sell-orders/          # Customer trade-in pickup orders & doorstep QC management
-│   │   │   ├── users/                # User accounts moderation (Customers, Vendors, Admins, KYC)
-│   │   │   ├── valuation/            # Dynamic valuation algorithm rules & condition deductions
-│   │   │   └── [...slug]/            # Dynamic fallback router for nested admin sub-views
+│   ├── app/                               # Next.js 16 App Router Routes
+│   │   ├── layout.js                      # Root HTML layout with Navbar & Footer
+│   │   ├── page.js                        # Storefront Homepage
 │   │   │
-│   │   ├── vendor/                   # Merchant Partner Portal
-│   │   │   ├── page.js               # Vendor business summary & sales analytics dashboard
-│   │   │   ├── login/                # Merchant sign-in & session management
-│   │   │   ├── signup/               # Merchant registration, GST/KYC onboarding & store setup
-│   │   │   ├── orders/               # Order fulfillment, shipment packing & courier dispatch
-│   │   │   ├── products/             # Merchant product inventory management
-│   │   │   │   ├── page.js           # Live product inventory table with stock toggles
-│   │   │   │   ├── new/              # Add product wizard with Cloudinary uploads & variant matrix
-│   │   │   │   └── [id]/             # Edit product specifications, pricing & grading
-│   │   │   └── profile/              # Store branding, warehouse address & bank payout details
-│   │   ├── api/                      # Next.js API route handlers:
-│   │   │   ├── auth/                 # Proxy auth routes (`login`, `me`, `otp`, `register`)
-│   │   │   └── public/[...slug]/     # Resilient route handler with live proxy & offline fallback
-│   │   └── layout.js                 # Global HTML root, JSON-LD Schema & metadata
+│   │   ├── (Storefront Catalog)/
+│   │   │   ├── buy-refurbished/           # Master catalog of certified refurbished electronics
+│   │   │   ├── buy-refurbished-mobile-phones/ # Refurbished smartphones with brand filters
+│   │   │   ├── buy-refurbished-laptops/   # Laptops catalog with processor/RAM filters
+│   │   │   ├── buy-refurbished-tablets/   # iPads & Android tablets catalog
+│   │   │   ├── buy-refurbished-smart-watches/ # Apple Watch & smartwatches
+│   │   │   ├── buy-refurbished-dslr-cameras/ # DSLR & mirrorless cameras
+│   │   │   ├── buy-refurbished-gaming-consoles/ # PS5, PS4, Xbox, Nintendo
+│   │   │   ├── buy-refurbished-gadgets/   # Multi-category certified gadgets deals
+│   │   │   ├── buy-accessories/           # Chargers, cables, adapters, cases
+│   │   │   ├── supersale/                 # Flash sales & festive mega discounts
+│   │   │   ├── brands/                    # Brands directory (Apple, Samsung, Dell, etc.)
+│   │   │   ├── search/                    # Live dynamic search results page
+│   │   │   ├── shop/                      # Category & brand taxonomy views
+│   │   │   │   ├── brands/page.js         # Shop by manufacturer
+│   │   │   │   └── categories/[slug]/     # Dynamic category product listing
+│   │   │   ├── product/[slug]/page.js     # Single Product Detail Page (PDP) with variants
+│   │   │   └── find-new-phone/page.js     # Smart phone recommendation quiz
+│   │   │
+│   │   ├── (Recommerce & Sell Old Device)/
+│   │   │   ├── sell/page.js               # Trade-in category selection hub
+│   │   │   ├── sell-old-mobile-phone/     # Smartphone valuation engine (brand/model selector)
+│   │   │   │   ├── page.js                # Select brand & popular models
+│   │   │   │   ├── [brand]/page.js        # Select specific model from brand
+│   │   │   │   ├── [brand]/[model]/page.js # 3-step condition assessment questionnaire
+│   │   │   │   └── order-confirmed/page.js # Doorstep pickup appointment confirmation
+│   │   │   ├── sell-old-laptop/           # Old laptop valuation calculator
+│   │   │   ├── sell-old-tablet/           # Old tablet trade-in calculator
+│   │   │   ├── sell-old-smart-watch/      # Smartwatch trade-in calculator
+│   │   │   ├── sell-old-television/       # Smart TV trade-in calculator
+│   │   │   ├── sell-old-dslr-camera/      # DSLR & camera trade-in calculator
+│   │   │   ├── sell-old-gaming-consoles/  # Gaming console trade-in calculator
+│   │   │   ├── sell-old-earbuds/          # Wireless earbuds valuation
+│   │   │   ├── sell-old-smart-speaker/    # Smart speaker valuation
+│   │   │   ├── sell-old-imac/             # Apple iMac trade-in valuation
+│   │   │   ├── recycle-old-mobile-phone/  # Eco-friendly electronic scrap recycling
+│   │   │   ├── repair/ & laptop-repair/   # Doorstep screen, battery & motherboard repair
+│   │   │   └── rent-ps5/                  # Gaming console rental service
+│   │   │
+│   │   ├── (Cart & Checkout Flow)/
+│   │   │   ├── cart/page.js               # Shopping cart with quantity modification
+│   │   │   ├── checkout/page.js           # Multi-step checkout (Address, Pan-India courier, Pay)
+│   │   │   └── order-confirmed/page.js    # Order success page with tracking summary
+│   │   │
+│   │   ├── (Customer / User Dashboard)/
+│   │   │   ├── account/                   # Customer master account center
+│   │   │   │   ├── layout.js              # Account layout with left navigation sidebar
+│   │   │   │   ├── page.js                # Profile overview & quick statistics
+│   │   │   │   ├── orders/page.js         # Customer order history & invoices
+│   │   │   │   ├── sell-orders/page.js    # Customer old device trade-in requests & QC status
+│   │   │   │   ├── payouts/page.js        # Device sale payout status (UPI / Bank transfer)
+│   │   │   │   ├── warranty/page.js       # Active 6-12 month warranty cards & claim form
+│   │   │   │   ├── addresses/page.js      # Saved delivery addresses management
+│   │   │   │   ├── reviews/page.js        # Customer published product ratings & reviews
+│   │   │   │   ├── wishlist/page.js       # Saved favorite gadgets
+│   │   │   │   └── profile/page.js        # Personal details, phone, and password edit
+│   │   │   ├── orders/page.js             # Standalone direct orders tracking page
+│   │   │   ├── track-order/page.js        # Pan-India consignment tracking (AWB search)
+│   │   │   └── wishlist/page.js           # Direct wishlist page
+│   │   │
+│   │   ├── (Admin Master Control Center)/
+│   │   │   ├── admin/
+│   │   │   │   ├── page.js                # Executive Admin Dashboard (MUI Charts, Sales, GMV)
+│   │   │   │   ├── login/page.js          # Secure Administrator login portal
+│   │   │   │   ├── orders/                # Orders management (AWB assignment, Barcode labels)
+│   │   │   │   ├── shipping/              # Pan-India Courier API Dashboard (Delhivery / Shiprocket)
+│   │   │   │   ├── payouts/               # Vendor Commission & Weekly Settlement Ledger
+│   │   │   │   ├── sell-orders/page.js    # Trade-in orders, technician dispatch, QC price revision
+│   │   │   │   ├── sell-models/page.js    # Master catalog of sellable phone models & base prices
+│   │   │   │   ├── valuation/page.js      # Algorithmic valuation engine deduction rules
+│   │   │   │   ├── products/page.js       # Platform catalog moderation, stock & prices
+│   │   │   │   ├── categories/page.js     # Taxonomy, categories & banner settings
+│   │   │   │   ├── brands/page.js         # Supported manufacturer brands
+│   │   │   │   ├── users/page.js          # Customer, vendor, and admin accounts moderation
+│   │   │   │   └── [...slug]/page.js      # Universal sub-view router (Tax, SEO, AI Copywriter)
+│   │   │
+│   │   ├── (Vendor Partner Portal)/
+│   │   │   ├── vendor/
+│   │   │   │   ├── page.js                # Merchant dashboard (Sales, pending orders, revenue)
+│   │   │   │   ├── login/page.js          # Merchant authentication
+│   │   │   │   ├── signup/page.js         # Merchant registration, GST/KYC & bank details
+│   │   │   │   ├── orders/page.js         # Orders fulfillment with 1-Click AWB & Barcode Label PDF
+│   │   │   │   ├── payouts/page.js        # Vendor Commission (10%) & Weekly Settlement Ledger
+│   │   │   │   ├── products/
+│   │   │   │   │   ├── page.js            # Live inventory table with stock toggles
+│   │   │   │   │   ├── new/page.js        # Add product wizard with Cloudinary multi-upload
+│   │   │   │   │   └── [id]/page.js       # Edit product specs, grading (A++/A+/A), and price
+│   │   │   │   └── profile/page.js        # Store branding, pickup warehouse address, bank settings
+│   │   │   └── panel-login/page.js        # Unified entry gateway (Routes to Admin or Vendor)
+│   │   │
+│   │   ├── (Informational, Corporate & Legal)/
+│   │   │   ├── about-us/                  # Company story, 32-point inspection lab process
+│   │   │   ├── contact/                   # Customer support & grievance officer contact
+│   │   │   ├── careers/                   # Job openings & culture
+│   │   │   ├── offline-stores/            # Offline retail partner store locations in Bihar
+│   │   │   ├── partner-with-us/           # Vendor & technician franchise partnership
+│   │   │   ├── press-releases/            # Media coverage & announcements
+│   │   │   ├── corporate-information/     # Corporate registration & leadership
+│   │   │   ├── community/                 # Tech community & forums
+│   │   │   ├── blog/ & articles/          # Refurbished buying guides & tech news
+│   │   │   ├── what-is-refurbished/       # Refurbished vs Used vs New explanation guide
+│   │   │   ├── faq/                       # Frequently asked questions
+│   │   │   ├── privacy-policy/            # Data protection & privacy policy
+│   │   │   ├── terms/ & terms-conditions/ # Terms of service
+│   │   │   ├── refund-policy/ & return-policy/ # 7-day replacement & refund rules
+│   │   │   ├── shipping-policy/           # Pan-India & local delivery timelines
+│   │   │   ├── warranty-policy/           # 12-month doorstep warranty coverage
+│   │   │   ├── cookie-policy/             # Cookie policy
+│   │   │   └── e-waste-policy/            # Environmental e-waste handling policy
+│   │   │
+│   │   └── api/                           # Next.js Serverless Route Handlers
+│   │       ├── admin/
+│   │       │   ├── live-alerts/route.js   # Real-time polling for new Sell & Purchase orders
+│   │       │   ├── payouts/route.js       # Admin vendor commission ledger & statistics
+│   │       │   ├── payouts/settle/route.js # 1-Click weekly settlement execution with UTR
+│   │       │   ├── sell-orders/route.js   # Customer trade-in requests API
+│   │       │   ├── valuation/route.js     # Valuation engine rules API
+│   │       │   ├── products/route.js      # Admin product management API
+│   │       │   └── [...slug]/route.js     # Universal admin telemetry & sub-routes
+│   │       ├── shipping/
+│   │       │   ├── generate-awb/route.js  # 1-Click Delhivery / Shiprocket AWB generator
+│   │       │   ├── label/[id]/route.js    # Print-ready Barcode Shipping Label HTML / PDF
+│   │       │   └── track/[id]/route.js    # Live milestone tracking API
+│   │       ├── vendor/
+│   │       │   ├── payouts/route.js       # Vendor commission & weekly settlement ledger API
+│   │       │   └── bank-details/route.js  # Vendor bank account & UPI settings API
+│   │       ├── orders/                    # Customer order placement & history API
+│   │       ├── serviceability/            # Pincode check API (Pan-India & West Champaran)
+│   │       ├── sell-orders/               # Trade-in order submission API
+│   │       └── auth/                      # Authentication proxy API
 │   │
-│   ├── components/                   # React components
-│   │   ├── ui/                       # shadcn/ui primitives (`button`, `card`, `checkout-block`, etc.)
-│   │   ├── HeroCarousel.jsx          # Homepage hero banner carousel (Cloudinary CDN)
-│   │   ├── RefurbishedPhonesSection.jsx # Dynamic mobile phones slider
-│   │   ├── RefurbishedLaptopsSection.jsx # Dynamic laptops slider
-│   │   ├── HotDealsSection.jsx       # Dynamic hot deals slider
-│   │   ├── OurServicesSection.jsx    # Sellbar core services grid
-│   │   ├── SellYourOldDeviceSection.jsx # Instant cash device sale icons
-│   │   ├── SellbarGuidesSection.jsx  # Device buying guides
-│   │   ├── TrendingArticlesSection.jsx # Tech news & updates
-│   │   ├── Navbar.jsx                # Responsive header with live search & cart counter
-│   │   ├── Footer.jsx                # Complete site footer with legal links
-│   │   └── LoginModal.jsx            # OTP & mobile auth popup dialog
+│   ├── components/                        # Reusable React UI Components
+│   │   ├── AdminHeader.jsx                # Admin top header with Web Audio Bell Ping & Sound Toggle
+│   │   ├── AdminSidebar.jsx               # Collapsible accordion sidebar navigation for Admin
+│   │   ├── PanelShell.js                  # Master portal wrapper with auth guards (Admin & Vendor)
+│   │   ├── Navbar.jsx                     # Customer storefront navigation with live search
+│   │   ├── Footer.jsx                     # Comprehensive footer with legal & category links
+│   │   ├── SellbarStylePDP.jsx            # Two-column electronics product page with dynamic variants
+│   │   ├── BuybackWizard.jsx              # Interactive device valuation step-by-step wizard
+│   │   ├── HeroCarousel.jsx               # Cloudinary CDN responsive hero banners slider
+│   │   ├── RefurbishedPhonesSection.jsx   # Certified smartphones carousel slider
+│   │   ├── RefurbishedLaptopsSection.jsx  # Certified laptops carousel slider
+│   │   ├── HotDealsSection.jsx            # Festive flash deals carousel slider
+│   │   ├── LoginModal.jsx                 # OTP & phone authentication modal dialog
+│   │   ├── DesktopOnlyGuard.jsx           # Guard requiring minimum screen width for admin
+│   │   └── ui/                            # Radix UI & Tailwind primitive buttons, cards, dialogs
 │   │
 │   ├── config/
-│   │   ├── cloudinary-mapping.json   # 74-key JSON mapping local paths -> Cloudinary CDN URLs
-│   │   └── products-cache.json       # 24-product snapshot for instant offline dev fallback
+│   │   ├── cloudinary-mapping.json        # 74/74 local image paths mapped to Cloudinary CDN URLs
+│   │   └── products-cache.json            # 24-product snapshot for offline dev fallback
 │   │
 │   └── lib/
-│       ├── api.js                    # Base Axios instance targeting backend gateway
-│       ├── productApi.js             # Resilient client layer for fetching products
-│       ├── cloudinary.js             # URL helper for Cloudinary transformations
-│       ├── cart.js                   # LocalStorage cart management with custom events
-│       ├── auth.js                   # JWT session helper (`getSession`, `clearSession`)
-│       └── utils.js                  # Tailwind class merge helper (`cn()`)
+│       ├── panel.js                       # Panel session management (`getPanelSession`, `money`, `fmtDate`)
+│       ├── api.js                         # Unified fetch client targeting backend gateway
+│       ├── adminNavigationConfig.js       # Complete navigation structure for Admin sidebar
+│       ├── productImageHelper.js          # Cloudinary image URL resolver with fallbacks
+│       └── db.js                          # Resilient MongoDB connector for Next.js route handlers
 │
-├── next.config.mjs                   # Webpack rules, proxy rewrites, and redirects
-├── server.js                         # Production Node.js bootstrapper (standalone fallback)
-├── package.json                      # Dependencies and scripts
-└── README.md                         # Comprehensive frontend guide
+├── package.json                           # Dependencies (Next.js 16, React 19, Tailwind 4, MUI)
+├── next.config.mjs                        # Next.js configuration & image domains
+├── server.js                              # Custom Node.js production server wrapper
+└── README.md                              # This file
 ```
 
 ---
 
-## 🗺 App Router Sitemap (72+ Routes)
+## 1. Public Storefront Pages & Catalog
 
-### Storefront Routes
-| Route Path | Purpose |
-|---|---|
-| `/` | Homepage (Hero banners, live deals, tech categories) |
-| `/buy-refurbished` | Master certified refurbished catalog |
-| `/buy-refurbished-mobile-phones` | Smartphones with brand & price filters |
-| `/buy-refurbished-laptops` | Laptops with processor & RAM filters |
-| `/buy-refurbished-gadgets` | Multi-gadget deals (Smartwatches, tablets) |
-| `/product/[slug]` | Premium Electronics Single Product Detail |
-| `/find-new-phone` | Smartphone finder & recommendation engine |
-| `/supersale` | Seasonal discount showcase |
-| `/cart` | Shopping cart review |
-| `/checkout` | Multi-step address, shipping, and payment |
-| `/account` | User orders, profile, saved addresses |
-| `/orders` | Order tracking & invoice downloads |
-| `/track-order` | Real-time courier dispatch status |
-| `/about-us` | Company background, mission, certified refurbish process |
-| `/contact-us` | Customer support & grievance officer details |
-| `/privacy-policy` | Privacy policy & data protection terms |
-| `/terms` | Terms of service |
-| `/refund-policy` | 7-day replacement & refund rules |
-| `/warranty-policy` | 12-month doorstep warranty guide |
+All public pages are server-rendered with Next.js 16 App Router for optimal SEO, Core Web Vitals, and OpenGraph social previews:
 
-### Recommerce / Trade-In Routes
-| Route Path | Purpose |
-|---|---|
-| `/sell` | Trade-in hub for selling used devices |
-| `/sell-old-mobile-phone` | Smartphone valuation wizard (15 brands) |
-| `/sell-old-laptop` | Laptop valuation calculator |
-| `/sell-old-tablet` | iPad & Android tablet trade-in |
-| `/sell-old-smart-watch` | Smartwatch trade-in |
-| `/sell-old-television` | Smart TV trade-in |
-| `/sell-old-dslr-camera` | DSLR & mirrorless camera trade-in |
-| `/sell-old-gaming-consoles` | PS5, Xbox, Nintendo trade-in |
-| `/sell-old-earbuds` | Wireless earbuds trade-in |
-| `/sell-old-smart-speaker` | Smart speakers (Echo, HomePod, Bose) |
-| `/sell-old-imac` | Apple iMac & Mac Studio trade-in |
-| `/recycle-old-mobile-phone` | Eco-friendly electronics recycling |
-| `/repair` | Doorstep screen & battery repair service |
+1. **Homepage (`src/app/page.js`)**:
+   - `HeroCarousel`: Hero banners served from Cloudinary CDN.
+   - `SellYourOldDeviceSection`: Grid of 10 device categories for instant trade-in.
+   - `RefurbishedPhonesSection` & `RefurbishedLaptopsSection`: Dynamic carousels with price, specs, warranty badge, and savings calculation.
+   - `OurServicesSection`: 32-point inspection guarantee, 12-month doorstep warranty, 7-day replacement.
+2. **Electronics Single Product Detail Page (`src/app/product/[slug]/page.js`)**:
+   - **Dynamic Variant Switching**: Storage (128GB, 256GB, 512GB), RAM (6GB, 8GB), Color swatches with live image updates.
+   - **Grading Transparency**: Clear breakdown for *Flawless (Grade A++)*, *Superb (Grade A+)*, and *Good (Grade A)*.
+   - **Pricing & Savings**: MRP strikethrough, discount %, No-Cost EMI calculator, and Pincode delivery checker.
+   - **Inspection Report**: Full 32-point hardware checklist (Battery health, display, cameras, motherboard).
+3. **Certified Refurbished Category Catalogs**:
+   - `/buy-refurbished-mobile-phones`: Brand filters (Apple, Samsung, OnePlus, Xiaomi) + budget sliders.
+   - `/buy-refurbished-laptops`: Processor filters (Core i5, i7, Apple M1/M2/M3) + RAM/SSD filters.
+   - `/buy-refurbished-tablets`, `/buy-refurbished-smart-watches`, `/buy-refurbished-dslr-cameras`, `/buy-refurbished-gaming-consoles`.
+4. **Search & Recommendations**:
+   - `/search`: Live instant debounced search over titles, brands, and SKUs.
+   - `/find-new-phone`: Interactive recommendation wizard based on budget and usage.
 
-### 🏢 Admin Master Control Portal (`src/app/admin/`)
-The Admin Portal provides platform owners with complete control over inventory, merchants, trade-in valuations, orders, and customer accounts.
+---
 
-| Folder / Route Path | File Location | Key Capabilities & Features |
+## 2. Recommerce & Sell Old Device Pages
+
+Cashify-style device buyback valuation engine with instant price estimation and free doorstep pickup:
+
+1. **Trade-In Hub (`/sell`)**:
+   - Master directory of all 10 sellable electronics categories.
+2. **Smartphone Valuation Wizard (`/sell-old-mobile-phone`)**:
+   - **Step 1 - Brand & Model**: Choose from 15+ verified brands (`/sell-old-mobile-phone/[brand]/[model]`).
+   - **Step 2 - Variant & Storage**: Select RAM, storage capacity, and color.
+   - **Step 3 - Condition Assessment**: 4-part questionnaire covering screen condition (scratches/cracks), body condition, functional issues, and original accessories (box, charger, bill).
+   - **Instant Offer Calculation**: Live algorithm calculates final cash offer.
+   - **Doorstep Pickup Booking (`/order-confirmed`)**: Customer enters address, PIN code, preferred pickup date, and time slot.
+   - **Instant Payout Selection**: Customer selects payout via UPI ID or direct Bank Account transfer (processed immediately upon technician inspection).
+3. **Other Device Calculators**:
+   - `/sell-old-laptop`, `/sell-old-tablet`, `/sell-old-smart-watch`, `/sell-old-television`, `/sell-old-dslr-camera`, `/sell-old-gaming-consoles`, `/sell-old-earbuds`, `/sell-old-smart-speaker`, `/sell-old-imac`.
+
+---
+
+## 3. Cart, Checkout & Order Confirmation
+
+1. **Shopping Cart (`/cart`)**:
+   - Reactive item quantity modifiers (`+` / `-`).
+   - Dynamic order summary calculating subtotal, delivery charges, and coupon discount.
+   - Multi-tab synchronization using browser `storage` and `sellbar-cart-updated` events.
+2. **Secure Multi-Step Checkout (`/checkout`)**:
+   - **Step 1 - Delivery Address**: Full name, contact phone, street address, and 6-digit Indian PIN code.
+   - **Step 2 - Serviceability & Courier**: Automatically identifies West Champaran local fleet (24-48 hr) or Pan-India priority courier (3-5 days).
+   - **Step 3 - Payment Options**:
+     - Cash on Delivery (COD) with doorstep verification.
+     - Online Payment via Razorpay (UPI, Credit/Debit Cards, NetBanking).
+3. **Order Confirmation (`/order-confirmed`)**:
+   - Order receipt, tracking summary, estimated delivery date, and instant invoice download link.
+
+---
+
+## 4. Customer / User Dashboard (`/account`)
+
+The customer dashboard allows users to manage their orders, sold devices, warranties, and addresses:
+
+| Route Path | File Location | Key Capabilities & Features |
 |---|---|---|
-| `/admin` | `src/app/admin/page.js` | **Executive Overview**: Total GMV, active users, orders count, revenue charts, recent transactions table |
-| `/admin/brands` | `src/app/admin/brands/page.js` | **Brand Management**: Add/edit manufacturers (Apple, Samsung, OnePlus, Dell, HP, Lenovo) |
-| `/admin/categories` | `src/app/admin/categories/page.js` | **Taxonomy Control**: Global categories, commission rates, banner associations, and SEO slugs |
-| `/admin/products` | `src/app/admin/products/page.js` | **Catalog Oversight**: Platform-wide product moderation, approvals, price audit, and inventory toggles |
-| `/admin/sell-models` | `src/app/admin/sell-models/page.js` | **Trade-in Catalog**: Master database of sellable electronic models, base valuation prices, and variants |
-| `/admin/sell-orders` | `src/app/admin/sell-orders/page.js` | **Buyback Pipeline**: Customer device selling orders, technician doorstep pickup dispatch, and QC status |
-| `/admin/valuation` | `src/app/admin/valuation/page.js` | **Pricing Algorithm**: Configure deduction rules for cosmetic scratches, battery health, and functional defects |
-| `/admin/users` | `src/app/admin/users/page.js` | **User Accounts**: Customer & merchant account moderation, role assignment, and status toggles |
-| `/admin/login` | `src/app/admin/login/page.js` | **Admin Auth**: Protected administrator login with secure JWT session validation |
-| `/admin/[...slug]` | `src/app/admin/[...slug]/page.js` | **Dynamic Sub-Views**: Unified router fallback for deep admin sub-modules |
+| `/account` | `src/app/account/page.js` | **Customer Overview**: Recent orders summary, active trade-in requests, quick links |
+| `/account/orders` | `src/app/account/orders/page.js` | **Purchase Orders**: Order status tracking, purchased items, invoice download |
+| `/account/sell-orders` | `src/app/account/sell-orders/page.js` | **Device Selling Requests**: Pickup appointment date, assigned technician, doorstep QC status |
+| `/account/payouts` | `src/app/account/payouts/page.js` | **Device Sale Payouts**: Real-time UPI & Bank transfer payment status for sold phones |
+| `/account/warranty` | `src/app/account/warranty/page.js` | **Certified Warranty Cards**: Active 6-12 month warranty certificates & 1-click doorstep claim |
+| `/account/addresses` | `src/app/account/addresses/page.js` | **Saved Addresses**: Add, edit, or delete shipping and doorstep pickup addresses |
+| `/account/reviews` | `src/app/account/reviews/page.js` | **My Reviews**: Customer submitted ratings, reviews, and unboxing photos |
+| `/account/profile` | `src/app/account/profile/page.js` | **Profile Settings**: Update name, email, phone number, and security password |
+| `/track-order` | `src/app/track-order/page.js` | **Live Consignment Tracking**: Input Order ID or AWB to track milestones from Bettiah Hub |
+| `/wishlist` | `src/app/wishlist/page.js` | **Saved Wishlist**: Gadgets saved for later with instant "Move to Cart" button |
 
 ---
 
-### 🏪 Vendor / Merchant Partner Portal (`src/app/vendor/`)
-The Vendor Portal is designed for certified refurbishment partners and sellers to manage their listings, stock, and customer orders.
+## 5. Admin Master Control Center (`/admin`)
 
-| Folder / Route Path | File Location | Key Capabilities & Features |
+The Admin Control Center gives platform owners enterprise-grade tools for operations, logistics, vendor management, and real-time monitoring.
+
+### 🔔 Real-time Audio Alert Notification Bell (Feature E)
+- **Location**: `src/components/AdminHeader.jsx` & `/api/admin/live-alerts`
+- **How it works**:
+  - The Admin panel polls `/api/admin/live-alerts` every **7 seconds**.
+  - It tracks two streams: **New Store Purchase Orders (`Order`)** and **New Old Phone Sell Requests (`SellOrder`)**.
+  - When an order arrives:
+    1. Triggers a **Web Audio API two-tone bell chime ping** (880 Hz $\rightarrow$ 1318.5 Hz) synthesized natively in the browser.
+    2. Displays a floating live alert toast at the top-right corner with order details and a "View" button.
+    3. Increments the notification badge count.
+  - **Sound Controls**: Includes a **[ 🔊 Sound Alert ON ]** toggle button in the header and a **"🔔 Test Sound"** button inside the notifications dropdown.
+
+### 🚚 Pan-India Logistics & Barcode Shipping Labels (Feature C)
+- **Location**: `src/app/admin/shipping/page.js` (or via `/admin/[...slug]`), `src/app/admin/orders/page.js`, `/api/shipping/*`
+- **Features**:
+  - **1-Click AWB Generation**: Automatically assigns courier partners (Delhivery Surface, Shiprocket Express, or Sellbar Local Fleet) and generates unique tracking numbers.
+  - **Printable Barcode Shipping Labels (`/api/shipping/label/:orderId`)**: Generates official 4x6" thermal labels with Code-128 barcodes, consignee details, return addresses, and COD collect amounts.
+  - **Live Consignment Tracking (`/api/shipping/track/:id`)**: Milestone status from manifest creation to doorstep delivery.
+  - **Pan-India Pincode Checker**: Validates any 6-digit Indian PIN code.
+
+### 💰 Vendor Payouts & Commission Settlements (Feature D)
+- **Location**: `src/app/admin/payouts/page.js` (or via `/admin/[...slug]`), `/api/admin/payouts`
+- **Features**:
+  - **Platform Commission Overview**: Platform Gross Sales, Sellbar Fee (10%), Total Disbursed, and Pending Balances.
+  - **Vendor Settlement Table**: Lists all vendor stores with their registered bank accounts, commission rates, and pending balances.
+  - **1-Click Weekly Settlement Trigger**: Allows the Admin to record a Bank UTR number, settle pending balances, and generate a settlement transfer record.
+
+---
+
+## 6. Vendor / Merchant Partner Portal (`/vendor`)
+
+The Vendor Portal is designed for certified refurbishment sellers to manage listings, dispatches, and financials:
+
+| Route Path | File Location | Key Capabilities & Features |
 |---|---|---|
-| `/vendor` | `src/app/vendor/page.js` | **Merchant Dashboard**: Daily sales metrics, pending dispatches, revenue summary, low stock alerts |
-| `/vendor/login` | `src/app/vendor/login/page.js` | **Partner Sign-in**: Secure authentication for verified merchant partners |
-| `/vendor/signup` | `src/app/vendor/signup/page.js` | **Merchant Registration**: Business registration, GST/PAN KYC upload, warehouse address submission |
-| `/vendor/products` | `src/app/vendor/products/page.js` | **Inventory List**: Table of all vendor products with live stock toggles, price updates, and status filters |
-| `/vendor/products/new` | `src/app/vendor/products/new/page.js` | **Product Creation Wizard**: Multi-image Cloudinary upload, condition grading (A++/A+/A), variant matrix |
-| `/vendor/products/[id]` | `src/app/vendor/products/[id]/page.js` | **Product Editor**: Modify specifications, update pricing, restock hardware variants, and adjust descriptions |
-| `/vendor/orders` | `src/app/vendor/orders/page.js` | **Order Fulfillment**: Track new orders, download invoices, mark orders packed, generate shipping labels |
-| `/vendor/profile` | `src/app/vendor/profile/page.js` | **Store Settings**: Business profile, pickup warehouse location, bank account details for settlements |
-| `/panel-login` | `src/app/panel-login/page.js` | **Unified Entry**: Smart redirection gateway routing users to either Admin or Vendor portal |
+| `/vendor` | `src/app/vendor/page.js` | **Vendor Dashboard**: Daily sales metrics, low stock warnings, revenue |
+| `/vendor/login` | `src/app/vendor/login/page.js` | **Merchant Login**: Secure JWT authentication for verified sellers |
+| `/vendor/signup` | `src/app/vendor/signup/page.js` | **Merchant Registration**: Business onboarding, GST/PAN submission, store profile |
+| `/vendor/products` | `src/app/vendor/products/page.js` | **Inventory Table**: Live stock toggles, price updates, status filters |
+| `/vendor/products/new` | `src/app/vendor/products/new/page.js` | **Add Product Wizard**: Multi-image Cloudinary upload, condition grading, variant matrix |
+| `/vendor/products/[id]` | `src/app/vendor/products/[id]/page.js` | **Product Editor**: Modify specs, restock variants, adjust prices |
+| `/vendor/orders` | `src/app/vendor/orders/page.js` | **Order Fulfillment**: 1-Click AWB generation, print barcode labels, track dispatches |
+| `/vendor/payouts` | `src/app/vendor/payouts/page.js` | **Commission & Ledger**: 10% auto-deduction breakdown, bank setup, weekly transfers |
+| `/vendor/profile` | `src/app/vendor/profile/page.js` | **Store Settings**: Warehouse address, contact details, store branding |
+
+### ⚡ 1-Click AWB Generation & Label Printing
+Inside `/vendor/orders`, each order card includes:
+- **"⚡ 1-Click Generate Delhivery / Shiprocket AWB"**: Instantly generates an AWB number.
+- **"🖨️ Print Barcode Label PDF"**: Opens the print-ready shipping label in a dedicated window.
+- **"Track Milestone"**: Displays real-time transit milestones.
+- **Automated Commission Strip**: Shows Gross Order Total, Sellbar Platform Fee (10%), and Vendor Net Earnings.
+
+### 💵 Vendor Commission & Payout Ledger Page (`/vendor/payouts`)
+- **4 Financial KPI Cards**: Pending Balance, Settled to Bank, Gross Sales, and Sellbar Fee (10%).
+- **Bank Account Setup Card**: Form to save Account Holder, Account Number, IFSC Code, Bank Name, Branch, and UPI ID.
+- **Weekly Bank Settlement History**: Complete audit table of all weekly disbursements with UTR numbers.
+- **Itemized Order Commission Ledger**: Order-by-order breakdown of the 10% platform fee and net earnings.
 
 ---
 
-## 📱 Electronics Single Product Detail Page
+## 7. Next.js API Route Handlers (`src/app/api`)
 
-Located at `src/app/product/[slug]/page.js`. Specifically engineered for **electronics recommerce**:
-
-1. **Two-Column Desktop Viewport (~55% / ~45%)**:
-   - **Left Column**: 1:1 Aspect ratio image frame, desktop hover-zoom lens, fullscreen modal inspection lightbox, mobile touch swipe gestures (`touchstart`/`touchend`), multi-angle thumbnail selector (front, back, angle, side/ports).
-   - **Right Column (Sticky)**: Brand badge, official **Model Number** & **SKU**, star rating with verified purchase count, prominent price block with **MRP strikethrough**, **Savings % chip**, **No-Cost EMI calculator**, real-time **Stock counter**, and **Pincode Delivery Estimator**.
-2. **Dynamic Variant Switching**:
-   - **Smartphones**: Storage (`128GB`, `256GB`, `512GB`), RAM (`6GB`, `8GB`), Color swatches with chips (`Midnight`, `Starlight`, `Deep Blue`), and Network (`5G`).
-   - **Laptops**: Processor (`Intel Core i5/i7`, `Apple M`), RAM (`8GB`, `16GB`), and SSD Storage (`256GB`, `512GB`).
-   - Selecting a variant dynamically recalculates **price**, **compare price**, **SKU**, **stock**, and updates the **active gallery photo**.
-3. **Structured Technical Tabs**:
-   - **Technical Specifications**: Structured categorized table (*Display & Build*, *Performance & Storage*, *Battery & Charging*, *Connectivity & Ports*, *Quality Assurance*).
-   - **Product Overview & Grade Breakdown**: Transparent criteria for *Flawless (Grade A++)*, *Superb (Grade A+)*, and *Good (Grade A)*.
-   - **What's in the Box**: Visual cards displaying device, fast charger, SIM tool, 32-point inspection report, warranty card.
-   - **Warranty & Replacement**: Complete coverage terms and step-by-step doorstep claim process.
-   - **Customer Reviews & Photos**: Rating breakdown bars (5★–1★), customer-uploaded unboxing photo gallery with lightbox, and verified buyer reviews.
-   - **Electronics FAQs**: Interactive accordion covering battery health guarantees, refurbishment testing, and returns.
-4. **Mobile Sticky Action Bar**:
-   - Floats at the bottom on mobile devices displaying product title, active variant price, **Cart**, and **Buy Now** buttons.
+| Method | Route | Description |
+|---|---|---|
+| `GET` | `/api/admin/live-alerts?since=...` | **Real-time Audio Alert API**: Checks for new purchase orders and sell requests |
+| `GET` | `/api/admin/payouts` | **Admin Payouts API**: Platform gross, commission earned, and vendor balances |
+| `POST` | `/api/admin/payouts/settle` | **Admin Settle API**: 1-click payout execution with Bank UTR recording |
+| `POST` | `/api/shipping/generate-awb` | **AWB Generator**: 1-click Delhivery / Shiprocket tracking number generation |
+| `GET` | `/api/shipping/label/[id]` | **Barcode Label HTML/PDF**: Renders printable Code-128 shipping label |
+| `GET` | `/api/shipping/track/[id]` | **Tracking API**: Real-time consignment transit milestones |
+| `GET` | `/api/vendor/payouts` | **Vendor Payouts API**: Vendor earnings, 10% fee deduction, and settlements |
+| `PATCH` | `/api/vendor/bank-details` | **Bank Details API**: Updates vendor bank account and UPI details |
+| `GET/POST`| `/api/orders` | **Customer Orders API**: Order creation and retrieval |
+| `GET` | `/api/serviceability/check?pincode=...` | **Pincode API**: Pan-India & West Champaran delivery validation |
 
 ---
 
-## 🛡 Resilient API Layer & Offline Fallback
+## 8. Key Components & Shared Libraries
 
-The frontend is architected to be **100% resilient** and never crash, even if the backend server is temporarily restarting or unreachable during local development:
-
-1. **Next.js App Router Route Handler** (`src/app/api/public/[...slug]/route.js`):
-   - Handles `/api/public/*` requests natively within Next.js.
-   - First attempts to proxy requests to `https://app.sellbar.in/api/public/...` (or local backend).
-   - If the backend is running, returns live MongoDB data.
-   - If the backend is unreachable, **seamlessly serves the matching cached response from `src/config/products-cache.json` with HTTP 200**.
-   - Completely prevents unhandled exceptions or blank screens.
-2. **Client API Service** (`src/lib/productApi.js`):
-   - Exports `fetchProducts`, `fetchProductByIdOrSlug`, `fetchFeaturedProducts`, and `fetchCategories`.
-   - Built with try/catch fallbacks to maintain a 100% smooth user experience under poor network conditions.
+- `src/components/AdminHeader.jsx`: Top navigation for admin with Web Audio bell chime, sound toggle, and live toast alerts.
+- `src/components/AdminSidebar.jsx`: Collapsible multi-level accordion sidebar with active route highlighting.
+- `src/components/PanelShell.js`: Universal dashboard layout wrapper enforcing role validation (`admin` or `vendor`).
+- `src/components/SellbarStylePDP.jsx`: Complete two-column electronics product detail component with real-time variant switching.
+- `src/lib/panel.js`: Helper functions: `getPanelSession`, `money` (₹ formatter), `fmtDate`, and `panelRequest`.
+- `src/lib/adminNavigationConfig.js`: Master menu configuration for the Admin sidebar (all 20 modules).
+- `src/lib/productImageHelper.js`: Resolves product images with automatic Cloudinary CDN and fallback handling.
 
 ---
 
-## ☁️ Cloudinary CDN Asset Pipeline
+## 9. Setup, Environment Variables & Development
 
-- All storefront graphics, banners, service icons, sell icons, and product photos are served via Cloudinary CDN under account `dbd4anwt`.
-- **Mapping**: Loaded via `src/config/cloudinary-mapping.json`.
-- **Helper** (`src/lib/cloudinary.js`):
-  ```javascript
-  import { getCloudinaryUrl } from "@/lib/cloudinary";
+### 1. Prerequisites
+- Node.js 20.x or 22.x LTS
+- npm 10+
 
-  // Automatically resolves local path to secure Cloudinary HTTPS URL:
-  const imageUrl = getCloudinaryUrl("/products/iphone-14.webp");
-  // Returns: https://res.cloudinary.com/dbd4anwt/image/upload/v1793353852/sellbar/products/iphone-14.webp
-  ```
-
----
-
-## 🛒 Cart, Session & Checkout Architecture
-
-- **Cart Management** (`src/lib/cart.js`):
-  - Persists items in `localStorage` under key `sellbar_cart`.
-  - Dispatches `sellbar-cart-updated` browser events so the header cart counter and badges reactively update across all open tabs.
-  - Supports variant options: `id`, `name`, `price`, `quantity`, `image`, `conditionGrade`, `variantName`, `sku`.
-- **Session Authentication** (`src/lib/auth.js`):
-  - Handles JWT token extraction and role management (`customer`, `vendor`, `admin`).
-- **Checkout Block** (`src/components/ui/checkout-block.jsx`):
-  - Built with shadcn/ui patterns (`Card`, `Badge`, `Select`, `Input`).
-  - Reads active cart items from `getLocalCart()` and automatically synchronizes pricing, delivery charges, and taxes.
-
----
-
-## 🚀 Setup & Local Development
-
-### Prerequisites
-- **Node.js**: `v20.x` or higher (recommended: `v22.x`)
-- **npm**: `v10.x` or higher
-- **Git**
-
-### Installation
-
+### 2. Environment Variables (`.env.local` or `.env`)
 ```bash
-# 1. Clone the repository
-git clone https://github.com/sellbar3/sellbar-frontend.git
-cd sellbar-frontend
-
-# 2. Install dependencies
-npm install
-
-# 3. Create .env.local file
-cp .env.example .env.local
-```
-
-### Running Locally
-
-```bash
-# Start development server with Turbopack (Port 3000)
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## ⚙️ Environment Variables Configuration
-
-Create a `.env.local` file in the root of `sellbar-frontend`:
-
-```env
-# Backend API Base URL
+# Backend REST API Gateway URL
 NEXT_PUBLIC_API_URL=https://app.sellbar.in/api
 
-# Site Metadata URL
-NEXT_PUBLIC_SITE_URL=https://sellbar.in
+# MongoDB Atlas connection (for internal Next.js API routes)
+MONGODB_URI=mongodb+srv://sellbar3_db_user:SwkiSitTUWtSeMBR@cluster0.foqbgdq.mongodb.net/sellbar?retryWrites=true&w=majority
 
-# Cloudinary Cloud Name
+# Cloudinary CDN Configuration
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=dbd4anwt
 ```
 
----
+### 3. Installation & Running
+```bash
+# Navigate to frontend folder
+cd sellbar-frontend
 
-## 🚢 Deployment
+# Install dependencies
+npm install
 
-### 1. Hostinger Node.js Web App (Current Production Setup)
-- **Domain**: `sellbar.in`
-- **Application Type**: Next.js (or Node.js)
-- **Node.js Version**: 22
-- **Build Command**: `npm run build`
-- **Entry File**: `server.js` (automatically serves standalone build or Next.js production server)
-- **Output Directory**: none / default
+# Start development server
+npm run dev
 
-### 2. Vercel Deployment
-1. Import the `sellbar-frontend` repository in Vercel.
-2. Framework Preset: **Next.js**
-3. Set environment variable `NEXT_PUBLIC_API_URL=https://app.sellbar.in/api`.
-4. Deploy!
+# Build for production
+npm run build
 
----
-
-## 🤝 How-To Guides & Contributing
-
-### How to Add a New Storefront Page
-1. Create a new folder inside `src/app/<your-page-name>/`.
-2. Add a `page.js` file:
-   ```javascript
-   "use client";
-   import React from "react";
-   import Link from "next/link";
-
-   export default function MyNewPage() {
-     return (
-       <div className="min-h-screen bg-[#f8fafc] py-12 px-4 sm:px-6 lg:px-8">
-         <div className="max-w-6xl mx-auto">
-           <h1 className="text-3xl font-black text-gray-900">New Feature Page</h1>
-         </div>
-       </div>
-     );
-   }
-   ```
-3. Test production build using `npm run build` to verify that there are no routing or prerendering errors.
-
----
-
-## 👥 Maintained & License
-
-- **Maintained by**: [Maajanki Web Tech](https://maajankiwebtech.com)
+# Start production server
+npm start
+```

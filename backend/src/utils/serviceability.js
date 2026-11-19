@@ -223,37 +223,57 @@ const PINCODE_DIRECTORY = {
 
 function isServiceablePincode(pincode) {
   const pin = String(pincode || "").trim().replace(/\D/g, "");
-  return SERVICEABLE_PINCODES.includes(pin);
+  // West Champaran local or standard 6-digit Pan-India pincode
+  if (SERVICEABLE_PINCODES.includes(pin)) return true;
+  return /^[1-9][0-9]{5}$/.test(pin);
 }
 
 function checkServiceability(pincode) {
   const pin = String(pincode || "").trim().replace(/\D/g, "");
   const details = PINCODE_DIRECTORY[pin];
 
-  if (!details) {
+  // 1. Local West Champaran & Bihar Priority Fleet
+  if (details) {
     return {
-      serviceable: false,
+      serviceable: true,
       pincode: pin,
-      district: "Outside Service Area",
-      state: "Outside Service Area",
-      message:
-        "Delivery is currently available exclusively in West Champaran, Bihar. PIN code " +
-        (pin || "provided") +
-        " is not currently serviceable.",
+      type: "local_express",
+      courierPartner: "Sellbar Internal Fleet (Bettiah Hub)",
+      town: details.primaryTown,
+      district: details.district,
+      state: details.state,
+      subdivision: details.subdivision,
+      blocks: details.blocks,
+      deliveryDays: details.deliveryDays,
+      codAvailable: details.codAvailable,
+      shippingFee: 0,
+      message: `Local Priority Delivery available in ${details.primaryTown}, West Champaran within 24-48 Hours.`,
+    };
+  }
+
+  // 2. Pan-India Shipping (Shiprocket & Delhivery Network)
+  if (/^[1-9][0-9]{5}$/.test(pin)) {
+    return {
+      serviceable: true,
+      pincode: pin,
+      type: "pan_india_courier",
+      courierPartner: "Delhivery / Shiprocket Priority Express",
+      town: "All India Delivery",
+      district: "Pan-India Hub",
+      state: "India",
+      deliveryDays: "3 - 5 Business Days",
+      codAvailable: true,
+      shippingFee: 0,
+      message: `Pan-India Courier Delivery available via Delhivery / Shiprocket within 3-5 days.`,
     };
   }
 
   return {
-    serviceable: true,
+    serviceable: false,
     pincode: pin,
-    town: details.primaryTown,
-    district: details.district,
-    state: details.state,
-    subdivision: details.subdivision,
-    blocks: details.blocks,
-    deliveryDays: details.deliveryDays,
-    codAvailable: details.codAvailable,
-    message: `Delivery available in ${details.primaryTown}, West Champaran within 24-48 Hours.`,
+    district: "Invalid Postal Code",
+    state: "India",
+    message: "Please enter a valid 6-digit Indian PIN code for delivery.",
   };
 }
 

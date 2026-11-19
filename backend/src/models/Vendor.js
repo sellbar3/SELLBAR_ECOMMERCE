@@ -50,6 +50,25 @@ const vendorSchema = new mongoose.Schema(
     isStoreActive: {
       type: Boolean,
       default: true
+    },
+
+    // Automated Commission & Settlement Configuration
+    commissionRate: {
+      type: Number,
+      default: 10, // Default 10% platform commission (configurable per vendor)
+      min: 0,
+      max: 100,
+    },
+
+    bankDetails: {
+      accountHolder: { type: String, trim: true, default: "" },
+      accountNumber: { type: String, trim: true, default: "" },
+      ifscCode: { type: String, trim: true, uppercase: true, default: "" },
+      bankName: { type: String, trim: true, default: "" },
+      branchName: { type: String, trim: true, default: "" },
+      upiId: { type: String, trim: true, default: "" },
+      panNumber: { type: String, trim: true, uppercase: true, default: "" },
+      isVerified: { type: Boolean, default: false }
     }
   },
   {

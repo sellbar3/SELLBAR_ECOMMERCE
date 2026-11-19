@@ -172,6 +172,73 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    // Vendor Automated Commission & Settlement Ledger
+    commissionRate: {
+      type: Number,
+      default: 10, // e.g. 10% standard platform commission
+      min: 0,
+      max: 100,
+    },
+    commissionAmount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    vendorEarnings: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    payoutStatus: {
+      type: String,
+      enum: ["pending", "processing", "settled", "on_hold"],
+      default: "pending",
+      index: true,
+    },
+    payoutRef: {
+      type: String,
+      default: null, // UTR or Bank Reference
+    },
+    payoutSettledAt: {
+      type: Date,
+      default: null,
+    },
+    // Courier & Logistics (Pan-India Shipping)
+    shippingCarrier: {
+      type: String,
+      default: "Sellbar Express",
+    },
+    awbNumber: {
+      type: String,
+      default: null,
+      index: true,
+    },
+    shippingLabelUrl: {
+      type: String,
+      default: null,
+    },
+    courierTrackingUrl: {
+      type: String,
+      default: null,
+    },
+    shippingStatus: {
+      type: String,
+      enum: [
+        "manifest_pending",
+        "awb_assigned",
+        "picked_up",
+        "in_transit",
+        "out_for_delivery",
+        "delivered",
+        "rto",
+        "failed",
+      ],
+      default: "manifest_pending",
+    },
+    isPanIndia: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -13,6 +13,7 @@ const VENDOR_NAV = [
   ["/vendor", "📊 Dashboard"],
   ["/vendor/products", "📦 Products"],
   ["/vendor/orders", "🧾 Orders"],
+  ["/vendor/payouts", "💰 Payouts & Ledger"],
   ["/vendor/profile", "🏪 Store Profile"],
 ];
 

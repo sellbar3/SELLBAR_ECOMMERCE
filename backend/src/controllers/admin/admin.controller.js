@@ -3,6 +3,8 @@ const Vendor = require("../../models/Vendor");
 const Product = require("../../models/Product");
 const Category = require("../../models/Category");
 const Order = require("../../models/Order");
+const SellOrder = require("../../models/SellOrder");
+const VendorPayout = require("../../models/VendorPayout");
 
 exports.getDashboard = async (req, res, next) => {
   try {
@@ -435,3 +437,266 @@ exports.deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+// ========================================================
+// REAL-TIME AUDIO NOTIFICATION ALERTS FOR ADMIN
+// Monitors both New Sell Device Orders & New Purchase Orders
+// ========================================================
+exports.getLiveAlerts = async (req, res, next) => {
+  try {
+    const sinceParam = req.query.since;
+    // Default to last 30 seconds if not provided
+    const sinceDate = sinceParam ? new Date(Number(sinceParam)) : new Date(Date.now() - 30000);
+
+    const [newPurchaseOrders, newSellOrders] = await Promise.all([
+      Order.find({ createdAt: { $gt: sinceDate } })
+        .populate("customer", "name email")
+        .populate("vendor", "storeName")
+        .sort({ createdAt: -1 })
+        .lean(),
+      SellOrder.find({ createdAt: { $gt: sinceDate } })
+        .sort({ createdAt: -1 })
+        .lean(),
+    ]);
+
+    const formattedPurchaseOrders = newPurchaseOrders.map((o) => ({
+      type: "purchase_order",
+      id: o._id,
+      orderNumber: `ORD-${String(o._id).slice(-6).toUpperCase()}`,
+      customer: o.shippingAddress?.fullName || o.customer?.name || "Customer",
+      total: o.total || o.subtotal || 0,
+      paymentMethod: o.paymentMethod || "COD",
+      itemsCount: o.items?.length || 1,
+      createdAt: o.createdAt,
+    }));
+
+    const formattedSellOrders = newSellOrders.map((so) => ({
+      type: "sell_device_order",
+      id: so._id,
+      orderNumber: so.orderId || `SB-SELL-${String(so._id).slice(-5)}`,
+      customer: so.customer?.name || "Customer",
+      device: `${so.device?.brand || ""} ${so.device?.model || "Device"}`.trim(),
+      estimatedPrice: so.estimatedPrice || so.finalOffer || 0,
+      city: so.pickupDetails?.city || "West Champaran",
+      createdAt: so.createdAt,
+    }));
+
+    const totalNew = formattedPurchaseOrders.length + formattedSellOrders.length;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        hasNew: totalNew > 0,
+        totalNew,
+        serverTime: Date.now(),
+        purchaseOrders: formattedPurchaseOrders,
+        sellOrders: formattedSellOrders,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ========================================================
+// VENDOR AUTOMATED COMMISSION & PAYOUT LEDGER (ADMIN)
+// ========================================================
+exports.getAdminPayouts = async (req, res, next) => {
+  try {
+    const [vendors, allOrders, settlements] = await Promise.all([
+      Vendor.find().populate("user", "name email").lean(),
+      Order.find().populate("vendor", "storeName").sort({ createdAt: -1 }).lean(),
+      VendorPayout.find().populate("vendor", "storeName").sort({ settledAt: -1 }).lean(),
+    ]);
+
+    let totalPlatformGrossSales = 0;
+    let totalPlatformCommission = 0;
+    let totalVendorEarnings = 0;
+    let totalSettled = 0;
+    let totalPendingPayouts = 0;
+
+    // Map vendor stats
+    const vendorMap = new Map();
+    for (const v of vendors) {
+      vendorMap.set(v._id.toString(), {
+        vendorId: v._id,
+        storeName: v.storeName,
+        email: v.user?.email || "",
+        phone: v.phone || "",
+        commissionRate: v.commissionRate !== undefined ? v.commissionRate : 10,
+        bankDetails: v.bankDetails || {},
+        totalOrders: 0,
+        grossSales: 0,
+        commissionDeducted: 0,
+        netEarnings: 0,
+        settledAmount: 0,
+        pendingBalance: 0,
+        unsettledOrderIds: [],
+      });
+    }
+
+    for (const o of allOrders) {
+      const vId = o.vendor?._id ? o.vendor._id.toString() : (o.vendor ? o.vendor.toString() : null);
+      const orderTotal = o.total || o.subtotal || 0;
+      const rate = o.commissionRate !== undefined ? o.commissionRate : 10;
+      const commission = o.commissionAmount !== undefined ? o.commissionAmount : Math.round((orderTotal * rate) / 100);
+      const earnings = o.vendorEarnings !== undefined ? o.vendorEarnings : Math.max(0, orderTotal - commission);
+      const isSettled = o.payoutStatus === "settled";
+
+      totalPlatformGrossSales += orderTotal;
+      totalPlatformCommission += commission;
+      totalVendorEarnings += earnings;
+
+      if (isSettled) {
+        totalSettled += earnings;
+      } else if (o.orderStatus !== "cancelled") {
+        totalPendingPayouts += earnings;
+      }
+
+      if (vId && vendorMap.has(vId)) {
+        const vData = vendorMap.get(vId);
+        vData.totalOrders += 1;
+        vData.grossSales += orderTotal;
+        vData.commissionDeducted += commission;
+        vData.netEarnings += earnings;
+        if (isSettled) {
+          vData.settledAmount += earnings;
+        } else if (o.orderStatus !== "cancelled") {
+          vData.pendingBalance += earnings;
+          vData.unsettledOrderIds.push(o._id);
+        }
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        summary: {
+          totalPlatformGrossSales,
+          totalPlatformCommission,
+          totalVendorEarnings,
+          totalSettled,
+          totalPendingPayouts,
+          totalVendors: vendors.length,
+          totalSettlements: settlements.length,
+        },
+        vendors: Array.from(vendorMap.values()),
+        recentSettlements: settlements,
+        recentOrders: allOrders.slice(0, 20).map((o) => ({
+          _id: o._id,
+          orderNumber: String(o._id).slice(-8).toUpperCase(),
+          vendorName: o.vendor?.storeName || "Vendor",
+          total: o.total || o.subtotal || 0,
+          commissionRate: o.commissionRate || 10,
+          commissionAmount: o.commissionAmount || Math.round(((o.total || 0) * 10) / 100),
+          vendorEarnings: o.vendorEarnings || ((o.total || 0) - Math.round(((o.total || 0) * 10) / 100)),
+          payoutStatus: o.payoutStatus || "pending",
+          payoutRef: o.payoutRef || null,
+          createdAt: o.createdAt,
+        })),
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/admin/payouts/settle
+// 1-Click Weekly Settlement Execution
+exports.settleVendorPayout = async (req, res, next) => {
+  try {
+    const { vendorId, orderIds, paymentMode = "IMPS", utrNumber, settlementCycle, notes } = req.body;
+
+    if (!vendorId) {
+      return res.status(400).json({ success: false, message: "vendorId is required" });
+    }
+
+    const vendor = await Vendor.findById(vendorId);
+    if (!vendor) {
+      return res.status(404).json({ success: false, message: "Vendor not found" });
+    }
+
+    // Filter pending orders
+    const filter = {
+      vendor: vendor._id,
+      payoutStatus: { $ne: "settled" },
+      orderStatus: { $ne: "cancelled" },
+    };
+    if (Array.isArray(orderIds) && orderIds.length > 0) {
+      filter._id = { $in: orderIds };
+    }
+
+    const ordersToSettle = await Order.find(filter);
+
+    if (ordersToSettle.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No pending orders found for this vendor to settle.",
+      });
+    }
+
+    let grossSales = 0;
+    let commissionDeducted = 0;
+    let netPayoutAmount = 0;
+
+    const generatedUtr = utrNumber && utrNumber.trim()
+      ? utrNumber.trim()
+      : `UTR-SB-${Date.now().toString().slice(-8)}`;
+
+    const settledAt = new Date();
+
+    for (const order of ordersToSettle) {
+      const orderTotal = order.total || order.subtotal || 0;
+      const rate = order.commissionRate !== undefined ? order.commissionRate : (vendor.commissionRate || 10);
+      const commission = order.commissionAmount !== undefined ? order.commissionAmount : Math.round((orderTotal * rate) / 100);
+      const earnings = order.vendorEarnings !== undefined ? order.vendorEarnings : Math.max(0, orderTotal - commission);
+
+      grossSales += orderTotal;
+      commissionDeducted += commission;
+      netPayoutAmount += earnings;
+
+      order.payoutStatus = "settled";
+      order.payoutRef = generatedUtr;
+      order.payoutSettledAt = settledAt;
+      await order.save();
+    }
+
+    // Create VendorPayout ledger entry
+    const currentWeek = Math.ceil((new Date().getDate()) / 7);
+    const cycleLabel = settlementCycle || `Weekly Settlement (W${currentWeek} - ${settledAt.toLocaleString("en-IN", { month: "short", year: "numeric" })})`;
+    const payoutId = `PAY-${Date.now().toString().slice(-6)}`;
+
+    const payoutRecord = await VendorPayout.create({
+      payoutId,
+      vendor: vendor._id,
+      orders: ordersToSettle.map((o) => o._id),
+      orderCount: ordersToSettle.length,
+      grossSales,
+      commissionDeducted,
+      netPayoutAmount,
+      settlementCycle: cycleLabel,
+      paymentMode,
+      utrNumber: generatedUtr,
+      bankSnapshot: {
+        accountHolder: vendor.bankDetails?.accountHolder || vendor.storeName,
+        accountNumber: vendor.bankDetails?.accountNumber || "N/A",
+        ifscCode: vendor.bankDetails?.ifscCode || "N/A",
+        bankName: vendor.bankDetails?.bankName || "Bank Transfer",
+        upiId: vendor.bankDetails?.upiId || "",
+      },
+      status: "settled",
+      notes: notes || `Settled ${ordersToSettle.length} orders via ${paymentMode}`,
+      processedBy: req.user?._id || null,
+      settledAt,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Successfully transferred ₹${netPayoutAmount.toLocaleString("en-IN")} to ${vendor.storeName} (UTR: ${generatedUtr})`,
+      data: { payout: payoutRecord },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

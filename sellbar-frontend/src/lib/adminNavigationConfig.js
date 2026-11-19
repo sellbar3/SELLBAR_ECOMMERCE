@@ -138,6 +138,19 @@ export const ADMIN_SIDEBAR_MODULES = [
     ],
   },
   {
+    id: "payouts",
+    title: "Vendor Payouts & Commission",
+    icon: Wallet,
+    basePath: "/admin/payouts",
+    badge: "Ledger",
+    items: [
+      { label: "Commission & Payout Ledger", href: "/admin/payouts" },
+      { label: "Weekly Settlements", href: "/admin/payouts?tab=settlements" },
+      { label: "Vendor Bank Accounts", href: "/admin/payouts?tab=banks" },
+      { label: "Platform Commission (8-10%)", href: "/admin/payouts?tab=commission" },
+    ],
+  },
+  {
     id: "shipping",
     title: "Shipping & Delivery",
     icon: Truck,

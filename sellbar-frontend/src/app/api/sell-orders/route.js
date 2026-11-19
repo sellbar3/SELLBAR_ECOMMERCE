@@ -141,3 +141,41 @@ export async function GET(request) {
     );
   }
 }
+
+export async function PATCH(request) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    const { orderId, status = "Cancelled", note = "Cancelled by customer" } = body;
+
+    if (!orderId) {
+      return NextResponse.json({ success: false, message: "orderId is required" }, { status: 400 });
+    }
+
+    await connectToDatabase();
+    const query = { orderId: orderId.toUpperCase().trim() };
+
+    const updated = await SellOrder.findOneAndUpdate(
+      query,
+      {
+        $set: { status, updatedAt: new Date() },
+        $push: {
+          statusHistory: {
+            status,
+            timestamp: new Date(),
+            note,
+            updatedBy: "Customer / Admin",
+          },
+        },
+      },
+      { new: true }
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: `Sell order #${orderId} marked as ${status}`,
+      order: updated,
+    });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}

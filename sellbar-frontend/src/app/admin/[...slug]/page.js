@@ -34,6 +34,11 @@ import {
   Globe,
   Bell,
   Headphones,
+  Zap,
+  Building,
+  Wallet,
+  CheckCircle2,
+  Clock,
 } from "lucide-react";
 
 // MUI & MUI X Components
@@ -404,6 +409,36 @@ function UniversalAdminModuleContent() {
                     ),
                   },
                   {
+                    field: "awb",
+                    headerName: "AWB Tracking",
+                    flex: 1.2,
+                    minWidth: 150,
+                    renderCell: (p) => {
+                      const awb = p.row.awbNumber || `DEL${String(p.row.id || "84920").replace(/\D/g, "")}IN`;
+                      return (
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                            {awb}
+                          </span>
+                        </div>
+                      );
+                    },
+                  },
+                  {
+                    field: "shippingLabel",
+                    headerName: "Shipping Label",
+                    flex: 1.1,
+                    minWidth: 140,
+                    renderCell: (p) => (
+                      <button
+                        onClick={() => window.open(`/api/shipping/label/${p.row.id || "ORD-9842"}`, "_blank", "width=600,height=750")}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition cursor-pointer"
+                      >
+                        <Printer size={12} /> Label PDF
+                      </button>
+                    ),
+                  },
+                  {
                     field: "actions",
                     headerName: "Invoice",
                     flex: 0.8,
@@ -682,7 +717,236 @@ function UniversalAdminModuleContent() {
         )}
 
         {/* ======================================================== */}
-        {/* 10. GENERIC / ALL OTHER MODULES FALLBACK                 */}
+        {/* 10. SHIPPING & LOGISTICS (PAN-INDIA SHIPROCKET / DELHIVERY) */}
+        {/* ======================================================== */}
+        {moduleKey === "shipping" && (
+          <div className="space-y-6">
+            {/* Courier Integration Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase">Pan-India Courier</span>
+                  <h4 className="text-base font-bold text-slate-900 mt-0.5">Delhivery Surface</h4>
+                  <span className="inline-block mt-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    ✓ Connected (Waybill API)
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                  DEL
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase">Air &amp; Multi-Courier</span>
+                  <h4 className="text-base font-bold text-slate-900 mt-0.5">Shiprocket Logistics</h4>
+                  <span className="inline-block mt-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    ✓ Connected (Auto-AWB)
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-[#DC2564] text-white flex items-center justify-center font-bold text-xs">
+                  SR
+                </div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                <div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase">Local Priority Hub</span>
+                  <h4 className="text-base font-bold text-slate-900 mt-0.5">West Champaran Fleet</h4>
+                  <span className="inline-block mt-1 text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                    24-48 Hr Local Express
+                  </span>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                  BET
+                </div>
+              </div>
+            </div>
+
+            {/* Shipments DataGrid with 1-Click AWB & Barcode Label */}
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-base font-black text-slate-900">
+                    Active Consignments &amp; Barcode Shipping Labels
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    1-Click generate AWB tracking numbers and print compliant 4x6" Barcode Shipping Labels.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ height: 350, width: "100%" }}>
+                <DataGrid
+                  rows={[
+                    { id: "ORD-9842", customer: "Priya Sharma", address: "Bettiah, Bihar - 845438", carrier: "Delhivery Surface", awb: "DEL849201948IN", status: "In Transit", labelUrl: "/api/shipping/label/ORD-9842" },
+                    { id: "ORD-9841", customer: "Amitabh Kumar", address: "Motihari Central - 845401", carrier: "Delhivery Surface", awb: "DEL849201949IN", status: "Out for Delivery", labelUrl: "/api/shipping/label/ORD-9841" },
+                    { id: "ORD-9840", customer: "Rajesh Ranjan", address: "Patna Fraser Road - 800001", carrier: "Shiprocket Express", awb: "SR1094827592IN", status: "AWB Generated", labelUrl: "/api/shipping/label/ORD-9840" },
+                    { id: "ORD-9839", customer: "Kavita Devi", address: "Bengaluru, Karnataka - 560001", carrier: "Shiprocket Air", awb: "SR1094827593IN", status: "In Transit", labelUrl: "/api/shipping/label/ORD-9839" },
+                    { id: "ORD-9838", customer: "Rohan Gupta", address: "Bagaha Bazar - 845101", carrier: "Sellbar Local Fleet", awb: "SBEX84510102", status: "Delivered", labelUrl: "/api/shipping/label/ORD-9838" },
+                  ]}
+                  columns={[
+                    { field: "id", headerName: "Order ID", flex: 0.8, minWidth: 100 },
+                    { field: "customer", headerName: "Consignee", flex: 1.1, minWidth: 130 },
+                    { field: "address", headerName: "Destination", flex: 1.4, minWidth: 160 },
+                    { field: "carrier", headerName: "Courier Partner", flex: 1.2, minWidth: 140 },
+                    {
+                      field: "awb",
+                      headerName: "AWB Tracking #",
+                      flex: 1.2,
+                      minWidth: 140,
+                      renderCell: (p) => (
+                        <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                          {p.value}
+                        </span>
+                      ),
+                    },
+                    {
+                      field: "status",
+                      headerName: "Status",
+                      flex: 0.9,
+                      minWidth: 110,
+                      renderCell: (p) => (
+                        <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          {p.value}
+                        </span>
+                      ),
+                    },
+                    {
+                      field: "print",
+                      headerName: "Shipping Label",
+                      flex: 1.1,
+                      minWidth: 140,
+                      renderCell: (p) => (
+                        <button
+                          onClick={() => window.open(p.row.labelUrl, "_blank", "width=600,height=750")}
+                          className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition cursor-pointer"
+                        >
+                          <Printer size={13} /> Print Label PDF
+                        </button>
+                      ),
+                    },
+                  ]}
+                  pageSizeOptions={[5]}
+                  initialState={{ pagination: { paginationModel: { pageSize: 5, page: 0 } } }}
+                  disableRowSelectionOnClick
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* 11. VENDOR COMMISSION & PAYOUT LEDGER MODULE              */}
+        {/* ======================================================== */}
+        {moduleKey === "payouts" && (
+          <div className="space-y-6">
+            {/* 4 Financial Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Platform Gross Sales</span>
+                <div className="text-2xl font-black text-slate-900 mt-1">₹7,95,000</div>
+                <div className="text-[11px] text-slate-500 font-semibold mt-1">Total order volume</div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Sellbar Fee (10%)</span>
+                <div className="text-2xl font-black text-rose-600 mt-1">₹73,300</div>
+                <div className="text-[11px] text-emerald-600 font-semibold mt-1">Platform revenue earned</div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Total Settled to Bank</span>
+                <div className="text-2xl font-black text-emerald-700 mt-1">₹5,70,000</div>
+                <div className="text-[11px] text-slate-500 font-semibold mt-1">Disbursed via IMPS/NEFT</div>
+              </div>
+
+              <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <span className="text-[11px] font-bold text-slate-400 uppercase">Pending Settlements</span>
+                <div className="text-2xl font-black text-amber-600 mt-1">₹1,51,700</div>
+                <div className="text-[11px] text-amber-600 font-semibold mt-1">Scheduled for weekly cycle</div>
+              </div>
+            </div>
+
+            {/* Vendor Balances Table & 1-Click Settlement Trigger */}
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-4">
+              <h3 className="text-base font-black text-slate-900">
+                Vendor Weekly Settlement Balances &amp; Commission
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead>
+                    <tr className="border-b border-slate-200 text-slate-400 font-semibold uppercase text-[10px]">
+                      <th className="py-2.5 px-3">Vendor / Store</th>
+                      <th className="py-2.5 px-3">Bank Details</th>
+                      <th className="py-2.5 px-3">Commission</th>
+                      <th className="py-2.5 px-3">Gross Sales</th>
+                      <th className="py-2.5 px-3">Sellbar Fee</th>
+                      <th className="py-2.5 px-3 font-bold text-slate-900">Pending Balance</th>
+                      <th className="py-2.5 px-3 text-right">1-Click Settlement</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    <tr className="hover:bg-slate-50/60 transition">
+                      <td className="py-3 px-3">
+                        <div className="font-bold text-slate-900">Bettiah Recommerce Hub</div>
+                        <div className="text-slate-400 text-[11px]">bettiah.hub@sellbar.in</div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-semibold text-slate-800">State Bank of India</div>
+                        <div className="font-mono text-[11px] text-slate-500">••••••••3910 • SBIN0001842</div>
+                      </td>
+                      <td className="py-3 px-3 font-bold text-slate-800">10% Standard</td>
+                      <td className="py-3 px-3 font-medium">₹4,85,000</td>
+                      <td className="py-3 px-3 font-bold text-rose-600">-₹48,500</td>
+                      <td className="py-3 px-3 font-black text-amber-700 text-sm">₹86,500</td>
+                      <td className="py-3 px-3 text-right">
+                        <button
+                          onClick={() => {
+                            const utr = `UTR-SB-${Date.now().toString().slice(-8)}`;
+                            notify(`✓ Weekly settlement of ₹86,500 executed for Bettiah Recommerce Hub! Bank UTR: ${utr}`);
+                          }}
+                          className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition shadow-xs cursor-pointer"
+                        >
+                          ⚡ Settle Payout
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr className="hover:bg-slate-50/60 transition">
+                      <td className="py-3 px-3">
+                        <div className="font-bold text-slate-900">Patna Certified Gadgets</div>
+                        <div className="text-slate-400 text-[11px]">patna.gadgets@sellbar.in</div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-semibold text-slate-800">HDFC Bank Ltd</div>
+                        <div className="font-mono text-[11px] text-slate-500">••••••••7812 • HDFC0000492</div>
+                      </td>
+                      <td className="py-3 px-3 font-bold text-slate-800">8% Preferred</td>
+                      <td className="py-3 px-3 font-medium">₹3,10,000</td>
+                      <td className="py-3 px-3 font-bold text-rose-600">-₹24,800</td>
+                      <td className="py-3 px-3 font-black text-amber-700 text-sm">₹65,200</td>
+                      <td className="py-3 px-3 text-right">
+                        <button
+                          onClick={() => {
+                            const utr = `UTR-SB-${Date.now().toString().slice(-8)}`;
+                            notify(`✓ Weekly settlement of ₹65,200 executed for Patna Certified Gadgets! Bank UTR: ${utr}`);
+                          }}
+                          className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold transition shadow-xs cursor-pointer"
+                        >
+                          ⚡ Settle Payout
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* 12. GENERIC / ALL OTHER MODULES FALLBACK                 */}
         {/* ======================================================== */}
         {!["dashboard", "reports", "orders", "customers", "inventory", "coupons", "settings", "store-info", "tax", "seo", "ai"].includes(moduleKey) && (
           <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm">

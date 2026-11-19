@@ -95,7 +95,7 @@ const placeOrder = async (req, res, next) => {
     if (!isServiceablePincode(cleanPin)) {
       return res.status(400).json({
         success: false,
-        message: `Delivery is currently available exclusively in West Champaran, Bihar. PIN code ${cleanPin || address.postalCode} is outside our serviceable area.`,
+        message: `Please provide a valid 6-digit Indian PIN code. Delivery is available across Pan-India and locally in West Champaran, Bihar.`,
       });
     }
 
@@ -171,6 +171,7 @@ const placeOrder = async (req, res, next) => {
         if (!vendorGroups.has(vendorKey)) {
           vendorGroups.set(vendorKey, {
             vendor: vendor._id,
+            commissionRate: vendor.commissionRate !== undefined ? vendor.commissionRate : 10,
             items: [],
             subtotal: 0,
           });
@@ -198,6 +199,9 @@ const placeOrder = async (req, res, next) => {
       const checkoutGroupId = crypto.randomUUID();
       const ordersToCreate = [];
 
+      const cleanPinForShipping = address.postalCode.replace(/\D/g, "");
+      const isLocalDelivery = cleanPinForShipping.startsWith("845");
+
       for (const group of vendorGroups.values()) {
         // Atomic stock decrement prevents overselling.
         for (const item of group.items) {
@@ -222,6 +226,10 @@ const placeOrder = async (req, res, next) => {
           }
         }
 
+        const commRate = group.commissionRate !== undefined ? group.commissionRate : 10;
+        const commAmount = Math.round((group.subtotal * commRate) / 100);
+        const earnings = Math.max(0, group.subtotal - commAmount);
+
         ordersToCreate.push({
           checkoutGroupId,
           customer: customerId,
@@ -231,6 +239,16 @@ const placeOrder = async (req, res, next) => {
           subtotal: group.subtotal,
           shippingFee: 0,
           total: group.subtotal,
+
+          // Vendor Automated Commission & Payout Ledger
+          commissionRate: commRate,
+          commissionAmount: commAmount,
+          vendorEarnings: earnings,
+          payoutStatus: "pending",
+
+          // Logistics & Pan-India Shipping
+          shippingCarrier: isLocalDelivery ? "Sellbar Local Fleet" : "Delhivery Surface",
+          isPanIndia: !isLocalDelivery,
 
           // Respect the customer's selected payment method.
           paymentMethod,

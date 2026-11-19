@@ -30,6 +30,13 @@ router.post("/products", adminController.createProduct);
 router.patch("/products/:id", adminController.updateProduct);
 router.delete("/products/:id", adminController.deleteProduct);
 
+// Real-time Audio Alerts for Admin (Sell device orders & purchase orders)
+router.get("/live-alerts", adminController.getLiveAlerts);
+
+// Vendor Automated Commission & Payouts (Weekly Settlements)
+router.get("/payouts", adminController.getAdminPayouts);
+router.post("/payouts/settle", adminController.settleVendorPayout);
+
 // Universal fallback for sub-routes and telemetry endpoints
 router.use((req, res) => {
   return res.status(200).json({

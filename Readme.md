@@ -153,9 +153,11 @@ backend/
 │   ├── models/
 │   │   ├── Product.js                # Core electronics product schema with variants & specs
 │   │   ├── Category.js               # Category schema with hierarchy & image
-│   │   ├── User.js                   # Customer and admin account schema with bcrypt
-│   │   ├── Vendor.js                 # Merchant partner details, approval status, store info
-│   │   ├── Order.js                  # Order lifecycle, addresses, status, items
+│   │   ├── User.js                   # Customer, vendor and admin account schema with bcrypt
+│   │   ├── Vendor.js                 # Merchant partner details, commission rate & bank details
+│   │   ├── Order.js                  # Order lifecycle, commission breakdown & courier logistics
+│   │   ├── Shipment.js               # Pan-India courier records, AWB tracking, milestones & routing
+│   │   ├── VendorPayout.js           # Automated weekly vendor settlement ledger & disbursement
 │   │   ├── Cart.js                   # Server cart items schema
 │   │   ├── Review.js                 # Product review schema
 │   │   ├── Coupon.js                 # Promo discount code rules
@@ -163,7 +165,7 @@ backend/
 │   │   └── Shipping.js               # Shipping address and courier tracking
 │   │
 │   ├── routes/
-│   │   ├── admin.routes.js           # `/api/admin/*`
+│   │   ├── admin.routes.js           # `/api/admin/*` (dashboard, payouts, live audio alerts)
 │   │   ├── auth.routes.js            # `/api/auth/*`
 │   │   ├── cart.routes.js            # `/api/cart/*`
 │   │   ├── category.routes.js        # `/api/categories/*`
@@ -173,9 +175,16 @@ backend/
 │   │   ├── product.routes.js         # `/api/products/*`
 │   │   ├── publicProduct.routes.js   # `/api/public/*`
 │   │   ├── review.routes.js          # `/api/reviews/*`
-│   │   ├── vendor.routes.js          # `/api/vendor/*`
+│   │   ├── shipping.routes.js        # `/api/shipping/*` (1-click AWB, printable barcode label, tracking)
+│   │   ├── vendor.routes.js          # `/api/vendor/*` (profile, bank details, payouts ledger)
 │   │   ├── vendorOrder.routes.js     # `/api/vendor/orders/*`
 │   │   └── index.js                  # Master route aggregator mounted at `/api`
+│   │
+│   ├── services/
+│   │   └── logistics.service.js      # Shiprocket/Delhivery API engine, SVG Code-128 barcode & label generator
+│   │
+│   ├── utils/
+│   │   └── serviceability.js         # Pan-India PIN code validator with Bihar local fleet priority
 │   │
 │   ├── scripts/
 │   │   ├── migrate-public-images.js  # Uploads all 74 local public images to Cloudinary
@@ -256,8 +265,32 @@ Specifically tailored for certified refurbished consumer electronics:
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET / POST` | `/api/cart` | Get or update database-synced shopping cart |
-| `POST` | `/api/orders` | Place verified order with address & payment method |
+| `POST` | `/api/orders` | Place verified order, validate Pan-India PIN & auto-calculate 10% commission |
 | `GET` | `/api/orders/:id` | View order lifecycle & tracking updates |
+
+#### Logistics & Pan-India Shipping APIs (`/api/shipping/*`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/shipping/check?pincode=...` | Verify courier serviceability and estimated delivery |
+| `POST` | `/api/shipping/generate-awb` | **1-Click AWB Generation** with Shiprocket / Delhivery routing |
+| `GET` | `/api/shipping/label/:orderId` | Printable **HTML/PDF Shipping Label with Code-128 SVG Barcode** |
+| `GET` | `/api/shipping/track/:id` | Live milestone tracking progress |
+
+#### Vendor Partner & Payout APIs (`/api/vendor/*`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/vendor/products` | Manage store inventory listings |
+| `GET` | `/api/vendor/orders` | Incoming customer orders assigned to merchant |
+| `GET` | `/api/vendor/payouts` | **Vendor Payout Ledger**: gross sales, 10% commission deducted, net balance & payout history |
+| `PATCH` | `/api/vendor/bank-details` | Update bank account & UPI ID for weekly settlement disbursement |
+
+#### Platform Admin & Real-Time Alerts (`/api/admin/*`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/admin/dashboard` | Platform metrics (GMV, active merchants, orders) |
+| `GET` | `/api/admin/live-alerts` | **Real-Time Sound Alert Feed**: Polls new orders in the last 30s to trigger audio chime ping |
+| `GET` | `/api/admin/payouts` | **Platform Payout Ledger**: All vendor earnings & pending weekly settlements |
+| `POST` | `/api/admin/payouts/settle` | **1-Click Weekly Settlement**: Disburses vendor earnings and marks orders settled |
 
 ---
 

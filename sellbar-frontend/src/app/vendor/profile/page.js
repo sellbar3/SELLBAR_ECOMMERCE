@@ -18,6 +18,66 @@ function Profile({ session }) {
   const [preview, setPreview] = useState("");
   const [removeLogo, setRemoveLogo] = useState(false);
 
+  // Bank & KYC details state
+  const [bankVals, setBankVals] = useState({
+    accountHolder: "",
+    accountNumber: "",
+    ifscCode: "",
+    bankName: "",
+    branchName: "",
+    upiId: "",
+    panNumber: "",
+  });
+  const [bankMsg, setBankMsg] = useState({ ok: "", err: "" });
+  const [savingBank, setSavingBank] = useState(false);
+
+  // Load existing bank details
+  useEffect(() => {
+    fetch("/api/vendor/payouts", {
+      headers: { ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}) },
+    })
+      .then((r) => r.json())
+      .then((res) => {
+        if (res.success && res.data?.bankDetails) {
+          setBankVals({
+            accountHolder: res.data.bankDetails.accountHolder || "",
+            accountNumber: res.data.bankDetails.accountNumber || "",
+            ifscCode: res.data.bankDetails.ifscCode || "",
+            bankName: res.data.bankDetails.bankName || "",
+            branchName: res.data.bankDetails.branchName || "",
+            upiId: res.data.bankDetails.upiId || "",
+            panNumber: res.data.bankDetails.panNumber || "",
+          });
+        }
+      })
+      .catch(() => {});
+  }, [session?.token]);
+
+  const setBank = (k) => (e) => setBankVals({ ...bankVals, [k]: e.target.value });
+
+  const saveBankDetails = async (e) => {
+    e.preventDefault();
+    setSavingBank(true);
+    setBankMsg({ ok: "", err: "" });
+    try {
+      const res = await fetch("/api/vendor/bank-details", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bankVals),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setBankMsg({ ok: "Bank & KYC details saved! Weekly automated settlements will be credited to this account.", err: "" });
+      } else {
+        setBankMsg({ ok: "", err: data.message || "Failed to save bank details" });
+      }
+    } catch (err) {
+      setBankMsg({ ok: "", err: err.message });
+    } finally {
+      setSavingBank(false);
+    }
+  };
+
   useEffect(() => {
     panelRequest("/vendor/profile", { token: session.token })
       .then((d) => {
@@ -163,6 +223,54 @@ function Profile({ session }) {
         <div className="full">
           <button className="pn-btn" disabled={saving}>
             {saving ? "Saving..." : "Save changes"}
+          </button>
+        </div>
+      </form>
+
+      {/* Vendor Payout Bank Account & KYC */}
+      <form className="pn-box pn-form" onSubmit={saveBankDetails} style={{ marginTop: 24 }}>
+        <h2 className="full" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span>🏦</span> Bank Account & Settlement KYC (Payouts)
+        </h2>
+        <p className="full" style={{ fontSize: 13, color: "#64748b", margin: "-4px 0 12px" }}>
+          Orders deliver hone ke baad platform commission deduct karke aapki weekly sales ka net payout is bank account me transfer kiya jayega.
+        </p>
+
+        <label>
+          Account Holder Name
+          <input required placeholder="As per bank passbook" value={bankVals.accountHolder} onChange={setBank("accountHolder")} />
+        </label>
+        <label>
+          Bank Name
+          <input required placeholder="e.g. State Bank of India, HDFC" value={bankVals.bankName} onChange={setBank("bankName")} />
+        </label>
+        <label>
+          Account Number
+          <input required placeholder="Bank Account Number" value={bankVals.accountNumber} onChange={setBank("accountNumber")} />
+        </label>
+        <label>
+          IFSC Code
+          <input required placeholder="e.g. SBIN0001234" value={bankVals.ifscCode} onChange={setBank("ifscCode")} style={{ textTransform: "uppercase" }} />
+        </label>
+        <label>
+          Branch Name / City
+          <input placeholder="e.g. Bettiah Main Branch" value={bankVals.branchName} onChange={setBank("branchName")} />
+        </label>
+        <label>
+          UPI ID (Instant Transfer VPA)
+          <input placeholder="e.g. storename@okaxis" value={bankVals.upiId} onChange={setBank("upiId")} />
+        </label>
+        <label className="full">
+          Business PAN / GSTIN (KYC Verification)
+          <input placeholder="e.g. ABCDE1234F or 10ABCDE1234F1Z5" value={bankVals.panNumber} onChange={setBank("panNumber")} style={{ textTransform: "uppercase" }} />
+        </label>
+
+        {bankMsg.err && <p className="pn-err full">{bankMsg.err}</p>}
+        {bankMsg.ok && <p className="pn-ok full">{bankMsg.ok}</p>}
+
+        <div className="full">
+          <button className="pn-btn" type="submit" disabled={savingBank} style={{ background: "#059669" }}>
+            {savingBank ? "Saving Bank Details..." : "Save Bank & KYC Details"}
           </button>
         </div>
       </form>
